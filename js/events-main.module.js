@@ -342,9 +342,22 @@ const endRange = endOfMonth(futureMonths[futureMonths.length - 1].date);
 const fromParam = toISODate(lookback);
 const toParam = toISODate(endRange);
 
+function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
+  return fetch(primaryUrl)
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
+    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
+    .catch(() => []);
+}
+
 Promise.all([
-  fetch(`api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`).then((r) => (r.ok ? r.json() : [])).catch(() => []),
-  fetch('api/directory.php?limit=2000').then((r) => (r.ok ? r.json() : [])).catch(() => []),
+  fetchJsonWithFallback(
+    `api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`,
+    'output.json',
+  ),
+  fetchJsonWithFallback(
+    'api/directory.php?limit=2000',
+    'directory.json',
+  ),
 ]).then(([oneOffData, directoryData]) => {
   const todayStart = startOfDay(now);
   const todayEnd = endOfDay(now);

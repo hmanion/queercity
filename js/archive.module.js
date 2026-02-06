@@ -295,8 +295,17 @@ to.setDate(to.getDate() - 1);
 const fromParam = toISODate(from);
 const toParam = toISODate(to);
 
-fetch(`../api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`)
-  .then(r => r.ok ? r.json() : [])
+function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
+  return fetch(primaryUrl)
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
+    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
+    .catch(() => []);
+}
+
+fetchJsonWithFallback(
+  `../api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`,
+  '../output.json',
+)
   .then(oneOff => {
     const container = document.getElementById('archivelist');
     if (!container) return;

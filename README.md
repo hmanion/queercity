@@ -11,6 +11,11 @@ This site is deployed via GitHub Pages.
 ## How it works
 
 The site is plain HTML/CSS/JS and loads event data from JSON files at runtime.
+When deployed on GitHub Pages (static hosting), the site uses the local JSON files
+(`output.json`, `directory.json`) as a demo dataset. On hosts that support PHP
+(e.g. Ionos), the frontend will fetch live data from `/api/output.php` and
+`/api/directory.php`, and automatically fall back to the local JSON if the API
+is unavailable.
 
 Pages:
 - `/` upcoming events (grouped into Today / Tomorrow / Week / Month(s) ahead)
