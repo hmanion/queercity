@@ -12,7 +12,7 @@
 import {
   SEP_EN,
   // dates & formatting
-  parseISODateLocal, startOfDay,
+  parseISODateLocal, startOfDay, toISODate,
   formatDate, formatTimeRange,
   // event helper
   getEventEndDate,
@@ -94,7 +94,14 @@ function ensureMonthSection(container, title, id) {
   return createSection(container, title, id);
 }
 
-fetch('../output.json')
+const now = new Date();
+const from = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+const to = new Date(now);
+to.setDate(to.getDate() - 1);
+const fromParam = toISODate(from);
+const toParam = toISODate(to);
+
+fetch(`../api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`)
   .then(r => r.ok ? r.json() : [])
   .then(oneOff => {
     const container = document.getElementById('archivelist');

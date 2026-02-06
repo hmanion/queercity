@@ -94,7 +94,7 @@ function sortByTimeThenName(arr) {
   });
 }
 
-fetch('../directory.json')
+fetch('../api/directory.php?limit=2000')
   .then(r => r.json())
   .then(directory => {
     const container = document.getElementById('weekdaylist');
