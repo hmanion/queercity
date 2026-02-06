@@ -1,1 +1,507 @@
-import{SEP_EN,startOfDay,endOfDay,startOfWeek,endOfWeek,startOfMonth,endOfMonth,isSameMonth,formatDate,getEventStartDate,getEventEndDate,eventOverlaps,inRange,getUniqueCategories,getUniqueTags,eventKey,expandAllRecurring,createSection,formatTimeRange}from"./events-shared-utils.js";const FUTURE_MONTHS_AHEAD=3;function buildEventBox(e,t){const n=t+1,a=document.createElement("div");a.id=`event${n}`,a.className="eventbox";const r=document.createElement("div");r.id=`eventTop${n}`,r.className="eventboxtop";const o=document.createElement("div");o.id=`eventBottom${n}`,o.className="eventboxbottom";const s=document.createElement("a");e.url&&(s.href=e.url,s.rel="noopener noreferrer",s.target="_blank");const i=document.createElement("div");i.className="name",i.id=`name${n}`,i.textContent=e.name||"Untitled event",s.appendChild(i);const l=document.createElement("div");l.className="date",l.id=`date${n}`,l.textContent=formatDateTime(e);const c=document.createElement("div");c.className="category "+(e.category||""),c.id=`category${n}`,c.textContent=e.category||"";const d=document.createElement("div");d.className="location",d.id=`location${n}`;const m=[e.locName,e.locStreet,e.locTown,e.locPost].filter(Boolean);if(d.textContent=m.join(", "),r.appendChild(s),r.appendChild(l),r.appendChild(d),a.appendChild(r),o.appendChild(c),e._isRecurring&&e._recurrenceFrequency){const t=document.createElement("div");t.className="category recurring",t.textContent=String(e._recurrenceFrequency),o.appendChild(t)}return a.appendChild(o),a}function formatDateTime(e){const t=formatDate(e.startDate);if(!t)return"";if(e.endDate&&!e.endTime){const n=formatDate(e.endDate);return`${t}${SEP_EN}${n}`}return e.startTime&&e.endTime?`${t} ${formatTimeRange(e.startTime,e.endTime,SEP_EN)}`:e.startTime&&!e.endTime?`${t} ${e.startTime}`:t}function ensureFilterBar(e){let t=document.getElementById("category-filter-bar");return t?t.innerHTML="":(t=document.createElement("section"),t.id="category-filter-bar",t.className="category-filter-bar",e.parentNode.insertBefore(t,e)),t}function buildTagDropdown(e,t,n){let a=new Set,r="any";const o=document.createElement("div");o.className="tag-filter dropdown";const s=document.createElement("button");s.type="button",s.className="tags-toggle",s.setAttribute("aria-expanded","false"),s.textContent="Tags";const i=document.createElement("div");i.className="tags-panel",i.style.display="none";const l=document.createElement("div");l.className="tags-mode";const c=document.createElement("span");c.textContent="Match:";const d=document.createElement("button");d.type="button",d.className="tag-mode any active",d.textContent="Any",d.setAttribute("aria-pressed","true");const m=document.createElement("button");m.type="button",m.className="tag-mode all",m.textContent="All",m.setAttribute("aria-pressed","false"),l.appendChild(c),l.appendChild(d),l.appendChild(m);const u=document.createElement("div");u.className="tags-list";const p=document.createElement("div");p.className="tags-actions";const f=document.createElement("button");function g(){n(a.size?new Set(a):null,r)}function h(){const e="any"===r;d.classList.toggle("active",e),m.classList.toggle("active",!e),d.setAttribute("aria-pressed",String(e)),m.setAttribute("aria-pressed",String(!e))}function E(e){u.innerHTML="",e.forEach((e=>{const t=`tag-${e.replace(/[^a-z0-9]+/g,"-")}`,n=document.createElement("label");n.className="tag-option",n.setAttribute("for",t);const r=document.createElement("input");r.type="checkbox",r.id=t,r.value=e,r.checked=a.has(e),r.addEventListener("change",(()=>{r.checked?a.add(e):a.delete(e),g()}));const o=document.createElement("span");o.textContent=e,n.appendChild(r),n.appendChild(o),u.appendChild(n)}))}f.type="button",f.className="tags-clear",f.textContent="Clear",p.appendChild(f),i.appendChild(l),i.appendChild(u),i.appendChild(p),o.appendChild(s),o.appendChild(i),e.appendChild(o),s.addEventListener("click",(()=>{const e="none"===i.style.display;i.style.display=e?"block":"none",s.setAttribute("aria-expanded",String(e))})),document.addEventListener("click",(e=>{o.contains(e.target)||(i.style.display="none",s.setAttribute("aria-expanded","false"))})),f.addEventListener("click",(()=>{a.clear(),E(y),g()})),d.addEventListener("click",(()=>{r="any",h(),g()})),m.addEventListener("click",(()=>{r="all",h(),g()}));let y=t||[];return h(),E(y),{setOptions:function(e){y=Array.from(e);const t=new Set(a);a=new Set(Array.from(a).filter((e=>y.includes(e))));const n=t.size!==a.size||Array.from(t).some((e=>!a.has(e)));E(y),n&&g()},getSelected:()=>new Set(a),getMode:()=>r}}function buildFilters(e,t,n,a,r,o){let s=null;const i=document.createElement("div");i.className="filter-row",e.appendChild(i);const l=document.createElement("button");l.textContent="All",l.className="cat-pill active",l.setAttribute("aria-pressed","true"),i.appendChild(l);const c=t.map((e=>{const t=document.createElement("button");return t.textContent=e,t.className="cat-pill "+e,t.dataset.cat=e,t.setAttribute("aria-pressed","false"),i.appendChild(t),t}));function d(){const e=null===s||s&&0===s.size;l.classList.toggle("active",e),l.setAttribute("aria-pressed",String(e)),c.forEach((e=>{const t=s&&s.has(e.dataset.cat);e.classList.toggle("active",!!t),e.setAttribute("aria-pressed",String(!!t))}))}l.addEventListener("click",(()=>{s=null,d(),a(null)})),c.forEach((e=>{e.addEventListener("click",(()=>{null===s&&(s=new Set);const t=e.dataset.cat;s.has(t)?s.delete(t):s.add(t),0===s.size?(s=null,a(null)):a(new Set(s)),d()}))}));const m=document.createElement("div");m.className="filter-right";const u=document.createElement("button");u.className="toggle recurring off",u.setAttribute("aria-pressed","true"),u.textContent="Recurring: Hidden",m.appendChild(u),e.appendChild(m),u.addEventListener("click",(()=>{const e=u.classList.toggle("on");u.classList.toggle("off",!e),u.setAttribute("aria-pressed",String(e)),u.textContent=e?"Recurring: Shown":"Recurring: Hidden",r(e)}));const p=buildTagDropdown(e,n,o);return d(),{setTagOptions:e=>p.setOptions(e)}}function setTitleCountForList(e,t){const n=e.parentElement;if(!n)return;const a=n.querySelector("h2.event-section-title"),r=n.dataset.baseTitle||(a?a.textContent.replace(/\s*\(.*\)$/,""):"");a&&(a.textContent=t>0?`${r} (${t})`:r)}function monthKey(e){return`${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,"0")}`}function monthTitle(e){return e.toLocaleString("en-GB",{month:"long",year:"numeric"})}Promise.all([fetch("output.json").then((e=>e.ok?e.json():[])).catch((()=>[])),fetch("directory.json").then((e=>e.ok?e.json():[])).catch((()=>[]))]).then((([e,t])=>{const n=new Date,a=startOfDay(n),r=endOfDay(n),o=new Date(n);o.setDate(n.getDate()+1);const s=startOfDay(o),i=endOfDay(o),l=n.toLocaleString("en-GB",{month:"long"}),c=startOfWeek(n),d=endOfWeek(n),m=Array.from({length:Math.max(1,3)},((e,t)=>{const a=new Date(n.getFullYear(),n.getMonth()+(t+1),1);return{date:a,key:monthKey(a),title:0===t?`Next Month - ${a.toLocaleString("en-GB",{month:"long"})}`:monthTitle(a)}})),u=endOfMonth(m[m.length-1].date),p=(e||[]).filter((e=>e&&e.startDate)).map((e=>({...e}))),f=expandAllRecurring(t||[],c,u);function g(e){const t=getEventEndDate(e);return!t||t>=a}const h=[...p.filter(g),...f.filter(g)].sort(((e,t)=>(getEventStartDate(e)||new Date(864e13))-(getEventStartDate(t)||new Date(864e13)))),E=document.getElementById("eventlist");if(!E)return;const y=ensureFilterBar(E),v=getUniqueCategories(h),C=getUniqueTags(h),b={today:h.filter((e=>eventOverlaps(e,a,r))),tomorrow:h.filter((e=>eventOverlaps(e,s,i))),thisWeek:h.filter((e=>eventOverlaps(e,c,d))),restOfMonth:(()=>{const e=new Date(d);e.setDate(e.getDate()+1);const t=startOfDay(e),a=endOfMonth(n);return h.filter((e=>eventOverlaps(e,t,a)))})(),months:m.map((({date:e,key:t,title:n})=>({date:e,key:t,title:n,items:h.filter((t=>{const n=getEventStartDate(t);return n&&isSameMonth(n,e)}))})))};let S=0;function D(e,t,n){const a=(t||[]).filter((e=>{const t=eventKey(e);return(!n||!n.has(t))&&(n&&n.add(t),!0)}));if(setTitleCountForList(e,a.length),0===a.length){const t=e.parentElement;return void(t&&(t.style.display="none"))}const r=document.createDocumentFragment();a.forEach((e=>{const t=buildEventBox(e,S++);r.appendChild(t)})),e.appendChild(r);const o=e.parentElement;o&&(o.style.display="")}let T=null,k=null,N="any",w=!1;const x=buildFilters(y,v,C,(e=>{T=e,L(T,w,k,N)}),(e=>{w=e,L(T,w,k,N)}),((e,t)=>{k=e,N=t||N,L(T,w,k,N)}));function L(e,t,n,a){const{todayEl:r,tomorrowEl:o,weekListEl:s,restListEl:i,monthListEls:c}=function(){E.innerHTML="";const e=(e,t)=>{const n=createSection(E,e,t),a=n.parentElement;return a&&(a.dataset.baseTitle=e),n},t=e("Today","section-today"),n=e("Tomorrow","section-tomorrow"),a=e("Rest of this week","section-this-week"),r=e(`Rest of ${l}`,"section-rest-of-month"),o={};for(const t of m)o[t.key]=e(t.title,`section-month-${t.key}`);return{todayEl:t,tomorrowEl:n,weekListEl:a,restListEl:r,monthListEls:o}}();S=0;const R=new Set,d=t=>{if(!e)return!0;const n=(t.category||"").trim();return e.has(n)},u=()=>!0,p=e=>!!t||!e._isRecurring,f=b.today.filter(d).filter(u),g=b.tomorrow.filter(d).filter(u),h=b.thisWeek.filter(d).filter(p),y=b.restOfMonth.filter(d).filter(p),v=b.months.map((e=>({key:e.key,items:e.items.filter(d).filter(p)}))),C=[...f,...g,...h,...y,...v.flatMap((e=>e.items))],T=getUniqueTags(C);x.setTagOptions(T);const k=e=>{if(!n||0===n.size)return!0;const t=Array.isArray(e.tags)?e.tags.map((e=>String(e).trim().toLowerCase())):[];if("all"===a){for(const e of n)if(!t.includes(e))return!1;return!0}return t.some((e=>n.has(e)))},N=e=>e.filter(k);D(r,N(f),R),D(o,N(g),R),D(s,N(h),R),D(i,N(y),R);for(const e of v){const t=c[e.key];t&&D(t,N(e.items),R)}}L(T,w,k,N)})).catch((e=>console.error("Error loading JSON:",e)));
+import {
+  SEP_EN,
+  startOfDay,
+  endOfDay,
+  startOfWeek,
+  endOfWeek,
+  endOfMonth,
+  isSameMonth,
+  formatDate,
+  getEventStartDate,
+  getEventEndDate,
+  eventOverlaps,
+  getUniqueCategories,
+  getUniqueTags,
+  eventKey,
+  expandAllRecurring,
+  createSection,
+  formatTimeRange,
+  getCategory,
+  getLocationParts,
+  getEventUrl,
+  getEventStartTime,
+  getEventEndTime,
+  getTagsList,
+} from './events-shared-utils.js';
+
+const FUTURE_MONTHS_AHEAD = 3;
+
+function formatDateTime(event) {
+  const start = formatDate(event.startDate);
+  if (!start) return '';
+  const startTime = getEventStartTime(event);
+  const endTime = getEventEndTime(event);
+  if (event.endDate && !endTime) {
+    const end = formatDate(event.endDate);
+    return `${start}${SEP_EN}${end}`;
+  }
+  if (startTime && endTime) return `${start} ${formatTimeRange(startTime, endTime, SEP_EN)}`;
+  if (startTime) return `${start} ${startTime}`;
+  return start;
+}
+
+function buildEventBox(event, index) {
+  const i = index + 1;
+  const eventBox = document.createElement('div');
+  eventBox.id = `event${i}`;
+  eventBox.className = 'eventbox';
+
+  const top = document.createElement('div');
+  top.id = `eventTop${i}`;
+  top.className = 'eventboxtop';
+
+  const bottom = document.createElement('div');
+  bottom.id = `eventBottom${i}`;
+  bottom.className = 'eventboxbottom';
+
+  const link = document.createElement('a');
+  const url = getEventUrl(event);
+  if (url) {
+    link.href = url;
+    link.rel = 'noopener noreferrer';
+    link.target = '_blank';
+  }
+
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'name';
+  nameDiv.id = `name${i}`;
+  nameDiv.textContent = event.name || 'Untitled event';
+  link.appendChild(nameDiv);
+
+  const dateDiv = document.createElement('div');
+  dateDiv.className = 'date';
+  dateDiv.id = `date${i}`;
+  dateDiv.textContent = formatDateTime(event);
+
+  const category = getCategory(event);
+  const catDiv = document.createElement('div');
+  catDiv.className = 'category ' + category;
+  catDiv.id = `category${i}`;
+  catDiv.textContent = category;
+
+  const locDiv = document.createElement('div');
+  locDiv.className = 'location';
+  locDiv.id = `location${i}`;
+  locDiv.textContent = getLocationParts(event).join(', ');
+
+  top.appendChild(link);
+  top.appendChild(dateDiv);
+  top.appendChild(locDiv);
+  eventBox.appendChild(top);
+
+  bottom.appendChild(catDiv);
+  if (event._isRecurring && event._recurrenceFrequency) {
+    const label = document.createElement('div');
+    label.className = 'category recurring';
+    label.textContent = String(event._recurrenceFrequency);
+    bottom.appendChild(label);
+  }
+
+  eventBox.appendChild(bottom);
+  return eventBox;
+}
+
+function ensureFilterBar(beforeEl) {
+  let bar = document.getElementById('category-filter-bar');
+  if (!bar) {
+    bar = document.createElement('section');
+    bar.id = 'category-filter-bar';
+    bar.className = 'category-filter-bar';
+    beforeEl.parentNode.insertBefore(bar, beforeEl);
+  } else {
+    bar.innerHTML = '';
+  }
+  return bar;
+}
+
+function buildTagDropdown(barEl, initialTags, onChangeTagsWithMode) {
+  let selected = new Set();
+  let mode = 'any';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'tag-filter dropdown';
+
+  const toggleBtn = document.createElement('button');
+  toggleBtn.type = 'button';
+  toggleBtn.className = 'tags-toggle';
+  toggleBtn.setAttribute('aria-expanded', 'false');
+  toggleBtn.textContent = 'Tags';
+
+  const panel = document.createElement('div');
+  panel.className = 'tags-panel';
+  panel.style.display = 'none';
+
+  const modeWrap = document.createElement('div');
+  modeWrap.className = 'tags-mode';
+  const modeLabel = document.createElement('span');
+  modeLabel.textContent = 'Match:';
+  const anyBtn = document.createElement('button');
+  anyBtn.type = 'button';
+  anyBtn.className = 'tag-mode any active';
+  anyBtn.textContent = 'Any';
+  anyBtn.setAttribute('aria-pressed', 'true');
+  const allBtn = document.createElement('button');
+  allBtn.type = 'button';
+  allBtn.className = 'tag-mode all';
+  allBtn.textContent = 'All';
+  allBtn.setAttribute('aria-pressed', 'false');
+  modeWrap.appendChild(modeLabel);
+  modeWrap.appendChild(anyBtn);
+  modeWrap.appendChild(allBtn);
+
+  const list = document.createElement('div');
+  list.className = 'tags-list';
+
+  const actions = document.createElement('div');
+  actions.className = 'tags-actions';
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'tags-clear';
+  clearBtn.textContent = 'Clear';
+  actions.appendChild(clearBtn);
+
+  panel.appendChild(modeWrap);
+  panel.appendChild(list);
+  panel.appendChild(actions);
+  wrap.appendChild(toggleBtn);
+  wrap.appendChild(panel);
+  barEl.appendChild(wrap);
+
+  function emit() {
+    onChangeTagsWithMode(selected.size ? new Set(selected) : null, mode);
+  }
+
+  function updateModeUI() {
+    const isAny = mode === 'any';
+    anyBtn.classList.toggle('active', isAny);
+    allBtn.classList.toggle('active', !isAny);
+    anyBtn.setAttribute('aria-pressed', String(isAny));
+    allBtn.setAttribute('aria-pressed', String(!isAny));
+  }
+
+  let currentOptions = initialTags || [];
+  function renderOptions(tags) {
+    list.innerHTML = '';
+    tags.forEach((tag) => {
+      const id = `tag-${tag.replace(/[^a-z0-9]+/g, '-')}`;
+      const label = document.createElement('label');
+      label.className = 'tag-option';
+      label.setAttribute('for', id);
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.id = id;
+      cb.value = tag;
+      cb.checked = selected.has(tag);
+      cb.addEventListener('change', () => {
+        if (cb.checked) selected.add(tag); else selected.delete(tag);
+        emit();
+      });
+      const txt = document.createElement('span');
+      txt.textContent = tag;
+      label.appendChild(cb);
+      label.appendChild(txt);
+      list.appendChild(label);
+    });
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const open = panel.style.display === 'none';
+    panel.style.display = open ? 'block' : 'none';
+    toggleBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!wrap.contains(e.target)) {
+      panel.style.display = 'none';
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    selected.clear();
+    renderOptions(currentOptions);
+    emit();
+  });
+
+  anyBtn.addEventListener('click', () => { mode = 'any'; updateModeUI(); emit(); });
+  allBtn.addEventListener('click', () => { mode = 'all'; updateModeUI(); emit(); });
+
+  updateModeUI();
+  renderOptions(currentOptions);
+
+  return {
+    setOptions(newTags) {
+      currentOptions = Array.from(newTags);
+      const before = new Set(selected);
+      selected = new Set(Array.from(selected).filter((t) => currentOptions.includes(t)));
+      const changed = before.size !== selected.size || Array.from(before).some((t) => !selected.has(t));
+      renderOptions(currentOptions);
+      if (changed) emit();
+    },
+  };
+}
+
+function buildFilters(barEl, categories, initialTags, onChangeCats, onToggleRecurring, onChangeTags) {
+  let selectedCats = null;
+  const row = document.createElement('div');
+  row.className = 'filter-row';
+  barEl.appendChild(row);
+
+  const allBtn = document.createElement('button');
+  allBtn.textContent = 'All';
+  allBtn.className = 'cat-pill active';
+  allBtn.setAttribute('aria-pressed', 'true');
+  row.appendChild(allBtn);
+
+  const catBtns = categories.map((cat) => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.className = 'cat-pill ' + cat;
+    btn.dataset.cat = cat;
+    btn.setAttribute('aria-pressed', 'false');
+    row.appendChild(btn);
+    return btn;
+  });
+
+  function updateCatsUI() {
+    const allActive = selectedCats === null || (selectedCats && selectedCats.size === 0);
+    allBtn.classList.toggle('active', allActive);
+    allBtn.setAttribute('aria-pressed', String(allActive));
+    catBtns.forEach((btn) => {
+      const on = selectedCats && selectedCats.has(btn.dataset.cat);
+      btn.classList.toggle('active', !!on);
+      btn.setAttribute('aria-pressed', String(!!on));
+    });
+  }
+
+  allBtn.addEventListener('click', () => { selectedCats = null; updateCatsUI(); onChangeCats(null); });
+  catBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (selectedCats === null) selectedCats = new Set();
+      const cat = btn.dataset.cat;
+      if (selectedCats.has(cat)) selectedCats.delete(cat); else selectedCats.add(cat);
+      if (selectedCats.size === 0) {
+        selectedCats = null;
+        onChangeCats(null);
+      } else {
+        onChangeCats(new Set(selectedCats));
+      }
+      updateCatsUI();
+    });
+  });
+
+  const right = document.createElement('div');
+  right.className = 'filter-right';
+  const recBtn = document.createElement('button');
+  recBtn.className = 'toggle recurring off';
+  recBtn.setAttribute('aria-pressed', 'false');
+  recBtn.textContent = 'Recurring: Hidden';
+  right.appendChild(recBtn);
+  barEl.appendChild(right);
+
+  recBtn.addEventListener('click', () => {
+    const on = recBtn.classList.toggle('on');
+    recBtn.classList.toggle('off', !on);
+    recBtn.setAttribute('aria-pressed', String(on));
+    recBtn.textContent = on ? 'Recurring: Shown' : 'Recurring: Hidden';
+    onToggleRecurring(on);
+  });
+
+  const tagCtrl = buildTagDropdown(barEl, initialTags, onChangeTags);
+  updateCatsUI();
+  return { setTagOptions: (tags) => tagCtrl.setOptions(tags) };
+}
+
+function setTitleCountForList(listEl, count) {
+  const section = listEl.parentElement;
+  if (!section) return;
+  const h2 = section.querySelector('h2.event-section-title');
+  const base = section.dataset.baseTitle || (h2 ? h2.textContent.replace(/\s*\(.*\)$/, '') : '');
+  if (h2) h2.textContent = count > 0 ? `${base} (${count})` : base;
+}
+
+function monthKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; }
+function monthTitle(date) { return date.toLocaleString('en-GB', { month: 'long', year: 'numeric' }); }
+
+Promise.all([
+  fetch('output.json').then((r) => (r.ok ? r.json() : [])).catch(() => []),
+  fetch('directory.json').then((r) => (r.ok ? r.json() : [])).catch(() => []),
+]).then(([oneOffData, directoryData]) => {
+  const now = new Date();
+  const todayStart = startOfDay(now);
+  const todayEnd = endOfDay(now);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowStart = startOfDay(tomorrow);
+  const tomorrowEnd = endOfDay(tomorrow);
+  const thisMonthName = now.toLocaleString('en-GB', { month: 'long' });
+  const startWeek = startOfWeek(now);
+  const endWeek = endOfWeek(now);
+
+  const futureMonths = Array.from({ length: Math.max(1, FUTURE_MONTHS_AHEAD) }, (_, index) => {
+    const date = new Date(now.getFullYear(), now.getMonth() + (index + 1), 1);
+    return {
+      date,
+      key: monthKey(date),
+      title: index === 0 ? `Next Month - ${date.toLocaleString('en-GB', { month: 'long' })}` : monthTitle(date),
+    };
+  });
+
+  const endRange = endOfMonth(futureMonths[futureMonths.length - 1].date);
+
+  const singlesRaw = (oneOffData || []).filter((e) => e && e.startDate).map((e) => ({ ...e }));
+  const recurringRaw = expandAllRecurring(directoryData || [], startWeek, endRange);
+
+  function notEndedBeforeToday(ev) {
+    const end = getEventEndDate(ev);
+    return !end || end >= todayStart;
+  }
+
+  const allEvents = [...singlesRaw.filter(notEndedBeforeToday), ...recurringRaw.filter(notEndedBeforeToday)]
+    .sort((a, b) => (getEventStartDate(a) || new Date(8640000000000000)) - (getEventStartDate(b) || new Date(8640000000000000)));
+
+  const eventList = document.getElementById('eventlist');
+  if (!eventList) return;
+
+  const filterBar = ensureFilterBar(eventList);
+  const categories = getUniqueCategories(allEvents);
+  const tags = getUniqueTags(allEvents);
+
+  const base = {
+    today: allEvents.filter((e) => eventOverlaps(e, todayStart, todayEnd)),
+    tomorrow: allEvents.filter((e) => eventOverlaps(e, tomorrowStart, tomorrowEnd)),
+    thisWeek: allEvents.filter((e) => eventOverlaps(e, startWeek, endWeek)),
+    restOfMonth: (() => {
+      const dayAfterWeek = new Date(endWeek);
+      dayAfterWeek.setDate(dayAfterWeek.getDate() + 1);
+      const from = startOfDay(dayAfterWeek);
+      const to = endOfMonth(now);
+      return allEvents.filter((e) => eventOverlaps(e, from, to));
+    })(),
+    months: futureMonths.map(({ date, key, title }) => ({
+      date,
+      key,
+      title,
+      items: allEvents.filter((e) => {
+        const d = getEventStartDate(e);
+        return d && isSameMonth(d, date);
+      }),
+    })),
+  };
+
+  let counter = 0;
+  function appendEvents(listEl, arr, shownKeys) {
+    const filtered = (arr || []).filter((ev) => {
+      const key = eventKey(ev);
+      if (!shownKeys || !shownKeys.has(key)) {
+        if (shownKeys) shownKeys.add(key);
+        return true;
+      }
+      return false;
+    });
+
+    setTitleCountForList(listEl, filtered.length);
+    if (filtered.length === 0) {
+      const section = listEl.parentElement;
+      if (section) section.style.display = 'none';
+      return;
+    }
+
+    const frag = document.createDocumentFragment();
+    filtered.forEach((ev) => {
+      frag.appendChild(buildEventBox(ev, counter++));
+    });
+    listEl.appendChild(frag);
+
+    const section = listEl.parentElement;
+    if (section) section.style.display = '';
+  }
+
+  let selectedCats = null;
+  let selectedTags = null;
+  let tagMode = 'any';
+  let showRecurring = false;
+
+  const filterCtrl = buildFilters(
+    filterBar,
+    categories,
+    tags,
+    (cats) => { selectedCats = cats; render(); },
+    (on) => { showRecurring = on; render(); },
+    (tagsSet, mode) => { selectedTags = tagsSet; tagMode = mode || tagMode; render(); },
+  );
+
+  function createSections() {
+    eventList.innerHTML = '';
+    const make = (title, id) => {
+      const list = createSection(eventList, title, id);
+      const section = list.parentElement;
+      if (section) section.dataset.baseTitle = title;
+      return list;
+    };
+
+    const monthLists = {};
+    for (const month of futureMonths) {
+      monthLists[month.key] = make(month.title, `section-month-${month.key}`);
+    }
+
+    return {
+      todayEl: make('Today', 'section-today'),
+      tomorrowEl: make('Tomorrow', 'section-tomorrow'),
+      weekListEl: make('Rest of this week', 'section-this-week'),
+      restListEl: make(`Rest of ${thisMonthName}`, 'section-rest-of-month'),
+      monthListEls: monthLists,
+    };
+  }
+
+  function render() {
+    const sections = createSections();
+    counter = 0;
+    const shown = new Set();
+
+    const byCategory = (ev) => {
+      if (!selectedCats) return true;
+      return selectedCats.has(getCategory(ev));
+    };
+    const byRecurring = (ev) => (showRecurring ? true : !ev._isRecurring);
+
+    const preTagToday = base.today.filter(byCategory).filter(byRecurring);
+    const preTagTomorrow = base.tomorrow.filter(byCategory).filter(byRecurring);
+    const preTagWeek = base.thisWeek.filter(byCategory).filter(byRecurring);
+    const preTagRest = base.restOfMonth.filter(byCategory).filter(byRecurring);
+    const preTagMonths = base.months.map((m) => ({ key: m.key, items: m.items.filter(byCategory).filter(byRecurring) }));
+
+    const visibleBeforeTags = [
+      ...preTagToday,
+      ...preTagTomorrow,
+      ...preTagWeek,
+      ...preTagRest,
+      ...preTagMonths.flatMap((m) => m.items),
+    ];
+    filterCtrl.setTagOptions(getUniqueTags(visibleBeforeTags));
+
+    const byTags = (ev) => {
+      if (!selectedTags || selectedTags.size === 0) return true;
+      const eventTags = getTagsList(ev);
+      if (tagMode === 'all') {
+        for (const t of selectedTags) if (!eventTags.includes(t)) return false;
+        return true;
+      }
+      return eventTags.some((t) => selectedTags.has(t));
+    };
+
+    const applyTags = (arr) => arr.filter(byTags);
+
+    appendEvents(sections.todayEl, applyTags(preTagToday), shown);
+    appendEvents(sections.tomorrowEl, applyTags(preTagTomorrow), shown);
+    appendEvents(sections.weekListEl, applyTags(preTagWeek), shown);
+    appendEvents(sections.restListEl, applyTags(preTagRest), shown);
+
+    for (const month of preTagMonths) {
+      const target = sections.monthListEls[month.key];
+      if (target) appendEvents(target, applyTags(month.items), shown);
+    }
+  }
+
+  render();
+}).catch((err) => console.error('Error loading JSON:', err));
