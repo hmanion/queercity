@@ -20,7 +20,7 @@
     },
     "endDate": "2025-08-31T23:00:00",
     "url": "https://www.eventbrite.com/e/the-irrepressibles-at-deaf-institute-manchester-yo-homo-deluxe-launch-tickets-1567754117769",
-    "eventType": "Arts"
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -43,8 +43,8 @@
     },
     "endDate": "2025-09-14",
     "url": "https://hopemilltheatre.co.uk/event/canal-street-lonely-hearts-club/",
-    "eventType": "Arts",
-    "keywords": "theatre"
+    "keywords": "theatre",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -67,8 +67,8 @@
     },
     "endDate": "2025-09-06T04:00:00",
     "url": "https://ra.co/events/2221578",
-    "eventType": "Club",
-    "keywords": "house, disco"
+    "keywords": "house, disco",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -91,8 +91,8 @@
     },
     "endDate": "2025-09-07T18:00:00",
     "url": "https://www.wearemud.org/events/alternative-pride",
-    "eventType": "Celebration",
-    "keywords": "festival, outside"
+    "keywords": "festival, outside",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -115,8 +115,8 @@
     },
     "endDate": "2025-09-08T16:00:00",
     "url": "https://lgbt.foundation/event/prep-initiation-september-2025/",
-    "eventType": "Life",
-    "keywords": "safersex, health"
+    "keywords": "safersex, health",
+    "genre": "Life"
   },
   {
     "@context": "https://schema.org",
@@ -139,8 +139,8 @@
     },
     "endDate": "2025-09-10T21:30:00",
     "url": "https://cultplex.co.uk/Cultplex.dll/WhatsOn?f=669306",
-    "eventType": "Arts",
-    "keywords": "film"
+    "keywords": "film",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -163,8 +163,8 @@
     },
     "endDate": "2025-09-11T20:00:00",
     "url": "https://www.eventbrite.co.uk/e/the-exxxhibition-50-years-of-lgbtq-safer-sex-and-activism-tickets-1630976437429",
-    "eventType": "Arts",
-    "keywords": "safersex, exhibition, history"
+    "keywords": "safersex, exhibition, history",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -187,8 +187,8 @@
     },
     "endDate": "2025-09-11T14:30:00",
     "url": "https://events.manchester.ac.uk/event/event:l4n-maqm43h4-bcgu1o",
-    "eventType": "Arts",
-    "keywords": "exhibition, history, talk"
+    "keywords": "exhibition, history, talk",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -211,14 +211,14 @@
     },
     "endDate": "2025-09-12T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/sister-bingo-returns",
-    "eventType": "Activity",
     "keywords": "drag, bingo",
     "offers": {
       "@type": "Offer",
       "price": 5,
       "priceCurrency": "GBP",
       "url": "https://www.socialrefuge.com/event-details/sister-bingo-returns"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -241,8 +241,8 @@
     },
     "endDate": "2025-09-12T22:00:00",
     "url": "https://www.outsavvy.com/event/29374/strap-up-trans-masc-exhibition-performance-night",
-    "eventType": "Arts",
-    "keywords": "exhibition"
+    "keywords": "exhibition",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -265,8 +265,8 @@
     },
     "endDate": "2025-09-13T17:00:00",
     "url": "https://chorltonpride.co.uk",
-    "eventType": "Celebration",
-    "keywords": "pride"
+    "keywords": "pride",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -289,8 +289,8 @@
     },
     "endDate": "2025-09-13T17:00:00",
     "url": "https://www.socialrefuge.com/event-details/afro-queer-writers-workshop",
-    "eventType": "Activity",
-    "keywords": "literature, create"
+    "keywords": "literature, create",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -313,8 +313,8 @@
     },
     "endDate": "2025-09-18",
     "url": "https://hopemilltheatre.co.uk/event/a-little-flop-of-horrors/",
-    "eventType": "Arts",
-    "keywords": "drag, theatre"
+    "keywords": "drag, theatre",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -337,8 +337,8 @@
     },
     "endDate": "2025-09-21",
     "url": "https://www.instagram.com/withingtonpride/",
-    "eventType": "Celebration",
-    "keywords": "pride"
+    "keywords": "pride",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -361,8 +361,8 @@
     },
     "endDate": "2025-09-20T23:00:00",
     "url": "https://ra.co/events/2230497",
-    "eventType": "Club",
-    "keywords": "house"
+    "keywords": "house",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -385,8 +385,8 @@
     },
     "endDate": "2025-09-20T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/queers-throughout-history-mythology",
-    "eventType": "Arts",
-    "keywords": "talk, history"
+    "keywords": "talk, history",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -409,8 +409,8 @@
     },
     "endDate": "2025-09-21T16:00:00",
     "url": "https://phm.org.uk/events_new/bi-visibility-day-celebration/bi-visibility-day-celebration-sun-21-september-10-30am-1-00pm/",
-    "eventType": "Celebration",
-    "keywords": "talk, history"
+    "keywords": "talk, history",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -433,8 +433,8 @@
     },
     "endDate": "2025-09-23T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/speaking-in-tongues-whats-queer-about-multilingual-writing",
-    "eventType": "Arts",
-    "keywords": "talk, literature"
+    "keywords": "talk, literature",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -457,8 +457,8 @@
     },
     "endDate": "2025-09-25T22:30:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/Fairfield-Social-Club/Red-Rodeo-Club/41293002/",
-    "eventType": "Activity",
-    "keywords": "dance"
+    "keywords": "dance",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -482,14 +482,14 @@
     "endDate": "2025-09-26T21:00:00",
     "url": "https://www.outsavvy.com/event/29861/canal-street-kings-sexy-beasts#anchor?fbclid=PAZXh0bgNhZW0CMTEAAaccEktaVferMlz7ROj4yN-jE0Ux1EB6JLMqJaHze3cFSPV_D3oVBK6KD7sU1A_aem_fdRkoeW4gexzBVuuTQiZNg",
     "description": "Forget everything you thought you knew about the animal kingdom and step into the wild, with a night of burlesque, drag, and beastly brilliance that’ll have you roaring louder than a big cat!",
-    "eventType": "Arts",
     "keywords": "drag",
     "offers": {
       "@type": "Offer",
       "price": 5,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/29861/canal-street-kings-sexy-beasts#anchor?fbclid=PAZXh0bgNhZW0CMTEAAaccEktaVferMlz7ROj4yN-jE0Ux1EB6JLMqJaHze3cFSPV_D3oVBK6KD7sU1A_aem_fdRkoeW4gexzBVuuTQiZNg"
-    }
+    },
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -512,14 +512,14 @@
     },
     "endDate": "2025-09-27T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/queerprov",
-    "eventType": "Arts",
     "keywords": "comedy",
     "offers": {
       "@type": "Offer",
       "price": 10.25,
       "priceCurrency": "GBP",
       "url": "https://www.socialrefuge.com/event-details/queerprov"
-    }
+    },
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -542,8 +542,8 @@
     },
     "endDate": "2025-10-02T23:30:00",
     "url": "https://crm.ght.org.uk/civicrm/event/info?reset=1&id=3001",
-    "eventType": "Celebration",
-    "keywords": "drag, charity"
+    "keywords": "drag, charity",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -566,8 +566,8 @@
     },
     "endDate": "2025-10-06",
     "url": "https://manchesterleathermen.com/manchesterleatherweekend/2025",
-    "eventType": "Sexy",
-    "keywords": "Kink, leather"
+    "keywords": "Kink, leather",
+    "genre": "Sexy"
   },
   {
     "@context": "https://schema.org",
@@ -590,8 +590,8 @@
     },
     "endDate": "2025-10-11T08:00:00",
     "url": "https://ra.co/events/2230497",
-    "eventType": "Club",
-    "keywords": "techno, house"
+    "keywords": "techno, house",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -615,14 +615,14 @@
     "endDate": "2025-10-12T03:00:00",
     "url": "https://ra.co/events/2252073",
     "description": "Gather up your ghoul-friends, get into the Halloween sprit and get down to Islington Mill for the ultimate Trans centered Halloween bash.",
-    "eventType": "Club",
     "keywords": "pop",
     "offers": {
       "@type": "Offer",
       "price": 6.5,
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2252073"
-    }
+    },
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -645,8 +645,8 @@
     },
     "endDate": "2025-10-11T23:59:00",
     "url": "https://ra.co/events/2230992",
-    "eventType": "Club",
-    "keywords": "techno, house, dayparty"
+    "keywords": "techno, house, dayparty",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -669,8 +669,8 @@
     },
     "endDate": "2025-10-11T23:59:00",
     "url": "https://www.socialrefuge.com/event-details/sapphic-mixer-october",
-    "eventType": "Activity",
-    "keywords": "dating"
+    "keywords": "dating",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -693,8 +693,8 @@
     },
     "endDate": "2025-10-18T07:00:00",
     "url": "https://ra.co/events/2224151",
-    "eventType": "Club",
-    "keywords": "house"
+    "keywords": "house",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -717,8 +717,8 @@
     },
     "endDate": "2025-10-18T04:00:00",
     "url": "https://ra.co/events/2244423",
-    "eventType": "Club",
-    "keywords": "techno, house, rave"
+    "keywords": "techno, house, rave",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -741,8 +741,8 @@
     },
     "endDate": "2025-10-22T21:00:00",
     "url": "https://begstealborrow.co.uk/products/hsm2-made-me-gay-the-cabaret?utm_source=copyToPasteBoard&utm_medium=product-links&utm_content=web",
-    "eventType": "Arts",
-    "keywords": "cabaret"
+    "keywords": "cabaret",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -765,8 +765,8 @@
     },
     "endDate": "2025-10-25T23:59:00",
     "url": "https://ra.co/events/2188957",
-    "eventType": "Club",
-    "keywords": "house, dayparty, rave"
+    "keywords": "house, dayparty, rave",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -789,8 +789,8 @@
     },
     "endDate": "2025-10-26T21:30:00",
     "url": "https://www.instagram.com/mcrqueerartmarket/",
-    "eventType": "Arts",
-    "keywords": "market, art"
+    "keywords": "market, art",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -813,8 +813,8 @@
     },
     "endDate": "2025-11-01T04:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/Area-Manchester/The-Cavalcade-Club---Queer-RockPop-Circus-Cabaret--Club-Night/41284157/",
-    "eventType": "Club",
-    "keywords": "cabaret, sexpositive"
+    "keywords": "cabaret, sexpositive",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -837,8 +837,8 @@
     },
     "endDate": "2025-11-08T21:00:00",
     "url": "https://contactmcr.com/events/glamrou-drag-mother",
-    "eventType": "Arts",
-    "keywords": "drag, theatre"
+    "keywords": "drag, theatre",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -862,14 +862,14 @@
     "endDate": "2025-11-14T23:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/CULTPLEX/NEFARIOUS-DE-VILES-TRANS-HELL-RAISER-Fundraiser-Drag-Show/41131977/",
     "description": "Raising hell (and money!) for Nefarious De Vile's transition, featuring an all-star line-up of drag queens, kings and monsters!",
-    "eventType": "Arts",
     "keywords": "drag, fundraiser",
     "offers": {
       "@type": "Offer",
       "price": 11.25,
       "priceCurrency": "GBP",
       "url": "https://www.skiddle.com/whats-on/Manchester/CULTPLEX/NEFARIOUS-DE-VILES-TRANS-HELL-RAISER-Fundraiser-Drag-Show/41131977/"
-    }
+    },
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -892,8 +892,8 @@
     },
     "endDate": "2025-11-29T07:00:00",
     "url": "https://ra.co/events/2224151",
-    "eventType": "Club",
-    "keywords": "house"
+    "keywords": "house",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -916,8 +916,8 @@
     },
     "endDate": "2025-11-29T17:00:00",
     "url": "https://www.instagram.com/mcrqueerartmarket/",
-    "eventType": "Arts",
-    "keywords": "market, art"
+    "keywords": "market, art",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -939,8 +939,8 @@
       }
     },
     "endDate": "2025-12-01T21:00:00",
-    "eventType": "Celebration",
-    "keywords": "health, outside"
+    "keywords": "health, outside",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -963,8 +963,8 @@
     },
     "endDate": "2025-12-07T04:00:00",
     "url": "https://www.homobloc.co.uk/",
-    "eventType": "Club",
-    "keywords": "festival"
+    "keywords": "festival",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -988,13 +988,13 @@
     "endDate": "2025-10-11T04:00:00",
     "url": "https://ra.co/events/2190702",
     "image": "https://images.ra.co/7cea589da59f1d8f4460bc2cc43ebe59949c4664.jpg",
-    "eventType": "Club",
     "offers": {
       "@type": "Offer",
       "price": 11.4,
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2190702"
-    }
+    },
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1017,8 +1017,8 @@
     },
     "endDate": "2025-10-26T04:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/New-Century/Freak-Queer-Rave--Sam-Quealy--LSDXOXO--more/41310695/",
-    "eventType": "Club",
-    "keywords": "house, techno, pop, rave"
+    "keywords": "house, techno, pop, rave",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1041,8 +1041,8 @@
     },
     "endDate": "2025-09-20T23:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/The-Feel-Good-Club/The-Big-Send-Off/41353042/#about",
-    "eventType": "Club",
-    "keywords": "cabaret"
+    "keywords": "cabaret",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1066,14 +1066,14 @@
     "endDate": "2025-10-26T04:00:00",
     "url": "https://ra.co/events/2252033",
     "image": "https://images.ra.co/82a2248d48d139b725b52e228fccfe7aab3339f8.png",
-    "eventType": "Club",
     "keywords": "House",
     "offers": {
       "@type": "Offer",
       "price": 5.5,
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2252033"
-    }
+    },
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1096,8 +1096,8 @@
     },
     "endDate": "2025-09-23T18:00:00",
     "url": "https://www.feelgoodclub.co/pages/events#calendar-794f4b43-8bd8-4551-ac1f-31a2e827bf8a",
-    "eventType": "Celebration",
-    "keywords": "dance"
+    "keywords": "dance",
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -1121,8 +1121,8 @@
     "endDate": "2025-11-01T04:00:00",
     "url": "https://ra.co/events/2258167",
     "image": "https://images.ra.co/3d44ca33498a658a046a148bd8dfc1060a17c7db.png",
-    "eventType": "Club",
-    "keywords": "rnb, garage"
+    "keywords": "rnb, garage",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1144,8 +1144,8 @@
       }
     },
     "endDate": "2025-09-21T18:00:00",
-    "eventType": "Arts",
-    "keywords": "market, art"
+    "keywords": "market, art",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1168,14 +1168,14 @@
     },
     "endDate": "2025-12-02T23:00:00",
     "url": "https://ra.co/events/2218514",
-    "eventType": "Club",
     "keywords": "Experimental",
     "offers": {
       "@type": "Offer",
       "price": 20.7,
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2218514"
-    }
+    },
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1198,8 +1198,8 @@
     },
     "endDate": "2025-09-19T22:00:00",
     "url": "https://www.ticketsource.co.uk/smut-slam-manchester/smut-slam-manchester-lessons-learned/e-qmvelp",
-    "eventType": "Activity",
-    "keywords": "poetry, literature"
+    "keywords": "poetry, literature",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1222,8 +1222,8 @@
     },
     "endDate": "2025-09-14T18:00:00",
     "url": "https://www.instagram.com/queerbookswapmcr/",
-    "eventType": "Activity",
-    "keywords": "literature"
+    "keywords": "literature",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1246,14 +1246,14 @@
     },
     "endDate": "2025-10-29T20:00:00",
     "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester",
-    "eventType": "Activity",
     "keywords": "art, drawing",
     "offers": {
       "@type": "Offer",
       "price": 14,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1276,14 +1276,14 @@
     },
     "endDate": "2025-11-19T20:00:00",
     "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester",
-    "eventType": "Activity",
     "keywords": "art, drawing, create",
     "offers": {
       "@type": "Offer",
       "price": 14,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1306,14 +1306,14 @@
     },
     "endDate": "2025-12-03T20:00:00",
     "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester",
-    "eventType": "Activity",
     "keywords": "art, drawing, create",
     "offers": {
       "@type": "Offer",
       "price": 14,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1336,14 +1336,14 @@
     },
     "endDate": "2025-10-17T20:00:00",
     "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre",
-    "eventType": "Activity",
     "keywords": "art, drawing, create",
     "offers": {
       "@type": "Offer",
       "price": 14,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1366,14 +1366,14 @@
     },
     "endDate": "2025-11-28T20:00:00",
     "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre",
-    "eventType": "Activity",
     "keywords": "art, drawing, create",
     "offers": {
       "@type": "Offer",
       "price": 14,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1396,14 +1396,14 @@
     },
     "endDate": "2025-12-12T20:00:00",
     "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre",
-    "eventType": "Activity",
     "keywords": "art, drawing, create",
     "offers": {
       "@type": "Offer",
       "price": 14,
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1427,8 +1427,8 @@
     "endDate": "2026-08-01",
     "url": "https://www.royalexchange.co.uk/event/fun-home/",
     "description": "This groundbreaking modern masterpiece is a tale of grief and love, queer tragedy and queer joy, told through soaring, revelatory songs.",
-    "eventType": "Arts",
-    "keywords": "theatre"
+    "keywords": "theatre",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1452,8 +1452,8 @@
     "endDate": "2025-10-12",
     "url": "https://www.paradise-works.com/whatson",
     "description": "A body of work exploring unprecedented media focus on ‘the trans debate’, street harassment and exploitation of trans and queer people - predominantly trans women - through high camp humour, mirroring the pop culture obsession with speculations about queer celebrities and icons. ",
-    "eventType": "Arts",
-    "keywords": "art, exhibition"
+    "keywords": "art, exhibition",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1477,8 +1477,8 @@
     "endDate": "2025-10-01T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-lit-book-club-october",
     "description": "Featured Book: 99 Erics: A Kat Cataclysm Faux Novel by Julia Serano",
-    "eventType": "Activity",
-    "keywords": "literature"
+    "keywords": "literature",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1501,8 +1501,8 @@
     },
     "endDate": "2025-11-05T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-arthurian-a-magical-evening",
-    "eventType": "Arts",
-    "keywords": "literature"
+    "keywords": "literature",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1525,8 +1525,8 @@
     },
     "endDate": "2025-11-28T21:30:00",
     "url": "https://www.socialrefuge.com/event-details/switched-up-2",
-    "eventType": "Activity",
-    "keywords": "market"
+    "keywords": "market",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1549,8 +1549,8 @@
     },
     "endDate": "2025-10-02T20:30:00",
     "url": "https://www.eventbrite.co.uk/e/yuki-kihara-darwin-in-paradise-camp-preview-and-artist-talk-tickets-1635254603539",
-    "eventType": "Arts",
-    "keywords": "exhibition, talk, art"
+    "keywords": "exhibition, talk, art",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1574,8 +1574,8 @@
     "endDate": "2026-03-01",
     "url": "https://www.whitworth.manchester.ac.uk/whats-on/exhibitions/yukikihara/",
     "description": "A visually stunning exhibition centring Indigenous, queer worlds by Japanese-Sāmoan artist Yuki Kihara.",
-    "eventType": "Arts",
-    "keywords": "exhibition, art"
+    "keywords": "exhibition, art",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1598,7 +1598,7 @@
     },
     "endDate": "2025-09-27T16:00:00",
     "url": "https://lgbt.foundation/event/community-photoshoot-open-call-for-lgbtq-men/",
-    "eventType": "Activity"
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1621,8 +1621,8 @@
     },
     "endDate": "2025-09-26T20:30:00",
     "url": "https://lgbt.foundation/event/september-sober-social-quiz-night/",
-    "eventType": "Activity",
-    "keywords": "quiz"
+    "keywords": "quiz",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1645,7 +1645,7 @@
     },
     "endDate": "2025-10-09T20:00:00",
     "url": "https://www.eventbrite.co.uk/e/community-playlist-live-tickets-1654960534509",
-    "eventType": "Celebration"
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -1666,7 +1666,7 @@
         "addressCountry": "GB"
       }
     },
-    "eventType": "Celebration"
+    "genre": "Celebration"
   },
   {
     "@context": "https://schema.org",
@@ -1689,8 +1689,8 @@
     },
     "endDate": "2025-10-03T20:00:00",
     "url": "https://www.eventbrite.co.uk/e/love-in-a-fcked-up-world-dean-spade-in-conversation-tickets-1573268491409",
-    "eventType": "Arts",
-    "keywords": "literature, talk"
+    "keywords": "literature, talk",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1713,8 +1713,8 @@
     },
     "endDate": "2025-10-05T20:00:00",
     "url": "https://www.eventbrite.co.uk/e/before-gender-eli-erlick-in-conversation-tickets-1520322618879",
-    "eventType": "Arts",
-    "keywords": "literature, talk"
+    "keywords": "literature, talk",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1738,8 +1738,8 @@
     "endDate": "2025-10-18T01:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/The-Carlton-Club-Manchester/The-Carlton-Queer-Clubhouse-2/41381156/#tickets",
     "description": "Celebrating the queers of The Carlton Club with a night filled with Performers, Acts, & Music! A variety show of happenings in a club night setting!",
-    "eventType": "Club",
-    "keywords": "cabaret"
+    "keywords": "cabaret",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1763,7 +1763,7 @@
     "endDate": "2025-10-19T01:00:00",
     "url": "https://www.skiddle.com/whats-on/Salford/Un.Titled-Studio/Transient-Shift/41218172/",
     "description": "A first of it's kind (to the UK) celebration of groundbreaking music produced by transgender and GNC artists.",
-    "eventType": "Club"
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -1787,8 +1787,8 @@
     "endDate": "2026-01-16T22:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/53two/Divina-De-Campo---Back-on-the-Road/41386481/",
     "description": "Drag Race UK star and powerhouse vocalist Divina De Campo joins Ric 'the Piano Guy' Neale for an evening of soaring songs, humour and cabaret",
-    "eventType": "Arts",
-    "keywords": "cabaret"
+    "keywords": "cabaret",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1811,8 +1811,8 @@
     },
     "endDate": "2025-10-08T22:00:00",
     "url": "https://www.fatsoma.com/e/8vw917c6/stripped-sketch",
-    "eventType": "Activity",
-    "keywords": "art, drawing"
+    "keywords": "art, drawing",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1837,14 +1837,14 @@
     "url": "https://www.skiddle.com/whats-on/Manchester/The-Carlton-Club-Manchester/Mondo-Queero-Climax/41391159/",
     "description": "Come join us on Halloween night for Gaspar Noé's choreographed descent into hell!",
     "image": "https://d31fr2pwly4c4s.cloudfront.net/9/a/9/2116119_5c260a20_mondo-queero-climax_400.jpg",
-    "eventType": "Arts",
     "keywords": "film",
     "offers": {
       "@type": "Offer",
       "price": 5,
       "priceCurrency": "GBP",
       "url": "https://www.skiddle.com/whats-on/Manchester/The-Carlton-Club-Manchester/Mondo-Queero-Climax/41391159/"
-    }
+    },
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1867,8 +1867,8 @@
     },
     "endDate": "2025-12-16T23:00:00",
     "url": "https://frogandbucket.ticketsolve.com/ticketbooth/shows/873657628/events/128614749",
-    "eventType": "Arts",
-    "keywords": "comedy, drag"
+    "keywords": "comedy, drag",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1891,8 +1891,8 @@
     },
     "endDate": "2025-10-22T23:00:00",
     "url": "https://frogandbucket.ticketsolve.com/ticketbooth/shows/873633003/events/128574162",
-    "eventType": "Arts",
-    "keywords": "comedy"
+    "keywords": "comedy",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1915,8 +1915,8 @@
     },
     "endDate": "2025-12-02T23:00:00",
     "url": "https://frogandbucket.ticketsolve.com/ticketbooth/shows/873633003/events/128574162",
-    "eventType": "Arts",
-    "keywords": "comedy"
+    "keywords": "comedy",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -1940,7 +1940,7 @@
     "endDate": "2025-10-25T12:30:00",
     "url": "https://lgbt.foundation/event/join-the-lgbtq-equality-panel-open-day-events/",
     "description": "Join the LGBTQ+ Equality Panel and help shape LGBTQ+ inclusive policy in Greater Manchester!",
-    "eventType": "Activity"
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1963,8 +1963,8 @@
     },
     "endDate": "2025-10-11T17:00:00",
     "url": "https://www.socialrefuge.com/event-details/afro-queer-writers-workshop",
-    "eventType": "Activity",
-    "keywords": "literature, create"
+    "keywords": "literature, create",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -1987,8 +1987,8 @@
     },
     "endDate": "2025-10-15T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/burlesque-workshop-2025-10-15-19-00",
-    "eventType": "Activity",
-    "keywords": "burlesque, class"
+    "keywords": "burlesque, class",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2011,8 +2011,8 @@
     },
     "endDate": "2025-10-18T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-comedy-halloween-special",
-    "eventType": "Activity",
-    "keywords": "comedy"
+    "keywords": "comedy",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2035,8 +2035,8 @@
     },
     "endDate": "2025-10-26T15:00:00",
     "url": "https://www.socialrefuge.com/event-details/gay-mens-erotic-fiction-workshop",
-    "eventType": "Activity",
-    "keywords": "literature, create, sexpositive"
+    "keywords": "literature, create, sexpositive",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2059,7 +2059,7 @@
     },
     "endDate": "2025-10-31T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/haunted-homo-halloween-party",
-    "eventType": "Activity"
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2082,8 +2082,8 @@
     },
     "endDate": "2025-11-03T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-in-faith",
-    "eventType": "Activity",
-    "keywords": "literature, talk"
+    "keywords": "literature, talk",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2106,8 +2106,8 @@
     },
     "endDate": "2025-11-10T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/sip-listen-an-evening-of-classical-harp",
-    "eventType": "Arts",
-    "keywords": "classical, fundraiser"
+    "keywords": "classical, fundraiser",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -2130,7 +2130,7 @@
     },
     "endDate": "2025-11-07T22:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-diary",
-    "eventType": "Activity"
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2153,8 +2153,8 @@
     },
     "endDate": "2025-09-28T02:00:00",
     "url": "https://www.instagram.com/p/DOqV9iGjUOl/",
-    "eventType": "Club",
-    "keywords": "fundraiser"
+    "keywords": "fundraiser",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -2177,7 +2177,7 @@
     },
     "endDate": "2025-09-27T02:00:00",
     "url": "https://www.instagram.com/p/DOvkQucjY-d/",
-    "eventType": "Club"
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -2200,8 +2200,8 @@
     },
     "endDate": "2025-11-15T04:00:00",
     "url": "https://ra.co/events/2263533",
-    "eventType": "Club",
-    "keywords": "fundraiser"
+    "keywords": "fundraiser",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -2224,7 +2224,7 @@
     },
     "endDate": "2025-11-01T22:30:00",
     "url": "https://www.fatout.info/oram100",
-    "eventType": "Arts"
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -2247,7 +2247,7 @@
     },
     "endDate": "2025-11-01T18:30:00",
     "url": "https://www.fatout.info/oram100workshop",
-    "eventType": "Activity"
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -2270,8 +2270,8 @@
     },
     "endDate": "2025-11-08T21:30:00",
     "url": "https://www.fatout.info/tsdaemon",
-    "eventType": "Arts",
-    "keywords": "theatre"
+    "keywords": "theatre",
+    "genre": "Arts"
   },
   {
     "@context": "https://schema.org",
@@ -2294,8 +2294,8 @@
     },
     "endDate": "2025-11-09T03:00:00",
     "url": "https://www.fatout.info/kinx-clubsodom",
-    "eventType": "Club",
-    "keywords": "Sexpositive, kink"
+    "keywords": "Sexpositive, kink",
+    "genre": "Club"
   },
   {
     "@context": "https://schema.org",
@@ -2318,7 +2318,7 @@
     },
     "endDate": "2025-10-06T19:30:00",
     "url": "https://www.eventbrite.co.uk/e/black-queer-history-a-community-session-tickets-1682373106249?aff=ebdssbdestsearch",
-    "eventType": "Activity",
-    "keywords": "talk, history"
+    "keywords": "talk, history",
+    "genre": "Activity"
   }
 ]

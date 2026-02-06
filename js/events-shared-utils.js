@@ -50,7 +50,10 @@ export function splitKeywords(keywords) {
   return keywords.split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 }
 
-export function getCategory(ev) { return (ev && (ev.category || ev.eventType)) ? String(ev.category || ev.eventType).trim() : ''; }
+export function getCategory(ev) {
+  const v = ev && (ev.category || ev.genre || ev.eventType);
+  return v ? String(v).trim() : '';
+}
 export function getEventUrl(ev) { return ev && ev.url ? String(ev.url) : ''; }
 export function getEventImage(ev) { return ev && ev.image ? ev.image : ''; }
 export function getEventPrice(ev) {

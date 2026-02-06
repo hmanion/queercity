@@ -27,14 +27,14 @@
     },
     "url": "https://www.eventbrite.com/e/queer-bachata-class-and-social-tickets-669074689407",
     "description": "Free weekly dance class for the LGBTQ+ community in the centre of Manchester",
-    "eventType": "Activity",
     "keywords": "dance, class",
     "offers": {
       "@type": "Offer",
       "price": 0,
       "priceCurrency": "GBP",
       "url": "https://www.eventbrite.com/e/queer-bachata-class-and-social-tickets-669074689407"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -64,14 +64,14 @@
     },
     "url": "https://www.meetup.com/manchester-lgbtq-meetup/events/310653930/?eventOrigin=group_upcoming_events",
     "description": "Did you know that being part of a community makes us feel happier? 🏳️‍⚧️🏳️‍🌈\n\nWhether you’re new to Manchester or you’ve been here a while, yours is here waiting to welcome you with open arms 🤗",
-    "eventType": "Activity",
     "keywords": "social",
     "offers": {
       "@type": "Offer",
       "price": 0,
       "priceCurrency": "GBP",
       "url": "https://www.meetup.com/manchester-lgbtq-meetup/events/310653930/?eventOrigin=group_upcoming_events"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -100,8 +100,8 @@
       "byDay": "https://schema.org/Monday"
     },
     "url": "https://ncbadminton.co.uk",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -130,8 +130,8 @@
       "byDay": "https://schema.org/Thursday"
     },
     "url": "https://ncbadminton.co.uk",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -160,8 +160,8 @@
       "byDay": "https://schema.org/Saturday"
     },
     "url": "https://ncbadminton.co.uk",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -190,14 +190,14 @@
       "byDay": "1SA"
     },
     "url": "https://manchesterleathermen.com",
-    "eventType": "Sexy",
     "keywords": "kink, leather",
     "offers": {
       "@type": "Offer",
       "price": 0,
       "priceCurrency": "GBP",
       "url": "https://manchesterleathermen.com"
-    }
+    },
+    "genre": "Sexy"
   },
   {
     "@context": "https://schema.org",
@@ -226,8 +226,8 @@
       "byDay": "2TH"
     },
     "url": "https://www.rainbownoirmcr.com",
-    "eventType": "Activity",
-    "keywords": "social"
+    "keywords": "social",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -256,8 +256,8 @@
       "byDay": "https://schema.org/Tuesday"
     },
     "url": "http://www.manchesterprairiedogs.co.uk",
-    "eventType": "Activity",
-    "keywords": "dance"
+    "keywords": "dance",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -286,8 +286,8 @@
       "byDay": "https://schema.org/Thursday"
     },
     "url": "https://www.manchesterfrontrunners.org/thursday-run",
-    "eventType": "Activity",
-    "keywords": "sport, outside"
+    "keywords": "sport, outside",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -316,8 +316,8 @@
       "byDay": "https://schema.org/Saturday"
     },
     "url": "https://www.manchesterfrontrunners.org/saturday-run",
-    "eventType": "Activity",
-    "keywords": "sport, outside"
+    "keywords": "sport, outside",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -346,8 +346,8 @@
       "byDay": "https://schema.org/Tuesday"
     },
     "url": "https://www.manchesterfrontrunners.org/tuesday-run",
-    "eventType": "Activity",
-    "keywords": "sport, outside"
+    "keywords": "sport, outside",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -376,8 +376,8 @@
       "byDay": "-1WE"
     },
     "url": "https://gaycitybowlers.com",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -406,8 +406,8 @@
       "byDay": "3WE"
     },
     "url": "https://gaycitybowlers.com",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -436,8 +436,8 @@
       "byDay": "https://schema.org/Monday"
     },
     "url": "https://www.manchesterproudchorus.org",
-    "eventType": "Activity",
-    "keywords": "sing"
+    "keywords": "sing",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -466,8 +466,8 @@
       "byDay": "https://schema.org/Saturday"
     },
     "url": "https://linktr.ee/villagespartans",
-    "eventType": "Activity",
-    "keywords": "sport, outside"
+    "keywords": "sport, outside",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -496,8 +496,8 @@
       "byDay": "1MO"
     },
     "url": "https://linktr.ee/villagespartans",
-    "eventType": "Activity",
-    "keywords": "sport, outside"
+    "keywords": "sport, outside",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -526,8 +526,8 @@
       "byDay": "https://schema.org/Wednesday"
     },
     "url": "https://www.outdoorlads.com/events?event_type%5B13%5D=13&region%5B51%5D=51&location_proximity_center%5Bcoordinates%5D%5Blat%5D=&location_proximity_center%5Bcoordinates%5D%5Blng%5D=&location_proximity_center%5Bgeocoder%5D%5Bgeolocation_geocoder_address%5D=&location_proximity=0&start_date=2025-09-11&end_date=",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -556,14 +556,14 @@
       "byDay": "1SA"
     },
     "url": "https://www.socialrefuge.com/event-list",
-    "eventType": "Activity",
     "keywords": "cabaret, sing",
     "offers": {
       "@type": "Offer",
       "price": 5,
       "priceCurrency": "GBP",
       "url": "https://www.socialrefuge.com/event-list"
-    }
+    },
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -592,8 +592,8 @@
       "byDay": "https://schema.org/Sunday"
     },
     "url": "thesundayboys.com",
-    "eventType": "Activity",
-    "keywords": "sing"
+    "keywords": "sing",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -622,8 +622,8 @@
       "byDay": "3SA"
     },
     "url": "http://clublocked.com",
-    "eventType": "Sexy",
-    "keywords": "kink, sexpositive"
+    "keywords": "kink, sexpositive",
+    "genre": "Sexy"
   },
   {
     "@context": "https://schema.org",
@@ -652,8 +652,8 @@
       "byDay": "https://schema.org/Sunday"
     },
     "url": "https://www.socialrefuge.com/event-details/run-with-pride-2025-09-21-10-00",
-    "eventType": "Activity",
-    "keywords": "sport, outside"
+    "keywords": "sport, outside",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -682,8 +682,8 @@
       "byDay": "https://schema.org/Monday"
     },
     "url": "https://www.gay-gordons-manchester.co.uk/index.html",
-    "eventType": "Activity",
-    "keywords": "dance, class"
+    "keywords": "dance, class",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -712,8 +712,8 @@
       "byDay": "https://schema.org/Wednesday"
     },
     "url": "https://www.instagram.com/transclimbingmcr/",
-    "eventType": "Activity",
-    "keywords": "sport"
+    "keywords": "sport",
+    "genre": "Activity"
   },
   {
     "@context": "https://schema.org",
@@ -742,8 +742,8 @@
       "byDay": "https://schema.org/Wednesday"
     },
     "url": "https://www.eventbrite.co.uk/e/queer-co-working-the-proud-trust-tickets-657721622077",
-    "eventType": "Life",
-    "keywords": "coworking"
+    "keywords": "coworking",
+    "genre": "Life"
   },
   {
     "@context": "https://schema.org",
@@ -772,7 +772,7 @@
       "byDay": "https://schema.org/Friday"
     },
     "url": "https://www.eventbrite.co.uk/e/queer-co-working-seesaw-tickets-1290357316469?aff=oddtdtcreator",
-    "eventType": "Life",
-    "keywords": "coworking"
+    "keywords": "coworking",
+    "genre": "Life"
   }
 ]
