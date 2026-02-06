@@ -4,11 +4,7 @@
 // IMPORTANT: delete this file after running.
 
 // ====== CONFIG ======
-$DB_HOST = 'localhost';        // Ionos typically allows local DB access via localhost from the web host
-$DB_PORT = 3306;
-$DB_NAME = 'dbs15283861';
-$DB_USER = 'dbu4246002';
-$DB_PASS = 'rancEb-tuktor-kyfqi4';
+$config = require __DIR__ . '/../config/db.php';
 
 $CITY_NAME = 'Manchester';
 $CITY_SLUG = 'manchester';
@@ -94,8 +90,8 @@ function load_json($path) {
 }
 
 // ====== MAIN ======
-$dsn = "mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME;charset=utf8mb4";
-$pdo = new PDO($dsn, $DB_USER, $DB_PASS, [
+$dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4";
+$pdo = new PDO($dsn, $config['user'], $config['pass'], [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);

@@ -22,9 +22,11 @@ import {
   getEventStartTime,
   getEventEndTime,
   getTagsList,
+  toISODate,
 } from './events-shared-utils.js';
 
 const FUTURE_MONTHS_AHEAD = 3;
+const LOOKBACK_DAYS = 0;
 
 function formatDateTime(event) {
   const start = formatDate(event.startDate);
@@ -323,11 +325,40 @@ function setTitleCountForList(listEl, count) {
 function monthKey(date) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; }
 function monthTitle(date) { return date.toLocaleString('en-GB', { month: 'long', year: 'numeric' }); }
 
+const now = new Date();
+const lookback = new Date(now);
+lookback.setDate(now.getDate() - LOOKBACK_DAYS);
+
+const futureMonths = Array.from({ length: Math.max(1, FUTURE_MONTHS_AHEAD) }, (_, index) => {
+  const date = new Date(now.getFullYear(), now.getMonth() + (index + 1), 1);
+  return {
+    date,
+    key: monthKey(date),
+    title: index === 0 ? `Next Month - ${date.toLocaleString('en-GB', { month: 'long' })}` : monthTitle(date),
+  };
+});
+
+const endRange = endOfMonth(futureMonths[futureMonths.length - 1].date);
+const fromParam = toISODate(lookback);
+const toParam = toISODate(endRange);
+
+function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
+  return fetch(primaryUrl)
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
+    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
+    .catch(() => []);
+}
+
 Promise.all([
-  fetch('output.json').then((r) => (r.ok ? r.json() : [])).catch(() => []),
-  fetch('directory.json').then((r) => (r.ok ? r.json() : [])).catch(() => []),
+  fetchJsonWithFallback(
+    `api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`,
+    'output.json',
+  ),
+  fetchJsonWithFallback(
+    'api/directory.php?limit=2000',
+    'directory.json',
+  ),
 ]).then(([oneOffData, directoryData]) => {
-  const now = new Date();
   const todayStart = startOfDay(now);
   const todayEnd = endOfDay(now);
   const tomorrow = new Date(now);
@@ -337,17 +368,6 @@ Promise.all([
   const thisMonthName = now.toLocaleString('en-GB', { month: 'long' });
   const startWeek = startOfWeek(now);
   const endWeek = endOfWeek(now);
-
-  const futureMonths = Array.from({ length: Math.max(1, FUTURE_MONTHS_AHEAD) }, (_, index) => {
-    const date = new Date(now.getFullYear(), now.getMonth() + (index + 1), 1);
-    return {
-      date,
-      key: monthKey(date),
-      title: index === 0 ? `Next Month - ${date.toLocaleString('en-GB', { month: 'long' })}` : monthTitle(date),
-    };
-  });
-
-  const endRange = endOfMonth(futureMonths[futureMonths.length - 1].date);
 
   const singlesRaw = (oneOffData || []).filter((e) => e && e.startDate).map((e) => ({ ...e }));
   const recurringRaw = expandAllRecurring(directoryData || [], startWeek, endRange);

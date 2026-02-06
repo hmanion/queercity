@@ -94,8 +94,14 @@ function sortByTimeThenName(arr) {
   });
 }
 
-fetch('../directory.json')
-  .then(r => r.json())
+function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
+  return fetch(primaryUrl)
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
+    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
+    .catch(() => []);
+}
+
+fetchJsonWithFallback('../api/directory.php?limit=2000', '../directory.json')
   .then(directory => {
     const container = document.getElementById('weekdaylist');
     if (!container) return;
