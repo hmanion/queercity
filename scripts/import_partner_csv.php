@@ -5,11 +5,7 @@
 // Run it once via browser, then delete this script.
 
 // ====== CONFIG ======
-$DB_HOST = 'db5019616289.hosting-data.io';
-$DB_PORT = 3306;
-$DB_NAME = 'dbs15283861';
-$DB_USER = 'dbu4246002';
-$DB_PASS = 'rancEb-tuktor-kyfqi4';
+$config = require __DIR__ . '/../config/db.php';
 
 $CITY_NAME = 'Manchester';
 $CITY_SLUG = 'manchester';
@@ -70,8 +66,8 @@ if ($REQUIRED_TOKEN === 'REPLACE_WITH_SECRET_TOKEN' || $provided !== $REQUIRED_T
     exit(1);
 }
 
-$dsn = "mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME;charset=utf8mb4";
-$pdo = new PDO($dsn, $DB_USER, $DB_PASS, [
+$dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4";
+$pdo = new PDO($dsn, $config['user'], $config['pass'], [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
 ]);

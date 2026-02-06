@@ -1,16 +1,12 @@
 <?php
 // output.php - one-off events JSON (Schema.org-like) from MySQL
 
-$DB_HOST = 'db5019616289.hosting-data.io';
-$DB_PORT = 3306;
-$DB_NAME = 'dbs15283861';
-$DB_USER = 'dbu4246002';
-$DB_PASS = 'rancEb-tuktor-kyfqi4';
+$config = require __DIR__ . '/../config/db.php';
 
 $pdo = new PDO(
-    "mysql:host=$DB_HOST;port=$DB_PORT;dbname=$DB_NAME;charset=utf8mb4",
-    $DB_USER,
-    $DB_PASS,
+    "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4",
+    $config['user'],
+    $config['pass'],
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
 );
 
