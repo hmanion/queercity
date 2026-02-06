@@ -439,17 +439,18 @@ Promise.all([
       if (section) section.dataset.baseTitle = title;
       return list;
     };
-
+    const todayEl = make('Today', 'section-today');
+    const tomorrowEl = make('Tomorrow', 'section-tomorrow');
+    const weekListEl = make('Rest of this week', 'section-this-week');
+    const restListEl = make(`Rest of ${thisMonthName}`, 'section-rest-of-month');
     const monthLists = {};
-    for (const month of futureMonths) {
-      monthLists[month.key] = make(month.title, `section-month-${month.key}`);
-    }
+    for (const month of futureMonths) monthLists[month.key] = make(month.title, `section-month-${month.key}`);
 
     return {
-      todayEl: make('Today', 'section-today'),
-      tomorrowEl: make('Tomorrow', 'section-tomorrow'),
-      weekListEl: make('Rest of this week', 'section-this-week'),
-      restListEl: make(`Rest of ${thisMonthName}`, 'section-rest-of-month'),
+      todayEl,
+      tomorrowEl,
+      weekListEl,
+      restListEl,
       monthListEls: monthLists,
     };
   }
@@ -464,9 +465,10 @@ Promise.all([
       return selectedCats.has(getCategory(ev));
     };
     const byRecurring = (ev) => (showRecurring ? true : !ev._isRecurring);
+    const byRecurringAlwaysShown = () => true;
 
-    const preTagToday = base.today.filter(byCategory).filter(byRecurring);
-    const preTagTomorrow = base.tomorrow.filter(byCategory).filter(byRecurring);
+    const preTagToday = base.today.filter(byCategory).filter(byRecurringAlwaysShown);
+    const preTagTomorrow = base.tomorrow.filter(byCategory).filter(byRecurringAlwaysShown);
     const preTagWeek = base.thisWeek.filter(byCategory).filter(byRecurring);
     const preTagRest = base.restOfMonth.filter(byCategory).filter(byRecurring);
     const preTagMonths = base.months.map((m) => ({ key: m.key, items: m.items.filter(byCategory).filter(byRecurring) }));
