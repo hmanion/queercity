@@ -6,7 +6,10 @@
 import {
   SEP_EN, EN_DASH,
   formatTimeRange, parseTimeToMinutes,
-  formatOccurrenceDisplay, createSection
+  formatOccurrenceDisplay, createSection,
+  getCategory, getLocationParts, getEventUrl,
+  getEventStartTime, getEventEndTime,
+  getRecurringFrequency, getRecurringOccurrence, getRecurringDayWeek
 } from './events-shared-utils.js';
 
 function normalizeWeekday(s) { return String(s || '').trim().toLowerCase(); }
@@ -28,10 +31,11 @@ function buildEventBox(event, index) {
 
   const eventTime = document.createElement('div');
   eventTime.className = 'date';
-  eventTime.textContent = formatTimeRange(event.startTime, event.endTime, SEP_EN);
+  eventTime.textContent = formatTimeRange(getEventStartTime(event), getEventEndTime(event), SEP_EN);
 
   const link = document.createElement('a');
-  if (event.url) { link.href = event.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+  const url = getEventUrl(event);
+  if (url) { link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
 
   const nameDiv = document.createElement('div');
   nameDiv.className = 'name';
@@ -40,15 +44,15 @@ function buildEventBox(event, index) {
   link.appendChild(nameDiv);
 
   const catDiv = document.createElement('div');
-  catDiv.className = 'category ' + (event.category || '');
+  const category = getCategory(event);
+  catDiv.className = 'category ' + category;
   catDiv.id = `weekdayCategory${i}`;
-  catDiv.textContent = event.category || '';
+  catDiv.textContent = category;
 
   const locDiv = document.createElement('div');
   locDiv.className = 'location';
   locDiv.id = `weekdayLocation${i}`;
-  const parts = [event.locName, event.locStreet, event.locTown, event.locPost].filter(Boolean);
-  locDiv.textContent = parts.join(', ');
+  locDiv.textContent = getLocationParts(event).join(', ');
 
   eventBoxTop.appendChild(eventTime);
   eventBoxTop.appendChild(link);
@@ -56,11 +60,12 @@ function buildEventBox(event, index) {
   eventBox.appendChild(eventBoxTop);
   eventBoxBottom.appendChild(catDiv);
 
-  if (event.frequency) {
+  const freq = getRecurringFrequency(event);
+  if (freq) {
     const label = document.createElement('div');
     label.className = 'category recurring';
-    const occ = formatOccurrenceDisplay(event.occurrence);
-    label.textContent = occ ? `${event.frequency} ${EN_DASH} ${occ}` : String(event.frequency);
+    const occ = formatOccurrenceDisplay(getRecurringOccurrence(event));
+    label.textContent = occ ? `${freq} ${EN_DASH} ${occ}` : String(freq);
     eventBoxBottom.appendChild(label);
   }
 
@@ -71,7 +76,7 @@ function buildEventBox(event, index) {
 function groupByWeekday(events) {
   const groups = { monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: [] };
   (events || []).forEach(ev => {
-    const wd = normalizeWeekday(ev.dayWeek);
+    const wd = normalizeWeekday(getRecurringDayWeek(ev));
     if (Object.prototype.hasOwnProperty.call(groups, wd)) groups[wd].push(ev);
   });
   return groups;
@@ -79,8 +84,8 @@ function groupByWeekday(events) {
 
 function sortByTimeThenName(arr) {
   return (arr || []).slice().sort((a, b) => {
-    const ma = parseTimeToMinutes(a.startTime);
-    const mb = parseTimeToMinutes(b.startTime);
+    const ma = parseTimeToMinutes(getEventStartTime(a));
+    const mb = parseTimeToMinutes(getEventStartTime(b));
     if (Number.isNaN(ma) && Number.isNaN(mb)) return String(a.name||'').localeCompare(String(b.name||''));
     if (Number.isNaN(ma)) return 1;
     if (Number.isNaN(mb)) return -1;

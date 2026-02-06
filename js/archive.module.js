@@ -17,21 +17,24 @@ import {
   // event helper
   getEventEndDate,
   // small DOM helper
-  createSection
+  createSection,
+  getEventStartTime, getEventEndTime, getCategory, getEventUrl, getLocationParts
 } from './events-shared-utils.js';
 
 function formatDateTime(ev) {
   const start = formatDate(ev.startDate);
   if (!start) return '';
-  if (ev.endDate && !ev.endTime) {
+  const startTime = getEventStartTime(ev);
+  const endTime = getEventEndTime(ev);
+  if (ev.endDate && !endTime) {
     const end = formatDate(ev.endDate);
     return `${start}${SEP_EN}${end}`; // e.g., "Mon 1 Sep – Thu 4 Sep"
   }
-  if (ev.startTime && ev.endTime) {
-    return `${start} ${formatTimeRange(ev.startTime, ev.endTime, SEP_EN)}`; // e.g., "Mon 1 Sep 19:00 – 21:00"
+  if (startTime && endTime) {
+    return `${start} ${formatTimeRange(startTime, endTime, SEP_EN)}`; // e.g., "Mon 1 Sep 19:00 – 21:00"
   }
-  if (ev.startTime && !ev.endTime) {
-    return `${start} ${ev.startTime}`;
+  if (startTime && !endTime) {
+    return `${start} ${startTime}`;
   }
   return start;
 }
@@ -61,7 +64,8 @@ function buildEventBox(ev, idx) {
   dateDiv.textContent = formatDateTime(ev);
 
   const link = document.createElement('a');
-  if (ev.url) { link.href = ev.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+  const url = getEventUrl(ev);
+  if (url) { link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
   const nameDiv = document.createElement('div');
   nameDiv.className = 'name';
   nameDiv.textContent = ev.name || 'Untitled event';
@@ -69,16 +73,16 @@ function buildEventBox(ev, idx) {
 
   const locDiv = document.createElement('div');
   locDiv.className = 'location';
-  const parts = [ev.locName, ev.locStreet, ev.locTown, ev.locPost].filter(Boolean);
-  locDiv.textContent = parts.join(', ');
+  locDiv.textContent = getLocationParts(ev).join(', ');
 
   top.appendChild(link);
   top.appendChild(dateDiv);
   top.appendChild(locDiv);
 
   const catDiv = document.createElement('div');
-  catDiv.className = 'category ' + (ev.category || '');
-  catDiv.textContent = ev.category || '';
+  const category = getCategory(ev);
+  catDiv.className = 'category ' + category;
+  catDiv.textContent = category;
   bottom.appendChild(catDiv);
 
   eventBox.appendChild(top);

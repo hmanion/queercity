@@ -13,11 +13,14 @@ export const SEP_EM = NBSP + EM_DASH + NBSP; // alt sep if you prefer em dash
 // Date helpers (local, day-precise)
 export function parseISODateLocal(iso) {
   if (!iso || typeof iso !== 'string') return null;
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!m) return null;
-  const y = Number(m[1]), mo = Number(m[2]) - 1, d = Number(m[3]);
-  const dt = new Date(y, mo, d, 0, 0, 0, 0);
-  return Number.isNaN(dt.getTime()) ? null : dt;
+  const dateOnly = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (dateOnly) {
+    const y = Number(dateOnly[1]), mo = Number(dateOnly[2]) - 1, d = Number(dateOnly[3]);
+    const dt = new Date(y, mo, d, 0, 0, 0, 0);
+    return Number.isNaN(dt.getTime()) ? null : dt;
+  }
+  const dateTime = new Date(iso);
+  return Number.isNaN(dateTime.getTime()) ? null : dateTime;
 }
 
 export const startOfDay = (date) => { const d = new Date(date); d.setHours(0,0,0,0); return d; };
@@ -35,6 +38,91 @@ export function formatDate(dateStr, locale='en-GB') {
   return new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' }).format(d);
 }
 
+export function toHHMM(t) {
+  if (!t || typeof t !== 'string') return '';
+  const m = t.match(/^(\d{2}):(\d{2})(?::\d{2})?$/);
+  return m ? `${m[1]}:${m[2]}` : t;
+}
+
+export function splitKeywords(keywords) {
+  if (Array.isArray(keywords)) return keywords.map(x => String(x).trim().toLowerCase()).filter(Boolean);
+  if (!keywords || typeof keywords !== 'string') return [];
+  return keywords.split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
+}
+
+export function getCategory(ev) { return (ev && (ev.category || ev.eventType)) ? String(ev.category || ev.eventType).trim() : ''; }
+export function getEventUrl(ev) { return ev && ev.url ? String(ev.url) : ''; }
+export function getEventImage(ev) { return ev && ev.image ? ev.image : ''; }
+export function getEventPrice(ev) {
+  if (!ev) return '';
+  if (ev.offers && ev.offers.price != null && ev.offers.price !== '') return String(ev.offers.price);
+  return ev.price != null ? String(ev.price) : '';
+}
+export function getEventStartTime(ev) {
+  if (!ev) return '';
+  if (ev.startTime) return toHHMM(String(ev.startTime));
+  if (ev.eventSchedule && ev.eventSchedule.startTime) return toHHMM(String(ev.eventSchedule.startTime));
+  const s = String(ev.startDate || '');
+  const m = s.match(/T(\d{2}:\d{2})(?::\d{2})?/);
+  return m ? m[1] : '';
+}
+export function getEventEndTime(ev) {
+  if (!ev) return '';
+  if (ev.endTime) return toHHMM(String(ev.endTime));
+  if (ev.eventSchedule && ev.eventSchedule.endTime) return toHHMM(String(ev.eventSchedule.endTime));
+  const s = String(ev.endDate || '');
+  const m = s.match(/T(\d{2}:\d{2})(?::\d{2})?/);
+  return m ? m[1] : '';
+}
+export function getLocationParts(ev) {
+  if (!ev) return [];
+  if (ev.locName || ev.locStreet || ev.locTown || ev.locPost) return [ev.locName, ev.locStreet, ev.locTown, ev.locPost].filter(Boolean);
+  const loc = ev.location || {};
+  const addr = loc.address || {};
+  return [loc.name, addr.streetAddress, addr.addressLocality, addr.postalCode].filter(Boolean);
+}
+export function getTagsList(ev) {
+  if (!ev) return [];
+  if (Array.isArray(ev.tags)) return ev.tags.map(t => String(t).trim().toLowerCase()).filter(Boolean);
+  return splitKeywords(ev.keywords);
+}
+export function getRecurringFrequency(ev) {
+  if (!ev) return '';
+  if (ev.frequency) return String(ev.frequency);
+  const rf = ev.eventSchedule && ev.eventSchedule.repeatFrequency ? String(ev.eventSchedule.repeatFrequency) : '';
+  if (rf === 'P1W') return 'Weekly';
+  if (rf === 'P2W') return 'Fortnightly';
+  if (rf === 'P1M') return 'Monthly';
+  return rf;
+}
+export function getRecurringDayWeek(ev) {
+  if (!ev) return '';
+  if (ev.dayWeek) return String(ev.dayWeek);
+  const byDay = ev.eventSchedule && ev.eventSchedule.byDay ? String(ev.eventSchedule.byDay) : '';
+  const map = { Monday:'Monday', Tuesday:'Tuesday', Wednesday:'Wednesday', Thursday:'Thursday', Friday:'Friday', Saturday:'Saturday', Sunday:'Sunday' };
+  const mUrl = byDay.match(/schema\.org\/([A-Za-z]+)/);
+  if (mUrl && map[mUrl[1]]) return map[mUrl[1]];
+  const mTok = byDay.match(/([A-Z]{2})$/);
+  if (!mTok) return '';
+  const rev = { MO:'Monday', TU:'Tuesday', WE:'Wednesday', TH:'Thursday', FR:'Friday', SA:'Saturday', SU:'Sunday' };
+  return rev[mTok[1]] || '';
+}
+export function getRecurringOccurrence(ev) {
+  if (!ev) return '';
+  if (ev.occurrence) return String(ev.occurrence);
+  const byDay = ev.eventSchedule && ev.eventSchedule.byDay ? String(ev.eventSchedule.byDay) : '';
+  const m = byDay.match(/^(-?\d+)[A-Z]{2}$/);
+  if (!m) return '';
+  const n = Number(m[1]);
+  if (n === 1) return 'first';
+  if (n === 2) return 'second';
+  if (n === 3) return 'third';
+  if (n === 4) return 'fourth';
+  if (n === 5) return 'fifth';
+  if (n === -1) return 'last';
+  return '';
+}
+
 export function getEventStartDate(ev){ return ev && ev.startDate ? parseISODateLocal(ev.startDate) : null; }
 export function getEventEndDate(ev){ if(!ev) return null; return ev.endDate ? parseISODateLocal(ev.endDate) : (ev.startDate ? parseISODateLocal(ev.startDate) : null); }
 export function eventOverlaps(ev, from, to){ const s=getEventStartDate(ev), e=getEventEndDate(ev); return !!(s && e && e>=from && s<=to); }
@@ -45,9 +133,9 @@ export function parseTimeToMinutes(t){ if(!t || typeof t!=="string") return NaN;
 export function formatTimeRange(startTime, endTime, sep=SEP_EN){ const hasS=!!startTime, hasE=!!endTime; if(hasS&&hasE) return String(startTime)+sep+String(endTime); if(hasS) return String(startTime); if(hasE) return String(endTime); return ''; }
 
 // Tag/category helpers
-export function getUniqueCategories(events){ const set=new Set(); (events||[]).forEach(e=>{ if(e && e.category) set.add(String(e.category).trim()); }); return Array.from(set).sort((a,b)=>a.localeCompare(b)); }
-export function getUniqueTags(events){ const set=new Set(); (events||[]).forEach(e=>{ if(e && Array.isArray(e.tags)) e.tags.forEach(t=>{ if(t!=null) set.add(String(t).trim().toLowerCase()); }); }); return Array.from(set).sort((a,b)=>a.localeCompare(b)); }
-export function eventKey(ev){ return [ev?.name||'', ev?.startDate||'', ev?.locName||'', ev?.locPost||''].join('|').toLowerCase(); }
+export function getUniqueCategories(events){ const set=new Set(); (events||[]).forEach(e=>{ const c=getCategory(e); if(c) set.add(c); }); return Array.from(set).sort((a,b)=>a.localeCompare(b)); }
+export function getUniqueTags(events){ const set=new Set(); (events||[]).forEach(e=>{ getTagsList(e).forEach(t=>set.add(t)); }); return Array.from(set).sort((a,b)=>a.localeCompare(b)); }
+export function eventKey(ev){ const parts=getLocationParts(ev); return [ev?.name||'', ev?.startDate||'', parts[0]||'', parts[3]||''].join('|').toLowerCase(); }
 
 // Recurrence helpers
 export const DAY_TO_INDEX = { sunday:0, monday:1, tuesday:2, wednesday:3, thursday:4, friday:5, saturday:6 };
@@ -83,40 +171,40 @@ export function formatOccurrenceDisplay(occurrence){
 }
 
 export function expandRecurringWeekly(rec, rangeStart, rangeEnd){
-  const out=[]; const dayIdx = DAY_TO_INDEX[String(rec.dayWeek||'').toLowerCase()]; if(dayIdx==null) return out; let cursor = nextOnOrAfterDay(rangeStart, dayIdx);
-  while(cursor <= rangeEnd){ out.push({ ...rec, startDate: toISODate(cursor), _isRecurring:true, _recurrenceFrequency: rec.frequency }); cursor = new Date(cursor); cursor.setDate(cursor.getDate()+7); }
+  const out=[]; const dayIdx = DAY_TO_INDEX[String(getRecurringDayWeek(rec)||'').toLowerCase()]; if(dayIdx==null) return out; let cursor = nextOnOrAfterDay(rangeStart, dayIdx);
+  while(cursor <= rangeEnd){ out.push({ ...rec, startDate: toISODate(cursor), _isRecurring:true, _recurrenceFrequency: getRecurringFrequency(rec) }); cursor = new Date(cursor); cursor.setDate(cursor.getDate()+7); }
   return out;
 }
 
 export function expandRecurringFortnightly(rec, rangeStart, rangeEnd){
-  const out=[]; const dayIdx = DAY_TO_INDEX[String(rec.dayWeek||'').toLowerCase()]; if(dayIdx==null) return out;
+  const out=[]; const dayIdx = DAY_TO_INDEX[String(getRecurringDayWeek(rec)||'').toLowerCase()]; if(dayIdx==null) return out;
   const anchorStr = rec.startDate || rec.anchorDate; let firstOccur;
   if(anchorStr){ const anchor = parseISODateLocal(anchorStr); if(anchor){ firstOccur = nextOnOrAfterDay(anchor, dayIdx); } }
   if(!firstOccur){ firstOccur = nextOnOrAfterDay(rangeStart, dayIdx); }
   let cursor = nextOnOrAfterDay(rangeStart, dayIdx);
   if(firstOccur){ const diffDays = Math.floor((cursor - firstOccur)/(24*3600*1000)); const mod = ((diffDays % 14) + 14) % 14; if(mod!==0){ cursor = new Date(cursor); cursor.setDate(cursor.getDate() + (14 - mod)); } }
-  while(cursor <= rangeEnd){ out.push({ ...rec, startDate: toISODate(cursor), _isRecurring:true, _recurrenceFrequency: rec.frequency || 'Fortnightly' }); cursor = new Date(cursor); cursor.setDate(cursor.getDate()+14); }
+  while(cursor <= rangeEnd){ out.push({ ...rec, startDate: toISODate(cursor), _isRecurring:true, _recurrenceFrequency: getRecurringFrequency(rec) || 'Fortnightly' }); cursor = new Date(cursor); cursor.setDate(cursor.getDate()+14); }
   return out;
 }
 
 export function expandRecurringMonthlySingle(rec, rangeStart, rangeEnd){
-  const out=[]; const dayIdx = DAY_TO_INDEX[String(rec.dayWeek||'').toLowerCase()]; const occKey=String(rec.occurrence||'').toLowerCase(); const occ = ORD_TO_NUM[occKey]; if(dayIdx==null || !occ) return out; const cursor=new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1); cursor.setHours(0,0,0,0);
-  while(cursor <= rangeEnd){ const y=cursor.getFullYear(), m=cursor.getMonth(); const d=nthWeekdayOfMonth(y,m,dayIdx,occ); if(d && d>=rangeStart && d<=rangeEnd){ out.push({ ...rec, startDate: toISODate(d), _isRecurring:true, _recurrenceFrequency: rec.frequency }); } cursor.setMonth(cursor.getMonth()+1,1); }
+  const out=[]; const dayIdx = DAY_TO_INDEX[String(getRecurringDayWeek(rec)||'').toLowerCase()]; const occKey=String(getRecurringOccurrence(rec)||'').toLowerCase(); const occ = ORD_TO_NUM[occKey]; if(dayIdx==null || !occ) return out; const cursor=new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1); cursor.setHours(0,0,0,0);
+  while(cursor <= rangeEnd){ const y=cursor.getFullYear(), m=cursor.getMonth(); const d=nthWeekdayOfMonth(y,m,dayIdx,occ); if(d && d>=rangeStart && d<=rangeEnd){ out.push({ ...rec, startDate: toISODate(d), _isRecurring:true, _recurrenceFrequency: getRecurringFrequency(rec) }); } cursor.setMonth(cursor.getMonth()+1,1); }
   return out;
 }
 
 export function expandRecurringMonthlyMulti(rec, rangeStart, rangeEnd){
-  const out=[]; const dayIdx = DAY_TO_INDEX[String(rec.dayWeek||'').toLowerCase()]; const occList = parseOccurrenceList(rec.occurrence); if(dayIdx==null || !occList.length) return out; const cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1); cursor.setHours(0,0,0,0);
-  while(cursor <= rangeEnd){ const y=cursor.getFullYear(), m=cursor.getMonth(); for(const occ of occList){ const d=nthWeekdayOfMonth(y,m,dayIdx,occ); if(d && d>=rangeStart && d<=rangeEnd){ out.push({ ...rec, startDate: toISODate(d), _isRecurring:true, _recurrenceFrequency: rec.frequency }); } } cursor.setMonth(cursor.getMonth()+1,1); }
+  const out=[]; const dayIdx = DAY_TO_INDEX[String(getRecurringDayWeek(rec)||'').toLowerCase()]; const occList = parseOccurrenceList(getRecurringOccurrence(rec)); if(dayIdx==null || !occList.length) return out; const cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1); cursor.setHours(0,0,0,0);
+  while(cursor <= rangeEnd){ const y=cursor.getFullYear(), m=cursor.getMonth(); for(const occ of occList){ const d=nthWeekdayOfMonth(y,m,dayIdx,occ); if(d && d>=rangeStart && d<=rangeEnd){ out.push({ ...rec, startDate: toISODate(d), _isRecurring:true, _recurrenceFrequency: getRecurringFrequency(rec) }); } } cursor.setMonth(cursor.getMonth()+1,1); }
   return out;
 }
 
 export function expandRecurringEvent(rec, rangeStart, rangeEnd){
-  const freq = String(rec.frequency||'').toLowerCase();
+  const freq = String(getRecurringFrequency(rec)||'').toLowerCase();
   if(freq==='weekly') return expandRecurringWeekly(rec, rangeStart, rangeEnd);
   if(freq==='fortnightly' || freq==='biweekly') return expandRecurringFortnightly(rec, rangeStart, rangeEnd);
   if(freq==='monthly'){
-    const occList = parseOccurrenceList(rec.occurrence);
+    const occList = parseOccurrenceList(getRecurringOccurrence(rec));
     return (occList.length>1) ? expandRecurringMonthlyMulti(rec, rangeStart, rangeEnd)
                               : expandRecurringMonthlySingle(rec, rangeStart, rangeEnd);
   }
