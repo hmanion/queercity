@@ -2,7 +2,7 @@
 // Import partner CSV from a directory (expects exactly one .csv file) into MySQL.
 // Skips matched events and logs audit rows. Deletes CSV after successful import.
 // Upload this script into: harrymanion.co.uk/queercity/csvimport (same folder as the CSV).
-// Run it once via browser, then delete this script.
+// Run it once via browser at: /queercity/csvimport/import.php, then delete this script.
 
 // ====== CONFIG ======
 $config = require __DIR__ . '/../config/db.php';
@@ -15,7 +15,7 @@ $CITY_TIMEZONE = 'Europe/London';
 
 $CSV_DIR = __DIR__; // directory containing the CSV (and this script)
 $DELETE_CSV_AFTER_SUCCESS = true;
-$REQUIRED_TOKEN = 'REPLACE_WITH_SECRET_TOKEN';
+$REQUIRED_TOKEN = $config['import_token'] ?? '';
 
 // ====== HELPERS ======
 function iso_to_mysql_datetime($date, $time) {
@@ -60,7 +60,7 @@ function find_single_csv($dir) {
 
 // ====== MAIN ======
 $provided = $_GET['token'] ?? $_POST['token'] ?? '';
-if ($REQUIRED_TOKEN === 'REPLACE_WITH_SECRET_TOKEN' || $provided !== $REQUIRED_TOKEN) {
+if ($REQUIRED_TOKEN === '' || $provided !== $REQUIRED_TOKEN) {
     http_response_code(403);
     echo "Forbidden\\n";
     exit(1);
