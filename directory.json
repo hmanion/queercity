@@ -1,0 +1,513 @@
+[
+    {
+        "id": "d1000",
+        "name": "Queer Bachata Class and Social",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Monday",
+        "startTime": "20:00",
+        "endTime": "22:00",
+        "locName": "Terrace NQ",
+        "locStreet": "Thomas St",
+        "locPost": "M4 1NA",
+        "url": "https://www.eventbrite.com/e/queer-bachata-class-and-social-tickets-669074689407",
+        "tags": [
+            "dance",
+            "class"
+        ],
+        "description": "Free weekly dance class for the LGBTQ+ community in the centre of Manchester",
+        "image": "",
+        "price": "0"
+    },
+    {
+        "id": "d1001",
+        "name": "Kiki Family: Weekly Queer Meet-up",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Thursday",
+        "startTime": "19:00",
+        "endTime": "21:00",
+        "locName": "Fairfield Social Club",
+        "locStreet": "Irk St",
+        "locPost": "M4 4JT",
+        "url": "https://www.meetup.com/manchester-lgbtq-meetup/events/310653930/?eventOrigin=group_upcoming_events",
+        "tags": [
+            "social"
+        ],
+        "description": "Did you know that being part of a community makes us feel happier? 🏳️‍⚧️🏳️‍🌈\n\nWhether you’re new to Manchester or you’ve been here a while, yours is here waiting to welcome you with open arms 🤗",
+        "image": "",
+        "price": "0"
+    },
+    {
+        "id": "d1002",
+        "name": "Northern Cocks Badminton",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Monday",
+        "startTime": "18:00",
+        "endTime": "20:00",
+        "locName": "Moss Side Leisure Centre",
+        "locStreet": "Moss Lane East",
+        "locPost": "M15 5NN",
+        "url": "https://ncbadminton.co.uk",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1003",
+        "name": "Northern Cocks Badminton",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Thursday",
+        "startTime": "18:00",
+        "endTime": "20:00",
+        "locName": "National Cycling Centre",
+        "locStreet": "Stuart St",
+        "locPost": "M11 4TE",
+        "url": "https://ncbadminton.co.uk",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1004",
+        "name": "Northern Cocks Badminton",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Saturday",
+        "startTime": "15:00",
+        "endTime": "17:00",
+        "locName": "Moss Side Leisure Centre",
+        "locStreet": "Moss Lane East",
+        "locPost": "M15 5NN",
+        "url": "https://ncbadminton.co.uk",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1005",
+        "name": "Leather Social",
+        "category": "Sexy",
+        "frequency": "Monthly",
+        "occurrence": "first",
+        "dayWeek": "Saturday",
+        "startTime": "19:00",
+        "endTime": "23:59",
+        "locName": "The Eagle",
+        "locStreet": "Bloom St",
+        "locPost": "M1 3HZ",
+        "url": "https://manchesterleathermen.com",
+        "tags": [
+            "kink",
+            "leather"
+        ],
+        "description": "",
+        "image": "",
+        "price": "0"
+    },
+    {
+        "id": "d1006",
+        "name": "Rainbow Noir QITPoC Social",
+        "category": "Activity",
+        "frequency": "Monthly",
+        "occurrence": "second",
+        "dayWeek": "Thursday",
+        "startTime": "19:00",
+        "endTime": "21:30",
+        "locName": "The Proud Place",
+        "locStreet": "Sidney St",
+        "locPost": "M1 7HB",
+        "url": "https://www.rainbownoirmcr.com",
+        "tags": [
+            "social"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1007",
+        "name": "Manchester Prairie Dogs",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Tuesday",
+        "startTime": "20:00",
+        "endTime": "22:00",
+        "locName": "The Thompsons Arms",
+        "locStreet": "Sackville St",
+        "locPost": "M1 3LZ",
+        "url": "http://www.manchesterprairiedogs.co.uk",
+        "tags": [
+            "dance"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1008",
+        "name": "Urban Run - Manchester Frontrunners",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Thursday",
+        "startTime": "18:50",
+        "endTime": "20:30",
+        "locName": "Sugden Sports Centre",
+        "locStreet": "Sidney St",
+        "locPost": "M1 7HL",
+        "url": "https://www.manchesterfrontrunners.org/thursday-run",
+        "tags": [
+            "sport",
+            "outside"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1009",
+        "name": "Mixed-terrain Run - Manchester Frontrunners",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Saturday",
+        "startTime": "09:50",
+        "endTime": "11:30",
+        "locName": "Longford Park Car Park",
+        "locStreet": "Ryebank Road",
+        "locPost": "M21 9LF",
+        "url": "https://www.manchesterfrontrunners.org/saturday-run",
+        "tags": [
+            "sport",
+            "outside"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1010",
+        "name": "Track Run - Manchester Frontrunners",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Tuesday",
+        "startTime": "18:30",
+        "endTime": "20:00",
+        "locName": "Manchester Regional Arena",
+        "locStreet": "Etihad Campus",
+        "locPost": "M11 3FF",
+        "url": "https://www.manchesterfrontrunners.org/tuesday-run",
+        "tags": [
+            "sport",
+            "outside"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1011",
+        "name": "Gay City Bowlers",
+        "category": "Activity",
+        "frequency": "Monthly",
+        "occurrence": "last",
+        "dayWeek": "Wednesday",
+        "startTime": "19:00",
+        "endTime": "22:30",
+        "locName": "Lane7",
+        "locStreet": "Great Northern Warehouse",
+        "locPost": "M3 4EN",
+        "url": "https://gaycitybowlers.com",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1012",
+        "name": "Gay City Bowlers",
+        "category": "Activity",
+        "frequency": "Monthly",
+        "occurrence": "third",
+        "dayWeek": "Wednesday",
+        "startTime": "19:00",
+        "endTime": "22:30",
+        "locName": "Roxy Ballroom",
+        "locStreet": "The Arndale Centre",
+        "locPost": "M4 3AQ",
+        "url": "https://gaycitybowlers.com",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1013",
+        "name": "Manchester Proud Chorus",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Monday",
+        "startTime": "19:00",
+        "endTime": "21:15",
+        "locName": "Hallé at St Michael’s",
+        "locStreet": "George Leigh St",
+        "locPost": "M4 5DG",
+        "url": "https://www.manchesterproudchorus.org",
+        "tags": [
+            "sing"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1014",
+        "name": "Rugby Union - Village Spartans",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Saturday",
+        "startTime": "11:00",
+        "endTime": "12:30",
+        "locName": "Sale Sports Club",
+        "locStreet": "Clarendon Crescent",
+        "locPost": "M33 2DE",
+        "url": "https://linktr.ee/villagespartans",
+        "tags": [
+            "sport",
+            "outside"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1015",
+        "name": "Touch Rugby - Village Spartans",
+        "category": "Activity",
+        "frequency": "Monthly",
+        "occurrence": "first",
+        "dayWeek": "Monday",
+        "startTime": "19:00",
+        "endTime": "20:30",
+        "locName": "Sale Sports Club",
+        "locStreet": "Clarendon Crescent",
+        "locPost": "M33 2DE",
+        "url": "https://linktr.ee/villagespartans",
+        "tags": [
+            "sport",
+            "outside"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1016",
+        "name": "Bouldering - Outdoor Lads",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Wednesday",
+        "startTime": "18:00",
+        "endTime": "20:00",
+        "locName": "Rock Over Climbing",
+        "locStreet": "Cheviot St",
+        "locPost": "M3 1LW",
+        "url": "https://www.outdoorlads.com/events?event_type%5B13%5D=13&region%5B51%5D=51&location_proximity_center%5Bcoordinates%5D%5Blat%5D=&location_proximity_center%5Bcoordinates%5D%5Blng%5D=&location_proximity_center%5Bgeocoder%5D%5Bgeolocation_geocoder_address%5D=&location_proximity=0&start_date=2025-09-11&end_date=",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1017",
+        "name": "Open Mic Cabaret with Live Piano",
+        "category": "Activity",
+        "frequency": "monthly",
+        "occurrence": "first",
+        "dayWeek": "Saturday",
+        "startTime": "19:00",
+        "endTime": "23:00",
+        "locName": "Social Refuge",
+        "locStreet": "Great Ancoats St",
+        "locPost": "M4 5AJ",
+        "url": "https://www.socialrefuge.com/event-list",
+        "tags": [
+            "cabaret",
+            "sing"
+        ],
+        "description": "",
+        "image": "",
+        "price": "5"
+    },
+    {
+        "id": "d1018",
+        "name": "The Sunday Boys",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Sunday",
+        "startTime": "17:30",
+        "endTime": "19:45",
+        "locName": "Hallé St Michaels",
+        "locStreet": "George Leigh St",
+        "locPost": "M4 5DG",
+        "url": "thesundayboys.com",
+        "tags": [
+            "sing"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1019",
+        "name": "Club Locked",
+        "category": "Sexy",
+        "frequency": "Monthly",
+        "occurrence": "third",
+        "dayWeek": "Saturday",
+        "startTime": "19:00",
+        "endTime": "23:00",
+        "locName": "The Eagle",
+        "locStreet": "Bloom St",
+        "locPost": "M1 3HZ",
+        "url": "http://clublocked.com",
+        "tags": [
+            "kink",
+            "sexpositive"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1020",
+        "name": "Run with Pride",
+        "category": "Activity",
+        "frequency": "Fortnightly",
+        "occurrence": "",
+        "dayWeek": "Sunday",
+        "startTime": "10:00",
+        "endTime": "14:00",
+        "locName": "Social Refuge",
+        "locStreet": "Great Ancoats St",
+        "locPost": "M4 5AJ",
+        "url": "https://www.socialrefuge.com/event-details/run-with-pride-2025-09-21-10-00",
+        "tags": [
+            "sport",
+            "outside"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1021",
+        "name": "Scottish Dancing - The Gay Gordons",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Monday",
+        "startTime": "19:45",
+        "endTime": "21:30",
+        "locName": "The Thompson’s Arms",
+        "locStreet": "Sackville St",
+        "locPost": "M1 3LZ",
+        "url": "https://www.gay-gordons-manchester.co.uk/index.html",
+        "tags": [
+            "dance",
+            "class"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1022",
+        "name": "Trans Climbing Manchester",
+        "category": "Activity",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Wednesday",
+        "startTime": "19:00",
+        "endTime": "21:00",
+        "locName": "Rock Over Climbing",
+        "locStreet": "Cheviot St",
+        "locPost": "M3 1LW",
+        "url": "https://www.instagram.com/transclimbingmcr/",
+        "tags": [
+            "sport"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1023",
+        "name": "Queer Co-working",
+        "category": "Life",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Wednesday",
+        "startTime": "09:00",
+        "endTime": "17:00",
+        "locName": "The Proud Place",
+        "locStreet": "Sidney St",
+        "locPost": "M1 7HB",
+        "url": "https://www.eventbrite.co.uk/e/queer-co-working-the-proud-trust-tickets-657721622077",
+        "tags": [
+            "coworking"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    },
+    {
+        "id": "d1024",
+        "name": "Queer Co-working",
+        "category": "Life",
+        "frequency": "Weekly",
+        "occurrence": "",
+        "dayWeek": "Friday",
+        "startTime": "09:00",
+        "endTime": "17:00",
+        "locName": "Seesaw",
+        "locStreet": "Princess St",
+        "locPost": "M1 6NG",
+        "url": "https://www.eventbrite.co.uk/e/queer-co-working-seesaw-tickets-1290357316469?aff=oddtdtcreator",
+        "tags": [
+            "coworking"
+        ],
+        "description": "",
+        "image": "",
+        "price": ""
+    }
+]
