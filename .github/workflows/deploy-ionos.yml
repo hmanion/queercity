@@ -35,18 +35,17 @@ jobs:
           if [ -z "$IONOS_SFTP_PORT" ]; then IONOS_SFTP_PORT=22; fi
           if [ -z "$IONOS_REMOTE_DIR" ]; then IONOS_REMOTE_DIR=/personal/queercity; fi
 
-          lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" <<LFTP
-          set sftp:auto-confirm yes
-          set net:max-retries 2
-          set net:reconnect-interval-base 5
-          mkdir -p "$IONOS_REMOTE_DIR"
-          mirror -R --verbose --only-newer --delete \
-            --exclude-glob .git/ \
-            --exclude-glob .github/ \
-            --exclude-glob config/db.php \
-            --exclude-glob scripts/ \
-            --exclude-glob schema.sql \
-            --exclude-glob csvimport/ \
-            ./ "$IONOS_REMOTE_DIR"
-          bye
-LFTP
+          lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" -e "\
+            set sftp:auto-confirm yes; \
+            set net:max-retries 2; \
+            set net:reconnect-interval-base 5; \
+            mkdir -p \"$IONOS_REMOTE_DIR\"; \
+            mirror -R --verbose --only-newer --delete \
+              --exclude-glob .git/ \
+              --exclude-glob .github/ \
+              --exclude-glob config/db.php \
+              --exclude-glob scripts/ \
+              --exclude-glob schema.sql \
+              --exclude-glob csvimport/ \
+              ./ \"$IONOS_REMOTE_DIR\"; \
+            bye"
