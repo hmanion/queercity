@@ -140,3 +140,18 @@ CREATE TABLE IF NOT EXISTS schedule_by_month_day (
   PRIMARY KEY (schedule_id, month_day),
   CONSTRAINT fk_schedule_by_month_day FOREIGN KEY (schedule_id) REFERENCES schedules(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS import_runs (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  source VARCHAR(64) NOT NULL,
+  run_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS import_rows (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  run_id BIGINT UNSIGNED NOT NULL,
+  source_event_id VARCHAR(64) NULL,
+  action ENUM('insert','skip','error') NOT NULL,
+  reason VARCHAR(255) NULL,
+  CONSTRAINT fk_import_runs FOREIGN KEY (run_id) REFERENCES import_runs(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
