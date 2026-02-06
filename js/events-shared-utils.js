@@ -50,9 +50,20 @@ export function splitKeywords(keywords) {
   return keywords.split(',').map(x => x.trim().toLowerCase()).filter(Boolean);
 }
 
+function normalizeCategoryLabel(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (raw === raw.toLowerCase()) {
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+  return raw;
+}
+
 export function getCategory(ev) {
   const v = ev && (ev.category || ev.genre || ev.eventType);
-  return v ? String(v).trim() : '';
+  const label = v ? normalizeCategoryLabel(v) : '';
+  if (label.toLowerCase() === 'music') return 'Club';
+  return label;
 }
 export function getEventUrl(ev) { return ev && ev.url ? String(ev.url) : ''; }
 export function getEventImage(ev) { return ev && ev.image ? ev.image : ''; }
