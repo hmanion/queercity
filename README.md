@@ -22,6 +22,22 @@ Pages:
 - `/weekdays/` recurring events by weekday
 - `/archive/` past one-off events
 
+## Deploy (Ionos via GitHub Actions)
+
+This repo includes a GitHub Actions workflow that deploys to Ionos via SFTP:
+`.github/workflows/deploy-ionos.yml`.
+
+Set these GitHub repo secrets:
+- `IONOS_SFTP_HOST`
+- `IONOS_SFTP_PORT` (optional; defaults to `22`)
+- `IONOS_SFTP_USER`
+- `IONOS_SFTP_PASSWORD`
+- `IONOS_REMOTE_DIR` (optional; defaults to `/personal/queercity`)
+
+Notes:
+- `config/db.php` is excluded so your server-side DB password isn't overwritten or deleted.
+- `csvimport/` is excluded so uploaded CSVs/import scripts aren't deleted by deploy sync.
+
 ## Data files
 
 - `output.json`: one-off events (including multi-day ranges like exhibitions)

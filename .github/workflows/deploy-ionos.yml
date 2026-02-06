@@ -1,0 +1,52 @@
+name: Deploy to Ionos (SFTP)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-ionos
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy via SFTP mirror
+        env:
+          IONOS_SFTP_HOST: ${{ secrets.IONOS_SFTP_HOST }}
+          IONOS_SFTP_PORT: ${{ secrets.IONOS_SFTP_PORT }}
+          IONOS_SFTP_USER: ${{ secrets.IONOS_SFTP_USER }}
+          IONOS_SFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
+          IONOS_REMOTE_DIR: ${{ secrets.IONOS_REMOTE_DIR }}
+        run: |
+          test -n "$IONOS_SFTP_HOST"
+          test -n "$IONOS_SFTP_USER"
+          test -n "$IONOS_SFTP_PASSWORD"
+          if [ -z "$IONOS_SFTP_PORT" ]; then IONOS_SFTP_PORT=22; fi
+          if [ -z "$IONOS_REMOTE_DIR" ]; then IONOS_REMOTE_DIR=/personal/queercity; fi
+
+          lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" <<LFTP
+          set sftp:auto-confirm yes
+          set net:max-retries 2
+          set net:reconnect-interval-base 5
+          mkdir -p "$IONOS_REMOTE_DIR"
+          mirror -R --verbose --only-newer --delete \
+            --exclude-glob .git/ \
+            --exclude-glob .github/ \
+            --exclude-glob config/db.php \
+            --exclude-glob scripts/ \
+            --exclude-glob schema.sql \
+            --exclude-glob csvimport/ \
+            ./ "$IONOS_REMOTE_DIR"
+          bye
+LFTP
