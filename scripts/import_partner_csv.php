@@ -54,7 +54,7 @@ function parse_price($v) {
 function find_single_csv($dir) {
     $files = glob($dir . '/*.csv');
     if (!$files || count($files) === 0) {
-        throw new Exception('No CSV file found in ' . $dir);
+        return null;
     }
     if (count($files) > 1) {
         throw new Exception('More than one CSV file found; please leave only one in the folder.');
@@ -94,10 +94,17 @@ try {
 
     // Start audit run
     $stmt = $pdo->prepare("INSERT INTO import_runs (source) VALUES (?)");
-    $stmt->execute([basename($csv_path)]);
+    $stmt->execute([($csv_path ? basename($csv_path) : 'no-csv')]);
     $run_id = (int)$pdo->lastInsertId();
 
     $log_row = $pdo->prepare("INSERT INTO import_rows (run_id, source_event_id, action, reason) VALUES (?,?,?,?)");
+
+    if ($csv_path === null) {
+        $log_row->execute([$run_id, null, 'skip', 'no csv found']);
+        $pdo->commit();
+        echo "No CSV found; nothing to import\\n";
+        exit(0);
+    }
 
     $get_address = $pdo->prepare("SELECT id FROM postal_addresses WHERE street_address <=> ? AND address_locality <=> ? AND postal_code <=> ? AND address_country <=> ?");
     $ins_address = $pdo->prepare("INSERT INTO postal_addresses (street_address, address_locality, postal_code, address_country) VALUES (?,?,?,?)");
