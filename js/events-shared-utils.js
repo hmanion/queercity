@@ -88,12 +88,19 @@ export function getEventEndTime(ev) {
   const m = s.match(/T(\d{2}:\d{2})(?::\d{2})?/);
   return m ? m[1] : '';
 }
+function isManchesterLocality(value) {
+  const norm = String(value || '').trim().toLowerCase().replace(/[^a-z]/g, '');
+  return norm === 'manchester' || norm === 'cityofmanchester';
+}
 export function getLocationParts(ev) {
   if (!ev) return [];
-  if (ev.locName || ev.locStreet || ev.locTown || ev.locPost) return [ev.locName, ev.locStreet, ev.locTown, ev.locPost].filter(Boolean);
+  const includeTown = (town) => (town && !isManchesterLocality(town) ? town : '');
+  if (ev.locName || ev.locStreet || ev.locTown || ev.locPost) {
+    return [ev.locName, ev.locStreet, includeTown(ev.locTown), ev.locPost].filter(Boolean);
+  }
   const loc = ev.location || {};
   const addr = loc.address || {};
-  return [loc.name, addr.streetAddress, addr.addressLocality, addr.postalCode].filter(Boolean);
+  return [loc.name, addr.streetAddress, includeTown(addr.addressLocality), addr.postalCode].filter(Boolean);
 }
 export function getTagsList(ev) {
   if (!ev) return [];
