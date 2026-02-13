@@ -64,13 +64,13 @@ jobs:
 
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             git fetch --no-tags origin "$GITHUB_BASE_REF":"refs/remotes/origin/$GITHUB_BASE_REF"
-            mapfile -t CHANGED < <(git diff --name-only "refs/remotes/origin/$GITHUB_BASE_REF...HEAD")
+            mapfile -t CHANGED < <(git diff --name-only --diff-filter=ACMRTUXB "refs/remotes/origin/$GITHUB_BASE_REF...HEAD")
           else
             BEFORE="${{ github.event.before }}"
             if [[ -n "$BEFORE" && "$BEFORE" != "0000000000000000000000000000000000000000" ]]; then
-              mapfile -t CHANGED < <(git diff --name-only "$BEFORE...HEAD")
+              mapfile -t CHANGED < <(git diff --name-only --diff-filter=ACMRTUXB "$BEFORE...HEAD")
             else
-              mapfile -t CHANGED < <(git diff --name-only HEAD)
+              mapfile -t CHANGED < <(git diff --name-only --diff-filter=ACMRTUXB HEAD)
             fi
           fi
 
