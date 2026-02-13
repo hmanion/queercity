@@ -9,8 +9,18 @@
   <script type="module" src="./add-event.js"></script>
 </head>
 <body>
+  <div class="header">
+    <nav>
+      <a href="../">EVENTS</a> |
+      <a href="../weekdays">WEEKDAYS</a> |
+      <a href="../archive">PAST EVENTS</a>
+    </nav>
+    <div class="title">QUEER CITY</div>
+    <span class="circle"></span>
+    <div class="subtitle">ADD EVENT</div>
+  </div>
+
   <main class="admin-wrap">
-    <h1>Add Event</h1>
     <p class="admin-intro">Create a one-off event. Choose existing entities from the database or add new place/organization records.</p>
     <p class="admin-intro">For local UI-only testing without PHP, open this page with <code>?mock=1</code>.</p>
 
@@ -208,5 +218,9 @@
       <pre id="status" class="status"></pre>
     </form>
   </main>
+
+  <section>
+    <a href="https://github.com/hmanion/queercity" target="_blank" rel="noopener noreferrer">SOURCE / LICENSE</a>
+  </section>
 </body>
 </html>
