@@ -1,1 +1,7 @@
 config/db.php
+CHAT_CONTEXT.md
+**/.DS_Store
+output/
+scripts/
+schema.sql
+organization_candidates_from_recurring.csv
