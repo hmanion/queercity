@@ -43,7 +43,13 @@ jobs:
             mirror -R --verbose --only-newer --delete \
               --exclude-glob .git/ \
               --exclude-glob .github/ \
+              --exclude-glob .gitignore \
+              --exclude-glob allowlist-*.txt \
+              --exclude-glob README.md \
+              --exclude-glob LICENSE \
+              --exclude-glob DATA_LICENSE.md \
               --exclude-glob config/db.php \
+              --exclude-glob config/db.sample.php \
               --exclude-glob scripts/ \
               --exclude-glob schema.sql \
               --exclude-glob csvimport/ \
