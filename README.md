@@ -21,6 +21,21 @@ Pages:
 - `/` upcoming events (grouped into Today / Tomorrow / Week / Month(s) ahead)
 - `/weekdays/` recurring events by weekday
 - `/archive/` past one-off events
+- `/admin/add-event.html` admin form for adding one-off events
+
+## Add events via form (Ionos/PHP hosting)
+
+Use `/admin/add-event.html` to add a new one-off event directly to MySQL.
+
+How it works:
+- Enter your admin token (uses `import_token` from `config/db.php`)
+- Click `Load existing DB options`
+- Choose existing records (city/place/org/tags) or create new place/org inline
+- Submit to create the event
+
+Endpoints used by this form:
+- `api/admin-options.php` (load existing cities/places/organizations/tags; token required)
+- `api/admin-add-event.php` (create one-off event; token required)
 
 ## Deploy (Ionos via GitHub Actions)
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Event</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./admin.css">
+  <script type="module" src="./add-event.js"></script>
+</head>
+<body>
+  <main class="admin-wrap">
+    <h1>Add Event</h1>
+    <p class="admin-intro">Create a one-off event. Choose existing entities from the database or add new place/organization records.</p>
+    <p class="admin-intro">For local UI-only testing without PHP, open this page with <code>?mock=1</code>.</p>
+
+    <form id="add-event-form" class="admin-form">
+      <section class="panel">
+        <h2>Auth + Options</h2>
+        <label>
+          Admin token
+          <input id="token" name="token" type="password" required>
+        </label>
+        <button id="load-options" type="button">Load existing DB options</button>
+      </section>
+
+      <section class="panel">
+        <h2>Event Details</h2>
+        <label>
+          Event name
+          <input name="name" type="text" required>
+        </label>
+        <label>
+          Description
+          <textarea name="description" rows="4"></textarea>
+        </label>
+        <label>
+          Event URL
+          <input name="url" type="url" placeholder="https://...">
+        </label>
+        <label>
+          Image URL
+          <input name="image_url" type="url" placeholder="https://...">
+        </label>
+        <label>
+          Category
+          <select name="genre">
+            <option value="">Select a category</option>
+            <option value="Club">Club</option>
+            <option value="Celebration">Celebration</option>
+            <option value="Activity">Activity</option>
+            <option value="Arts">Arts</option>
+            <option value="Life">Life</option>
+            <option value="Sexy">Sexy</option>
+          </select>
+        </label>
+        <label>
+          Keywords (comma separated)
+          <input name="keywords_text" type="text" placeholder="drag, dance, queer cinema">
+        </label>
+        <label>
+          Start date/time
+          <input name="start_datetime" type="datetime-local" required>
+        </label>
+        <label>
+          End date/time
+          <input name="end_datetime" type="datetime-local">
+        </label>
+        <label>
+          City
+          <select id="city_id" name="city_id" required>
+            <option value="">Load options first</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="panel">
+        <h2>Place</h2>
+        <label>
+          Place mode
+          <select id="place_mode" name="place_mode">
+            <option value="existing">Use existing place</option>
+            <option value="new">Create new place</option>
+          </select>
+        </label>
+
+        <div id="place-existing-fields">
+          <label>
+            Existing place
+            <select id="place_id" name="place_id">
+              <option value="">Load options first</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="place-new-fields" class="hidden">
+          <label>
+            New place name
+            <input name="new_place_name" type="text">
+          </label>
+          <label>
+            Street address
+            <input name="new_place_street_address" type="text">
+          </label>
+          <label>
+            Locality
+            <input name="new_place_locality" type="text" placeholder="Manchester">
+          </label>
+          <label>
+            Postal code
+            <input name="new_place_postal_code" type="text">
+          </label>
+          <label>
+            Country code / country
+            <input name="new_place_country" type="text" placeholder="GB">
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Organization (Optional)</h2>
+        <label>
+          Organization mode
+          <select id="organization_mode" name="organization_mode">
+            <option value="none">None</option>
+            <option value="existing">Use existing organization</option>
+            <option value="new">Create new organization</option>
+          </select>
+        </label>
+
+        <div id="organization-existing-fields" class="hidden">
+          <label>
+            Existing organization
+            <select id="organization_id" name="organization_id">
+              <option value="">Load options first</option>
+            </select>
+          </label>
+          <label>
+            Role
+            <input name="existing_organization_role" type="text" placeholder="host, organizer">
+          </label>
+        </div>
+
+        <div id="organization-new-fields" class="hidden">
+          <label>
+            New organization name
+            <input name="new_organization_name" type="text">
+          </label>
+          <label>
+            New organization URL
+            <input name="new_organization_url" type="url" placeholder="https://...">
+          </label>
+          <label>
+            Role
+            <input name="new_organization_role" type="text" placeholder="host, organizer">
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tags + Price (Optional)</h2>
+        <label>
+          Existing tags
+          <select id="tag_ids" name="tag_ids" multiple size="8"></select>
+        </label>
+        <label>
+          New tags (comma separated)
+          <input name="new_tags_csv" type="text" placeholder="community, sober, workshop">
+        </label>
+
+        <label>
+          Price
+          <input name="price" type="number" step="0.01" min="0" placeholder="10.00">
+        </label>
+        <label>
+          Price currency
+          <input name="price_currency" type="text" maxlength="3" placeholder="GBP">
+        </label>
+        <label>
+          Offer URL
+          <input name="offer_url" type="url" placeholder="https://...">
+        </label>
+      </section>
+
+      <button id="submit-btn" type="submit">Create event</button>
+      <pre id="status" class="status"></pre>
+    </form>
+  </main>
+</body>
+</html>
