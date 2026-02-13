@@ -60,6 +60,8 @@ Run a local static server:
 
 For PHP/API testing, use `main` branch with PHP runtime available.
 
+Operational SQL (dedupe, migrations, one-off fixes) must live only in the private ops repo, not this runtime repo.
+
 ## License
 
 Code:

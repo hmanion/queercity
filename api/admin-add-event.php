@@ -19,6 +19,67 @@ function normalize_text($value) {
     return $trimmed === '' ? null : $trimmed;
 }
 
+function normalize_spaces($value) {
+    $text = normalize_text($value);
+    if ($text === null) {
+        return null;
+    }
+    return preg_replace('/\s+/u', ' ', $text);
+}
+
+function abbreviate_street_words($value) {
+    $text = normalize_spaces($value);
+    if ($text === null) {
+        return null;
+    }
+    // Replace only whole words, never substrings (e.g. "Roadhouse" stays "Roadhouse").
+    $text = preg_replace('/\bstreet\b/i', 'St', $text);
+    $text = preg_replace('/\broad\b/i', 'Rd', $text);
+    return normalize_spaces($text);
+}
+
+function normalize_postal_code($value) {
+    $text = normalize_spaces($value);
+    if ($text === null) {
+        return null;
+    }
+    return strtoupper($text);
+}
+
+function normalize_country_code($value) {
+    $text = normalize_spaces($value);
+    if ($text === null) {
+        return null;
+    }
+    return strtoupper($text);
+}
+
+function canonical_address_text($value) {
+    $text = normalize_spaces($value);
+    if ($text === null) {
+        return '';
+    }
+    $text = strtolower($text);
+    $text = preg_replace('/[^a-z0-9]+/i', ' ', $text);
+    return trim(preg_replace('/\s+/', ' ', $text));
+}
+
+function canonical_postal_code($value) {
+    $text = normalize_postal_code($value);
+    if ($text === null) {
+        return '';
+    }
+    return strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
+}
+
+function canonical_country_code($value) {
+    $text = normalize_country_code($value);
+    if ($text === null) {
+        return '';
+    }
+    return strtolower(trim($text));
+}
+
 function parse_datetime_local($value) {
     $v = trim((string)$value);
     if ($v === '') {
@@ -47,15 +108,34 @@ function column_exists(PDO $pdo, $tableName, $columnName) {
 }
 
 function find_or_create_address(PDO $pdo, $street, $locality, $postalCode, $country) {
-    $sel = $pdo->prepare('SELECT id FROM postal_addresses WHERE street_address <=> ? AND address_locality <=> ? AND postal_code <=> ? AND address_country <=> ? LIMIT 1');
-    $sel->execute([$street, $locality, $postalCode, $country]);
+    $streetNormalized = abbreviate_street_words($street);
+    $localityNormalized = normalize_spaces($locality);
+    $postalNormalized = normalize_postal_code($postalCode);
+    $countryNormalized = normalize_country_code($country);
+
+    $streetCanonical = canonical_address_text($streetNormalized);
+    $localityCanonical = canonical_address_text($localityNormalized);
+    $postalCanonical = canonical_postal_code($postalNormalized);
+    $countryCanonical = canonical_country_code($countryNormalized);
+
+    $sel = $pdo->prepare(
+        'SELECT id
+         FROM postal_addresses
+         WHERE LOWER(TRIM(REGEXP_REPLACE(COALESCE(street_address, \'\'), \'[^a-zA-Z0-9]+\', \' \'))) = ?
+           AND LOWER(TRIM(REGEXP_REPLACE(COALESCE(address_locality, \'\'), \'[^a-zA-Z0-9]+\', \' \'))) = ?
+           AND LOWER(TRIM(REGEXP_REPLACE(COALESCE(postal_code, \'\'), \'[^a-zA-Z0-9]+\', \'\'))) = ?
+           AND LOWER(TRIM(COALESCE(address_country, \'\'))) = ?
+         ORDER BY id ASC
+         LIMIT 1'
+    );
+    $sel->execute([$streetCanonical, $localityCanonical, $postalCanonical, $countryCanonical]);
     $found = $sel->fetch();
     if ($found) {
         return (int)$found['id'];
     }
 
     $ins = $pdo->prepare('INSERT INTO postal_addresses (street_address, address_locality, postal_code, address_country) VALUES (?, ?, ?, ?)');
-    $ins->execute([$street, $locality, $postalCode, $country]);
+    $ins->execute([$streetNormalized, $localityNormalized, $postalNormalized, $countryNormalized]);
     return (int)$pdo->lastInsertId();
 }
 
