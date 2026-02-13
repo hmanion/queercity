@@ -13,6 +13,9 @@ const orgModeSelect = document.getElementById('organization_mode');
 const orgSelect = document.getElementById('organization_id');
 const orgExistingFields = document.getElementById('organization-existing-fields');
 const orgNewFields = document.getElementById('organization-new-fields');
+const eventAudienceSelect = document.getElementById('event_audience_label_id');
+const newOrgAudienceSelect = document.getElementById('new_organization_audience_label_id');
+const newOrgCategorySelect = document.getElementById('new_organization_category');
 
 const tagSelect = document.getElementById('tag_ids');
 const isMockMode = new URLSearchParams(window.location.search).get('mock') === '1';
@@ -27,9 +30,19 @@ const mockOptions = {
     { id: 11, name: 'YES Manchester' },
   ],
   organizations: [
-    { id: 20, name: 'Queer Fam' },
-    { id: 21, name: 'Sapphic Social' },
+    { id: 20, name: 'Queer Fam', category: 'Social', audience_label: 'all' },
+    { id: 21, name: 'Sapphic Social', category: 'Social', audience_label: 'lesbian' },
   ],
+  audience_labels: [
+    { id: 100, name: 'lesbian' },
+    { id: 101, name: 'gay' },
+    { id: 102, name: 'bi' },
+    { id: 103, name: 'trans' },
+    { id: 104, name: 'men' },
+    { id: 105, name: 'flinta' },
+    { id: 106, name: 'all' },
+  ],
+  organization_categories: ['Charity', 'Sports', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
   tags: [
     { id: 30, name: 'community' },
     { id: 31, name: 'club' },
@@ -85,11 +98,33 @@ function fillTagSelect(tags) {
   });
 }
 
+function fillAudienceSelect(selectEl, audienceLabels, placeholder) {
+  fillSelect(selectEl, audienceLabels || [], 'id', 'name', placeholder);
+}
+
+function fillCategorySelect(categories) {
+  newOrgCategorySelect.innerHTML = '';
+  const placeholderOption = document.createElement('option');
+  placeholderOption.value = '';
+  placeholderOption.textContent = 'Select category';
+  newOrgCategorySelect.appendChild(placeholderOption);
+
+  (categories || []).forEach((category) => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    newOrgCategorySelect.appendChild(option);
+  });
+}
+
 async function loadOptions() {
   if (isMockMode) {
     fillSelect(citySelect, mockOptions.cities, 'id', 'name', 'Select city');
     fillSelect(placeSelect, mockOptions.places, 'id', 'name', 'Select place');
     fillSelect(orgSelect, mockOptions.organizations, 'id', 'name', 'Select organization');
+    fillAudienceSelect(eventAudienceSelect, mockOptions.audience_labels, 'No label');
+    fillAudienceSelect(newOrgAudienceSelect, mockOptions.audience_labels, 'No label');
+    fillCategorySelect(mockOptions.organization_categories);
     fillTagSelect(mockOptions.tags);
     citySelect.value = '1';
     setStatus('Mock mode: options loaded locally (no API call).');
@@ -115,6 +150,9 @@ async function loadOptions() {
   fillSelect(citySelect, data.cities || [], 'id', 'name', 'Select city');
   fillSelect(placeSelect, data.places || [], 'id', 'name', 'Select place');
   fillSelect(orgSelect, data.organizations || [], 'id', 'name', 'Select organization');
+  fillAudienceSelect(eventAudienceSelect, data.audience_labels || [], 'No label');
+  fillAudienceSelect(newOrgAudienceSelect, data.audience_labels || [], 'No label');
+  fillCategorySelect(data.organization_categories || []);
   fillTagSelect(data.tags || []);
 
   const manchester = (data.cities || []).find((c) => String(c.slug || '').toLowerCase() === 'manchester');
@@ -166,8 +204,12 @@ function buildPayload() {
     organization_mode: organizationMode,
     organization_id: Number(fd.get('organization_id') || 0),
     new_organization_name: String(fd.get('new_organization_name') || '').trim(),
+    new_organization_category: String(fd.get('new_organization_category') || '').trim(),
     new_organization_url: String(fd.get('new_organization_url') || '').trim(),
+    new_organization_logo_url: String(fd.get('new_organization_logo_url') || '').trim(),
+    new_organization_audience_label_id: Number(fd.get('new_organization_audience_label_id') || 0),
     organization_role: organizationRole,
+    event_audience_label_id: Number(fd.get('event_audience_label_id') || 0),
 
     tag_ids: selectedTagIds(),
     new_tags: csvToArray(String(fd.get('new_tags_csv') || '')),

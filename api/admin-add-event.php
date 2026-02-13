@@ -3,6 +3,8 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
+const ORG_CATEGORIES = ['Charity', 'Sports', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
+
 function fail_json($code, $message) {
     http_response_code($code);
     echo json_encode(['error' => $message]);
@@ -54,7 +56,7 @@ function find_or_create_place(PDO $pdo, $name, $addressId, $cityId) {
     return (int)$pdo->lastInsertId();
 }
 
-function find_or_create_organization(PDO $pdo, $name, $url, $cityId) {
+function find_or_create_organization(PDO $pdo, $name, $category, $url, $logoUrl, $audienceLabelId) {
     $sel = $pdo->prepare('SELECT id FROM organizations WHERE name = ? LIMIT 1');
     $sel->execute([$name]);
     $found = $sel->fetch();
@@ -62,9 +64,14 @@ function find_or_create_organization(PDO $pdo, $name, $url, $cityId) {
         return (int)$found['id'];
     }
 
-    $ins = $pdo->prepare('INSERT INTO organizations (name, url, city_id) VALUES (?, ?, ?)');
-    $ins->execute([$name, $url, $cityId]);
+    $ins = $pdo->prepare('INSERT INTO organizations (name, category, url, logo_url, audience_label_id) VALUES (?, ?, ?, ?, ?)');
+    $ins->execute([$name, $category, $url, $logoUrl, $audienceLabelId]);
     return (int)$pdo->lastInsertId();
+}
+
+function link_organization_place(PDO $pdo, $organizationId, $placeId) {
+    $ins = $pdo->prepare('INSERT IGNORE INTO organization_places (organization_id, place_id) VALUES (?, ?)');
+    $ins->execute([$organizationId, $placeId]);
 }
 
 function find_or_create_tag(PDO $pdo, $name) {
@@ -141,6 +148,7 @@ $placeId = isset($data['place_id']) ? (int)$data['place_id'] : 0;
 $organizationMode = $data['organization_mode'] ?? 'none';
 $organizationId = isset($data['organization_id']) ? (int)$data['organization_id'] : 0;
 $organizationRole = normalize_text($data['organization_role'] ?? null);
+$eventAudienceLabelId = isset($data['event_audience_label_id']) ? (int)$data['event_audience_label_id'] : 0;
 
 $selectedTagIds = [];
 if (isset($data['tag_ids']) && is_array($data['tag_ids'])) {
@@ -192,6 +200,16 @@ try {
         fail_json(422, 'Selected city does not exist');
     }
 
+    if ($eventAudienceLabelId > 0) {
+        $checkAudience = $pdo->prepare('SELECT id FROM audience_labels WHERE id = ?');
+        $checkAudience->execute([$eventAudienceLabelId]);
+        if (!$checkAudience->fetch()) {
+            fail_json(422, 'Selected event audience label does not exist');
+        }
+    } else {
+        $eventAudienceLabelId = null;
+    }
+
     if ($placeMode === 'existing') {
         if ($placeId <= 0) {
             fail_json(422, 'Please choose an existing place');
@@ -229,18 +247,33 @@ try {
         }
     } elseif ($organizationMode === 'new') {
         $orgName = normalize_text($data['new_organization_name'] ?? null);
+        $orgCategory = normalize_text($data['new_organization_category'] ?? null);
         $orgUrl = normalize_text($data['new_organization_url'] ?? null);
+        $orgLogoUrl = normalize_text($data['new_organization_logo_url'] ?? null);
+        $orgAudienceLabelId = isset($data['new_organization_audience_label_id']) ? (int)$data['new_organization_audience_label_id'] : 0;
         if ($orgName === null) {
             fail_json(422, 'New organization name is required');
         }
-        $organizationId = find_or_create_organization($pdo, $orgName, $orgUrl, $cityId);
+        if ($orgCategory === null || !in_array($orgCategory, ORG_CATEGORIES, true)) {
+            fail_json(422, 'New organization category is required and must be valid');
+        }
+        if ($orgAudienceLabelId > 0) {
+            $checkAudience = $pdo->prepare('SELECT id FROM audience_labels WHERE id = ?');
+            $checkAudience->execute([$orgAudienceLabelId]);
+            if (!$checkAudience->fetch()) {
+                fail_json(422, 'Selected organization audience label does not exist');
+            }
+        } else {
+            $orgAudienceLabelId = null;
+        }
+        $organizationId = find_or_create_organization($pdo, $orgName, $orgCategory, $orgUrl, $orgLogoUrl, $orgAudienceLabelId);
     } elseif ($organizationMode !== 'none') {
         fail_json(422, 'Invalid organization mode');
     }
 
     $insEvent = $pdo->prepare(
-        'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, place_id, city_id, start_datetime, end_datetime)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, audience_label_id, place_id, city_id, start_datetime, end_datetime)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     );
     $insEvent->execute([
         $identifier,
@@ -252,6 +285,7 @@ try {
         $keywordsText,
         $eventStatus,
         $attendanceMode,
+        $eventAudienceLabelId,
         $placeId,
         $cityId,
         $startDateTime,
@@ -260,6 +294,7 @@ try {
     $eventId = (int)$pdo->lastInsertId();
 
     if ($organizationId > 0) {
+        link_organization_place($pdo, $organizationId, $placeId);
         $insEventOrg = $pdo->prepare('INSERT INTO event_organizations (event_id, organization_id, role) VALUES (?, ?, ?)');
         $insEventOrg->execute([$eventId, $organizationId, $organizationRole]);
     }

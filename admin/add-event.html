@@ -72,6 +72,12 @@
             <option value="">Load options first</option>
           </select>
         </label>
+        <label>
+          Event audience label (optional)
+          <select id="event_audience_label_id" name="event_audience_label_id">
+            <option value="">No label</option>
+          </select>
+        </label>
       </section>
 
       <section class="panel">
@@ -147,8 +153,24 @@
             <input name="new_organization_name" type="text">
           </label>
           <label>
+            New organization category
+            <select id="new_organization_category" name="new_organization_category">
+              <option value="">Select category</option>
+            </select>
+          </label>
+          <label>
             New organization URL
             <input name="new_organization_url" type="url" placeholder="https://...">
+          </label>
+          <label>
+            New organization logo URL
+            <input name="new_organization_logo_url" type="url" placeholder="https://...">
+          </label>
+          <label>
+            New organization audience label
+            <select id="new_organization_audience_label_id" name="new_organization_audience_label_id">
+              <option value="">No label</option>
+            </select>
           </label>
           <label>
             Role

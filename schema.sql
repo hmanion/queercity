@@ -21,20 +21,19 @@ CREATE TABLE IF NOT EXISTS postal_addresses (
   address_country VARCHAR(64) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS audience_labels (
+  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  name ENUM('lesbian','gay','bi','trans','men','flinta','all') NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS organizations (
   id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
-  description TEXT NULL,
+  category ENUM('Charity','Sports','Social','Arts','Club','Life','Sexy') NOT NULL,
   url VARCHAR(1024) NULL,
   logo_url VARCHAR(1024) NULL,
-  email VARCHAR(255) NULL,
-  phone VARCHAR(64) NULL,
-  address_id BIGINT UNSIGNED NULL,
-  city_id BIGINT UNSIGNED NULL,
-  slug VARCHAR(128) NULL,
-  CONSTRAINT fk_org_address FOREIGN KEY (address_id) REFERENCES postal_addresses(id),
-  CONSTRAINT fk_org_city FOREIGN KEY (city_id) REFERENCES cities(id),
-  INDEX idx_org_slug (slug)
+  audience_label_id BIGINT UNSIGNED NULL,
+  CONSTRAINT fk_org_audience_label FOREIGN KEY (audience_label_id) REFERENCES audience_labels(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS places (
@@ -42,12 +41,18 @@ CREATE TABLE IF NOT EXISTS places (
   name VARCHAR(255) NULL,
   address_id BIGINT UNSIGNED NULL,
   city_id BIGINT UNSIGNED NULL,
-  organization_id BIGINT UNSIGNED NULL,
   slug VARCHAR(128) NULL,
   CONSTRAINT fk_places_address FOREIGN KEY (address_id) REFERENCES postal_addresses(id),
   CONSTRAINT fk_places_city FOREIGN KEY (city_id) REFERENCES cities(id),
-  CONSTRAINT fk_places_org FOREIGN KEY (organization_id) REFERENCES organizations(id),
   INDEX idx_places_slug (slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS organization_places (
+  organization_id BIGINT UNSIGNED NOT NULL,
+  place_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (organization_id, place_id),
+  CONSTRAINT fk_org_places_org FOREIGN KEY (organization_id) REFERENCES organizations(id),
+  CONSTRAINT fk_org_places_place FOREIGN KEY (place_id) REFERENCES places(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS events (
@@ -61,6 +66,7 @@ CREATE TABLE IF NOT EXISTS events (
   keywords_text TEXT NULL,
   event_status VARCHAR(255) NULL,
   attendance_mode VARCHAR(255) NULL,
+  audience_label_id BIGINT UNSIGNED NULL,
   place_id BIGINT UNSIGNED NULL,
   city_id BIGINT UNSIGNED NULL,
   start_datetime DATETIME NULL,
@@ -69,6 +75,7 @@ CREATE TABLE IF NOT EXISTS events (
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_events_place FOREIGN KEY (place_id) REFERENCES places(id),
   CONSTRAINT fk_events_city FOREIGN KEY (city_id) REFERENCES cities(id),
+  CONSTRAINT fk_events_audience_label FOREIGN KEY (audience_label_id) REFERENCES audience_labels(id),
   UNIQUE KEY uq_events_identifier (identifier),
   INDEX idx_events_start_datetime (start_datetime),
   INDEX idx_events_end_datetime (end_datetime),
@@ -155,3 +162,12 @@ CREATE TABLE IF NOT EXISTS import_rows (
   reason VARCHAR(255) NULL,
   CONSTRAINT fk_import_runs FOREIGN KEY (run_id) REFERENCES import_runs(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO audience_labels (name) VALUES
+('lesbian'),
+('gay'),
+('bi'),
+('trans'),
+('men'),
+('flinta'),
+('all');

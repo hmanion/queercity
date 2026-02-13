@@ -37,6 +37,24 @@ Endpoints used by this form:
 - `api/admin-options.php` (load existing cities/places/organizations/tags; token required)
 - `api/admin-add-event.php` (create one-off event; token required)
 
+## Organization data model
+
+Organizations now use this structure:
+- `name`
+- `category` (one of: `Charity`, `Sports`, `Social`, `Arts`, `Club`, `Life`, `Sexy`)
+- `url`
+- `logo_url`
+- `audience_label_id` (shared labels table used by organizations and events)
+
+Audience labels are stored in shared table `audience_labels` with values:
+- `lesbian`, `gay`, `bi`, `trans`, `men`, `flinta`, `all`
+
+Organization venues are modeled as many-to-many via:
+- `organization_places (organization_id, place_id)`
+
+For existing databases, apply:
+- `scripts/migrate_organizations_schema.sql`
+
 ## Deploy (Ionos via GitHub Actions)
 
 This repo includes a GitHub Actions workflow that deploys to Ionos via SFTP:

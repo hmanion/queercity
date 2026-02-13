@@ -33,13 +33,22 @@ try {
 
     $cities = $pdo->query('SELECT id, name, region, country_code, timezone, slug FROM cities ORDER BY name ASC')->fetchAll();
     $places = $pdo->query('SELECT id, name FROM places WHERE name IS NOT NULL AND name <> "" ORDER BY name ASC')->fetchAll();
-    $organizations = $pdo->query('SELECT id, name FROM organizations WHERE name IS NOT NULL AND name <> "" ORDER BY name ASC')->fetchAll();
+    $organizations = $pdo->query(
+        'SELECT o.id, o.name, o.category, o.url, o.logo_url, o.audience_label_id, al.name AS audience_label
+         FROM organizations o
+         LEFT JOIN audience_labels al ON al.id = o.audience_label_id
+         WHERE o.name IS NOT NULL AND o.name <> ""
+         ORDER BY o.name ASC'
+    )->fetchAll();
+    $audienceLabels = $pdo->query('SELECT id, name FROM audience_labels ORDER BY id ASC')->fetchAll();
     $tags = $pdo->query('SELECT id, name FROM tags ORDER BY name ASC')->fetchAll();
 
     echo json_encode([
         'cities' => $cities,
         'places' => $places,
         'organizations' => $organizations,
+        'audience_labels' => $audienceLabels,
+        'organization_categories' => ['Charity', 'Sports', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
         'tags' => $tags,
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
