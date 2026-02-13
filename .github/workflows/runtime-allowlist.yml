@@ -1,0 +1,85 @@
+name: Enforce Runtime Allowlist
+
+on:
+  push:
+    branches: ["main", "pages"]
+  pull_request:
+    branches: ["main", "pages"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate tracked and changed files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TARGET_BRANCH="${GITHUB_REF_NAME}"
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            TARGET_BRANCH="${GITHUB_BASE_REF}"
+          fi
+
+          if [[ "$TARGET_BRANCH" == "main" ]]; then
+            ALLOWLIST="allowlist-main.txt"
+          elif [[ "$TARGET_BRANCH" == "pages" ]]; then
+            ALLOWLIST="allowlist-pages.txt"
+          else
+            echo "Unsupported target branch: $TARGET_BRANCH"
+            exit 1
+          fi
+
+          mapfile -t PATTERNS < <(grep -vE '^\s*(#|$)' "$ALLOWLIST")
+
+          is_allowed() {
+            local path="$1"
+            for pattern in "${PATTERNS[@]}"; do
+              if [[ "$path" == $pattern ]]; then
+                return 0
+              fi
+            done
+            return 1
+          }
+
+          check_paths() {
+            local label="$1"
+            shift
+            local bad=0
+            for path in "$@"; do
+              [[ -z "$path" ]] && continue
+              if ! is_allowed "$path"; then
+                echo "Disallowed $label file for $TARGET_BRANCH: $path"
+                bad=1
+              fi
+            done
+            return $bad
+          }
+
+          mapfile -t TRACKED < <(git ls-files)
+
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            git fetch --no-tags origin "$GITHUB_BASE_REF":"refs/remotes/origin/$GITHUB_BASE_REF"
+            mapfile -t CHANGED < <(git diff --name-only "refs/remotes/origin/$GITHUB_BASE_REF...HEAD")
+          else
+            BEFORE="${{ github.event.before }}"
+            if [[ -n "$BEFORE" && "$BEFORE" != "0000000000000000000000000000000000000000" ]]; then
+              mapfile -t CHANGED < <(git diff --name-only "$BEFORE...HEAD")
+            else
+              mapfile -t CHANGED < <(git diff --name-only HEAD)
+            fi
+          fi
+
+          echo "Using allowlist: $ALLOWLIST"
+          check_paths "tracked" "${TRACKED[@]}"
+          TRACKED_STATUS=$?
+          check_paths "changed" "${CHANGED[@]}"
+          CHANGED_STATUS=$?
+
+          if [[ $TRACKED_STATUS -ne 0 || $CHANGED_STATUS -ne 0 ]]; then
+            exit 1
+          fi

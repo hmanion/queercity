@@ -1,107 +1,69 @@
-# Queer City
+# Queer City (Runtime Repo)
 
-Queer City is a static website that lists queer events in Manchester: regular recurring events (e.g. sports training), one-offs (e.g. comedy nights), multi-run events (e.g. theatre), and multi-day listings like exhibitions.
+This repository stores website runtime code only.
 
-The listings are currently curated by me. I'm exploring ways to accept contributions in the future.
+Branch model:
+- `main`: live runtime for Ionos (public site + PHP APIs + admin runtime)
+- `pages`: static test runtime for GitHub Pages (public site only)
 
-## Live site
+All non-runtime tooling (imports, migrations, generated reports, ad hoc scripts) belongs in a separate private operations repository.
 
-This site is deployed via GitHub Pages.
+## Runtime Policy
 
-## How it works
+Only commit files required to run one of the two runtime branches.
 
-The site is plain HTML/CSS/JS and loads event data from JSON files at runtime.
-When deployed on GitHub Pages (static hosting), the site uses the local JSON files
-(`output.json`, `directory.json`) as a demo dataset. On hosts that support PHP
-(e.g. Ionos), the frontend will fetch live data from `/api/output.php` and
-`/api/directory.php`, and automatically fall back to the local JSON if the API
-is unavailable.
+Never commit here:
+- one-off scripts/import tooling
+- schema/migration SQL
+- generated analysis artifacts
+- local context files
 
-Pages:
-- `/` upcoming events (grouped into Today / Tomorrow / Week / Month(s) ahead)
-- `/weekdays/` recurring events by weekday
-- `/archive/` past one-off events
-- `/admin/add-event.html` admin form for adding one-off events
+Strict enforcement is in CI via branch-specific allowlists.
 
-## Add events via form (Ionos/PHP hosting)
+## Pages Branch (`pages`)
 
-Use `/admin/add-event.html` to add a new one-off event directly to MySQL.
+This branch is static-only and intended for GitHub Pages testing.
 
-How it works:
-- Enter your admin token (uses `import_token` from `config/db.php`)
-- Click `Load existing DB options`
-- Choose existing records (city/place/org/tags) or create new place/org inline
-- Submit to create the event
+Included runtime:
+- `/`, `/weekdays/`, `/archive/`
+- static assets (`style.css`, `extended.woff2`, `/js/*.module.js`)
+- fallback data (`output.json`, `directory.json`)
 
-Endpoints used by this form:
-- `api/admin-options.php` (load existing cities/places/organizations/tags; token required)
-- `api/admin-add-event.php` (create one-off event; token required)
+Excluded on this branch:
+- `/api/*`
+- `/admin/*`
 
-## Organization data model
+## Main Branch (`main`)
 
-Organizations now use this structure:
-- `name`
-- `category` (one of: `Charity`, `Sports`, `Social`, `Arts`, `Club`, `Life`, `Sexy`)
-- `url`
-- `logo_url`
-- `audience_label_id` (shared labels table used by organizations and events)
+Live runtime includes everything needed by Ionos:
+- public frontend runtime
+- PHP APIs (`/api/output.php`, `/api/directory.php`)
+- admin runtime (`/admin/*`, `/api/admin-*`)
 
-Audience labels are stored in shared table `audience_labels` with values:
-- `lesbian`, `gay`, `bi`, `trans`, `men`, `flinta`, `all`
+## Promotion Workflow
 
-Organization venues are modeled as many-to-many via:
-- `organization_places (organization_id, place_id)`
+Changes should flow from `main` to `pages` via cherry-pick of static/runtime-safe commits only.
 
-For existing databases, apply:
-- `scripts/migrate_organizations_schema.sql`
+Do not merge `main` wholesale into `pages`.
 
-## Deploy (Ionos via GitHub Actions)
+## Deployment
 
-This repo includes a GitHub Actions workflow that deploys to Ionos via SFTP:
-`.github/workflows/deploy-ionos.yml`.
+Ionos deploy workflow:
+- `.github/workflows/deploy-ionos.yml`
 
-Set these GitHub repo secrets:
-- `IONOS_SFTP_HOST`
-- `IONOS_SFTP_PORT` (optional; defaults to `22`)
-- `IONOS_SFTP_USER`
-- `IONOS_SFTP_PASSWORD`
-- `IONOS_REMOTE_DIR` (optional; defaults to `/personal/queercity`)
+Current workflow deploys from `main` only.
 
-Notes:
-- `config/db.php` is excluded so your server-side DB password isn't overwritten or deleted.
-- `csvimport/` is excluded so uploaded CSVs/import scripts aren't deleted by deploy sync.
+## Local Setup
 
-## Data files
-
-- `output.json`: one-off events (including multi-day ranges like exhibitions)
-- `directory.json`: recurring events (e.g. weekly / fortnightly / monthly patterns)
-
-Event fields (high level):
-- Common: `name`, `url`, `category`, `tags`, and location fields like `locName`, `locTown`, `locPost`
-- Dates: `startDate` (YYYY-MM-DD), optional `endDate` (YYYY-MM-DD)
-- Times: optional `startTime` / `endTime` (HH:MM)
-- Recurring-only: `dayWeek`, `frequency`, optional `occurrence` (for monthly patterns)
-
-## Run locally
-
-Because the site uses `fetch()` to load JSON, you'll usually need to run a local web server (opening `index.html` via `file://` may not work).
-
-Examples:
+Run a local static server:
 - `python3 -m http.server`
-- `npx serve`
 
-Then open the printed local URL in your browser.
+For PHP/API testing, use `main` branch with PHP runtime available.
 
 ## License
 
 Code:
-- Licensed under the GNU Affero General Public License v3.0 only (AGPL-3.0-only). See `LICENSE`.
+- AGPL-3.0-only (`LICENSE`)
 
-Event listings / curation data:
-- The compiled listings in `output.json` and `directory.json` are not licensed for reuse. See `DATA_LICENSE.md`.
-
-## Sharing events
-
-Please do share events widely: link to event pages, tell friends, and share individual event details.
-
-If you want to republish the site's compiled listings as a dataset (e.g. to run another events site/newsletter), please ask first.
+Event listings/data:
+- `DATA_LICENSE.md`
