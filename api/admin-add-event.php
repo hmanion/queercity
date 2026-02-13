@@ -3,7 +3,7 @@
 
 header('Content-Type: application/json; charset=utf-8');
 
-const ORG_CATEGORIES = ['Charity', 'Sports', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
+const ORG_CATEGORIES = ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
 
 function fail_json($code, $message) {
     http_response_code($code);
@@ -28,6 +28,22 @@ function parse_datetime_local($value) {
         return null;
     }
     return str_replace('T', ' ', $v) . ':00';
+}
+
+function table_exists(PDO $pdo, $tableName) {
+    $stmt = $pdo->prepare(
+        'SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ? LIMIT 1'
+    );
+    $stmt->execute([$tableName]);
+    return (bool)$stmt->fetchColumn();
+}
+
+function column_exists(PDO $pdo, $tableName, $columnName) {
+    $stmt = $pdo->prepare(
+        'SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ? LIMIT 1'
+    );
+    $stmt->execute([$tableName, $columnName]);
+    return (bool)$stmt->fetchColumn();
 }
 
 function find_or_create_address(PDO $pdo, $street, $locality, $postalCode, $country) {
@@ -56,7 +72,7 @@ function find_or_create_place(PDO $pdo, $name, $addressId, $cityId) {
     return (int)$pdo->lastInsertId();
 }
 
-function find_or_create_organization(PDO $pdo, $name, $category, $url, $logoUrl, $audienceLabelId) {
+function find_or_create_organization(PDO $pdo, $name, $category, $url, $logoUrl, $audienceLabelId, $cityId, $schemaFlags) {
     $sel = $pdo->prepare('SELECT id FROM organizations WHERE name = ? LIMIT 1');
     $sel->execute([$name]);
     $found = $sel->fetch();
@@ -64,8 +80,19 @@ function find_or_create_organization(PDO $pdo, $name, $category, $url, $logoUrl,
         return (int)$found['id'];
     }
 
-    $ins = $pdo->prepare('INSERT INTO organizations (name, category, url, logo_url, audience_label_id) VALUES (?, ?, ?, ?, ?)');
-    $ins->execute([$name, $category, $url, $logoUrl, $audienceLabelId]);
+    if ($schemaFlags['hasOrgCategory'] && $schemaFlags['hasOrgAudience'] && $schemaFlags['hasOrgLogo']) {
+        $ins = $pdo->prepare('INSERT INTO organizations (name, category, url, logo_url, audience_label_id) VALUES (?, ?, ?, ?, ?)');
+        $ins->execute([$name, $category, $url, $logoUrl, $audienceLabelId]);
+    } elseif ($schemaFlags['hasOrgCategory']) {
+        $ins = $pdo->prepare('INSERT INTO organizations (name, category, url) VALUES (?, ?, ?)');
+        $ins->execute([$name, $category, $url]);
+    } elseif ($schemaFlags['hasOrgCity']) {
+        $ins = $pdo->prepare('INSERT INTO organizations (name, url, city_id) VALUES (?, ?, ?)');
+        $ins->execute([$name, $url, $cityId]);
+    } else {
+        $ins = $pdo->prepare('INSERT INTO organizations (name, url) VALUES (?, ?)');
+        $ins->execute([$name, $url]);
+    }
     return (int)$pdo->lastInsertId();
 }
 
@@ -194,13 +221,23 @@ try {
 
     $pdo->beginTransaction();
 
+    $schemaFlags = [
+        'hasAudienceLabelsTable' => table_exists($pdo, 'audience_labels'),
+        'hasOrganizationPlacesTable' => table_exists($pdo, 'organization_places'),
+        'hasOrgCategory' => column_exists($pdo, 'organizations', 'category'),
+        'hasOrgLogo' => column_exists($pdo, 'organizations', 'logo_url'),
+        'hasOrgAudience' => column_exists($pdo, 'organizations', 'audience_label_id'),
+        'hasOrgCity' => column_exists($pdo, 'organizations', 'city_id'),
+        'hasEventAudience' => column_exists($pdo, 'events', 'audience_label_id'),
+    ];
+
     $checkCity = $pdo->prepare('SELECT id FROM cities WHERE id = ?');
     $checkCity->execute([$cityId]);
     if (!$checkCity->fetch()) {
         fail_json(422, 'Selected city does not exist');
     }
 
-    if ($eventAudienceLabelId > 0) {
+    if ($eventAudienceLabelId > 0 && $schemaFlags['hasAudienceLabelsTable']) {
         $checkAudience = $pdo->prepare('SELECT id FROM audience_labels WHERE id = ?');
         $checkAudience->execute([$eventAudienceLabelId]);
         if (!$checkAudience->fetch()) {
@@ -254,10 +291,10 @@ try {
         if ($orgName === null) {
             fail_json(422, 'New organization name is required');
         }
-        if ($orgCategory === null || !in_array($orgCategory, ORG_CATEGORIES, true)) {
+        if ($schemaFlags['hasOrgCategory'] && ($orgCategory === null || !in_array($orgCategory, ORG_CATEGORIES, true))) {
             fail_json(422, 'New organization category is required and must be valid');
         }
-        if ($orgAudienceLabelId > 0) {
+        if ($orgAudienceLabelId > 0 && $schemaFlags['hasAudienceLabelsTable']) {
             $checkAudience = $pdo->prepare('SELECT id FROM audience_labels WHERE id = ?');
             $checkAudience->execute([$orgAudienceLabelId]);
             if (!$checkAudience->fetch()) {
@@ -266,35 +303,59 @@ try {
         } else {
             $orgAudienceLabelId = null;
         }
-        $organizationId = find_or_create_organization($pdo, $orgName, $orgCategory, $orgUrl, $orgLogoUrl, $orgAudienceLabelId);
+        $organizationId = find_or_create_organization($pdo, $orgName, $orgCategory, $orgUrl, $orgLogoUrl, $orgAudienceLabelId, $cityId, $schemaFlags);
     } elseif ($organizationMode !== 'none') {
         fail_json(422, 'Invalid organization mode');
     }
 
-    $insEvent = $pdo->prepare(
-        'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, audience_label_id, place_id, city_id, start_datetime, end_datetime)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-    );
-    $insEvent->execute([
-        $identifier,
-        $name,
-        $description,
-        $url,
-        $imageUrl,
-        $genre,
-        $keywordsText,
-        $eventStatus,
-        $attendanceMode,
-        $eventAudienceLabelId,
-        $placeId,
-        $cityId,
-        $startDateTime,
-        $endDateTime,
-    ]);
+    if ($schemaFlags['hasEventAudience']) {
+        $insEvent = $pdo->prepare(
+            'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, audience_label_id, place_id, city_id, start_datetime, end_datetime)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        );
+        $insEvent->execute([
+            $identifier,
+            $name,
+            $description,
+            $url,
+            $imageUrl,
+            $genre,
+            $keywordsText,
+            $eventStatus,
+            $attendanceMode,
+            $eventAudienceLabelId,
+            $placeId,
+            $cityId,
+            $startDateTime,
+            $endDateTime,
+        ]);
+    } else {
+        $insEvent = $pdo->prepare(
+            'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, place_id, city_id, start_datetime, end_datetime)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        );
+        $insEvent->execute([
+            $identifier,
+            $name,
+            $description,
+            $url,
+            $imageUrl,
+            $genre,
+            $keywordsText,
+            $eventStatus,
+            $attendanceMode,
+            $placeId,
+            $cityId,
+            $startDateTime,
+            $endDateTime,
+        ]);
+    }
     $eventId = (int)$pdo->lastInsertId();
 
     if ($organizationId > 0) {
-        link_organization_place($pdo, $organizationId, $placeId);
+        if ($schemaFlags['hasOrganizationPlacesTable']) {
+            link_organization_place($pdo, $organizationId, $placeId);
+        }
         $insEventOrg = $pdo->prepare('INSERT INTO event_organizations (event_id, organization_id, role) VALUES (?, ?, ?)');
         $insEventOrg->execute([$eventId, $organizationId, $organizationRole]);
     }

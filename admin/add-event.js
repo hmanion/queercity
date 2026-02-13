@@ -42,7 +42,7 @@ const mockOptions = {
     { id: 105, name: 'flinta' },
     { id: 106, name: 'all' },
   ],
-  organization_categories: ['Charity', 'Sports', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
+  organization_categories: ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
   tags: [
     { id: 30, name: 'community' },
     { id: 31, name: 'club' },
