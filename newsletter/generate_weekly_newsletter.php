@@ -230,6 +230,23 @@ try {
     [$weekStart, $weekEnd] = week_window($now);
 
     $config = require __DIR__ . '/../config/db.php';
+    $requiredToken = (string)($config['import_token'] ?? '');
+    $isCli = PHP_SAPI === 'cli';
+    if (!$isCli) {
+        $providedToken = '';
+        if (isset($_GET['token'])) {
+            $providedToken = (string)$_GET['token'];
+        } elseif (isset($_POST['token'])) {
+            $providedToken = (string)$_POST['token'];
+        }
+        if ($requiredToken === '' || !hash_equals($requiredToken, $providedToken)) {
+            http_response_code(403);
+            header('Content-Type: text/plain; charset=utf-8');
+            echo "Forbidden\n";
+            exit(1);
+        }
+    }
+
     $pdo = new PDO(
         "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4",
         $config['user'],

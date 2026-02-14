@@ -18,6 +18,16 @@ Generated files are written to:
 php /path/to/queercity/newsletter/generate_weekly_newsletter.php
 ```
 
+## Web trigger (token required)
+
+If the script is accessed via URL, it now requires the same admin secret token (`import_token` from `config/db.php`):
+
+```text
+https://your-domain/queercity/newsletter/generate_weekly_newsletter.php?token=YOUR_IMPORT_TOKEN
+```
+
+Without a valid token it returns `403 Forbidden`.
+
 ## Cron setup (Ionos)
 
 Expected PHP binary:
