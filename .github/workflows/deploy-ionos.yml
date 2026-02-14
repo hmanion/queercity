@@ -50,5 +50,7 @@ jobs:
               --exclude-glob scripts/ \
               --exclude-glob schema.sql \
               --exclude-glob csvimport/ \
+              --exclude-glob output.json \
+              --exclude-glob directory.json \
               ./ .; \
             bye"

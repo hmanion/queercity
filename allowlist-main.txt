@@ -21,8 +21,6 @@ life/index.php
 sexy/index.php
 style.css
 extended.woff2
-output.json
-directory.json
 js/events-main.module.js
 js/events-shared-utils.js
 js/event-filters.module.js
