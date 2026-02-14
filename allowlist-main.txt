@@ -8,6 +8,7 @@ allowlist-main.txt
 allowlist-pages.txt
 config/db.sample.php
 includes/header.php
+includes/footer.php
 index.php
 archive/index.php
 weekdays/index.php

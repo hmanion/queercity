@@ -17,13 +17,7 @@
 
   <div id="eventlist"></div>
 
-  <section>
-    <a href="archive/">PAST EVENTS</a>
-  </section>
-
-  <section>
-    <a href="https://github.com/hmanion/queercity" target="_blank" rel="noopener noreferrer">SOURCE / LICENSE</a>
-  </section>
+  <?php require __DIR__ . '/includes/footer.php'; qc_render_footer(''); ?>
 
 </body>
 

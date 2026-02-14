@@ -2,6 +2,9 @@
 
 This script generates next week's one-off events newsletter content from the existing database-backed API query layer.
 
+Multi-day handling:
+- Events lasting 24+ hours are shown in an **"Ongoing this week"** section (not only on their first day).
+
 ## Output files
 
 Generated files are written to:
@@ -18,6 +21,14 @@ Generated files are written to:
 php /path/to/queercity/newsletter/generate_weekly_newsletter.php
 ```
 
+## Dry mode (no DB)
+
+Use dry mode to validate newsletter formatting and output files without a database connection:
+
+```bash
+php /path/to/queercity/newsletter/generate_weekly_newsletter.php --dry
+```
+
 ## Web trigger (token required)
 
 If the script is accessed via URL, it now requires the same admin secret token (`import_token` from `config/db.php`):
@@ -27,6 +38,12 @@ https://your-domain/queercity/newsletter/generate_weekly_newsletter.php?token=YO
 ```
 
 Without a valid token it returns `403 Forbidden`.
+
+For web dry mode tests, keep the token and add `dry=1`:
+
+```text
+https://your-domain/queercity/newsletter/generate_weekly_newsletter.php?token=YOUR_IMPORT_TOKEN&dry=1
+```
 
 ## Cron setup (Ionos)
 

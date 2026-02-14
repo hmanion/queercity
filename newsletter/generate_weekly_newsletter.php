@@ -113,6 +113,98 @@ function group_events_by_day(array $events, DateTimeZone $tz): array
     return $grouped;
 }
 
+function is_ongoing_event(array $event, DateTimeZone $tz): bool
+{
+    $start = parse_dt((string)($event['startDate'] ?? ''), $tz);
+    $end = parse_dt(isset($event['endDate']) ? (string)$event['endDate'] : null, $tz);
+    if ($start === null || $end === null) {
+        return false;
+    }
+    // Treat as "ongoing" only when it lasts at least 24h.
+    return ($end->getTimestamp() - $start->getTimestamp()) >= 86400;
+}
+
+function split_ongoing_events(array $events, DateTimeZone $tz): array
+{
+    $ongoing = [];
+    $singleDay = [];
+    foreach ($events as $event) {
+        if (is_ongoing_event($event, $tz)) {
+            $ongoing[] = $event;
+        } else {
+            $singleDay[] = $event;
+        }
+    }
+    return [$ongoing, $singleDay];
+}
+
+function cli_has_flag(string $flag): bool
+{
+    if (PHP_SAPI !== 'cli') {
+        return false;
+    }
+    global $argv;
+    if (!is_array($argv)) {
+        return false;
+    }
+    return in_array($flag, $argv, true);
+}
+
+function web_bool_param(string $name): bool
+{
+    if (!isset($_GET[$name]) && !isset($_POST[$name])) {
+        return false;
+    }
+    $raw = $_GET[$name] ?? $_POST[$name] ?? '';
+    $value = strtolower(trim((string)$raw));
+    return in_array($value, ['1', 'true', 'yes', 'on'], true);
+}
+
+function dry_mode_events(DateTimeImmutable $weekStart): array
+{
+    $singleStart = $weekStart->modify('+1 day')->setTime(19, 0, 0);
+    $singleEnd = $weekStart->modify('+1 day')->setTime(22, 0, 0);
+
+    $ongoingStart = $weekStart->setTime(10, 0, 0);
+    $ongoingEnd = $weekStart->modify('+4 days')->setTime(18, 0, 0);
+
+    return [
+        [
+            'name' => 'Dry Run: Queer Film Night',
+            'url' => 'https://example.org/events/dry-film-night',
+            'startDate' => $singleStart->format(DateTimeInterface::ATOM),
+            'endDate' => $singleEnd->format(DateTimeInterface::ATOM),
+            'genre' => 'Film',
+            'location' => ['name' => 'HOME Manchester'],
+            'offers' => ['price' => '8.00', 'priceCurrency' => 'GBP'],
+        ],
+        [
+            'name' => 'Dry Run: Multi-day Exhibition',
+            'url' => 'https://example.org/events/dry-exhibition',
+            'startDate' => $ongoingStart->format(DateTimeInterface::ATOM),
+            'endDate' => $ongoingEnd->format(DateTimeInterface::ATOM),
+            'genre' => 'Exhibition',
+            'location' => ['name' => 'Manchester Art Hall'],
+            'offers' => ['price' => '0', 'priceCurrency' => 'GBP'],
+        ],
+    ];
+}
+
+function format_ongoing_span(
+    DateTimeImmutable $start,
+    DateTimeImmutable $end,
+    DateTimeImmutable $weekStart,
+    DateTimeImmutable $weekEnd
+): string {
+    $effectiveStart = $start > $weekStart ? $start : $weekStart;
+    $effectiveEnd = $end < $weekEnd ? $end : $weekEnd;
+    return sprintf(
+        '%s to %s',
+        $effectiveStart->format('D j M'),
+        $effectiveEnd->format('D j M')
+    );
+}
+
 function build_text_newsletter(
     string $subject,
     DateTimeImmutable $weekStart,
@@ -136,7 +228,38 @@ function build_text_newsletter(
         return implode(PHP_EOL, $lines) . PHP_EOL;
     }
 
-    foreach (group_events_by_day($events, $tz) as $day) {
+    [$ongoingEvents, $singleDayEvents] = split_ongoing_events($events, $tz);
+
+    if (!empty($ongoingEvents)) {
+        $lines[] = 'Ongoing this week';
+        foreach ($ongoingEvents as $event) {
+            $start = parse_dt((string)($event['startDate'] ?? ''), $tz);
+            $end = parse_dt(isset($event['endDate']) ? (string)$event['endDate'] : null, $tz);
+            if ($start === null || $end === null) {
+                continue;
+            }
+            $venue = trim((string)($event['location']['name'] ?? ''));
+            if ($venue === '') {
+                $venue = 'Venue TBC';
+            }
+            $genre = trim((string)($event['genre'] ?? ''));
+            if ($genre === '') {
+                $genre = 'Genre TBC';
+            }
+            $lines[] = sprintf(
+                '- Ongoing (%s) | %s | %s | %s | %s',
+                format_ongoing_span($start, $end, $weekStart, $weekEnd),
+                (string)$event['name'],
+                $venue,
+                $genre,
+                format_money($event)
+            );
+            $lines[] = '  ' . (string)$event['url'];
+        }
+        $lines[] = '';
+    }
+
+    foreach (group_events_by_day($singleDayEvents, $tz) as $day) {
         $lines[] = $day['label'];
         foreach ($day['events'] as $event) {
             $start = parse_dt((string)($event['startDate'] ?? ''), $tz);
@@ -196,7 +319,35 @@ function build_html_newsletter(
         return implode(PHP_EOL, $html) . PHP_EOL;
     }
 
-    foreach (group_events_by_day($events, $tz) as $day) {
+    [$ongoingEvents, $singleDayEvents] = split_ongoing_events($events, $tz);
+
+    if (!empty($ongoingEvents)) {
+        $html[] = '  <h2 style="margin:20px 0 8px;font-size:18px;">Ongoing this week</h2>';
+        $html[] = '  <ul style="margin:0 0 0 18px;padding:0;">';
+        foreach ($ongoingEvents as $event) {
+            $start = parse_dt((string)($event['startDate'] ?? ''), $tz);
+            $end = parse_dt(isset($event['endDate']) ? (string)$event['endDate'] : null, $tz);
+            if ($start === null || $end === null) {
+                continue;
+            }
+            $venue = trim((string)($event['location']['name'] ?? ''));
+            if ($venue === '') {
+                $venue = 'Venue TBC';
+            }
+            $genre = trim((string)($event['genre'] ?? ''));
+            if ($genre === '') {
+                $genre = 'Genre TBC';
+            }
+            $span = 'Ongoing (' . format_ongoing_span($start, $end, $weekStart, $weekEnd) . ')';
+            $html[] = '    <li style="margin-bottom:10px;">';
+            $html[] = '      <a href="' . html_escape((string)$event['url']) . '" style="color:#1559c1;text-decoration:none;"><strong>' . html_escape((string)$event['name']) . '</strong></a><br>';
+            $html[] = '      <span>' . html_escape($span . ' | ' . $venue . ' | ' . $genre . ' | ' . format_money($event)) . '</span>';
+            $html[] = '    </li>';
+        }
+        $html[] = '  </ul>';
+    }
+
+    foreach (group_events_by_day($singleDayEvents, $tz) as $day) {
         $html[] = '  <h2 style="margin:20px 0 8px;font-size:18px;">' . html_escape((string)$day['label']) . '</h2>';
         $html[] = '  <ul style="margin:0 0 0 18px;padding:0;">';
         foreach ($day['events'] as $event) {
@@ -228,10 +379,11 @@ try {
     $tz = new DateTimeZone('Europe/London');
     $now = new DateTimeImmutable('now', $tz);
     [$weekStart, $weekEnd] = week_window($now);
+    $isCli = PHP_SAPI === 'cli';
+    $dryMode = cli_has_flag('--dry');
 
     $config = require __DIR__ . '/../config/db.php';
     $requiredToken = (string)($config['import_token'] ?? '');
-    $isCli = PHP_SAPI === 'cli';
     if (!$isCli) {
         $providedToken = '';
         if (isset($_GET['token'])) {
@@ -245,16 +397,21 @@ try {
             echo "Forbidden\n";
             exit(1);
         }
+        $dryMode = web_bool_param('dry');
     }
 
-    $pdo = new PDO(
-        "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4",
-        $config['user'],
-        $config['pass'],
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
-    );
+    if ($dryMode) {
+        $sourceEvents = dry_mode_events($weekStart);
+    } else {
+        $pdo = new PDO(
+            "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4",
+            $config['user'],
+            $config['pass'],
+            [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+        );
 
-    $sourceEvents = fetch_one_off_events($pdo, $weekStart->format('Y-m-d'), $weekEnd->format('Y-m-d'), 2000);
+        $sourceEvents = fetch_one_off_events($pdo, $weekStart->format('Y-m-d'), $weekEnd->format('Y-m-d'), 2000);
+    }
     $validEvents = array_values(array_filter($sourceEvents, 'is_valid_event'));
 
     usort($validEvents, fn(array $a, array $b): int => event_timestamp($a, $tz) <=> event_timestamp($b, $tz));
@@ -281,6 +438,8 @@ try {
         'timezone' => 'Europe/London',
         'week_start' => $weekStart->format('Y-m-d'),
         'week_end' => $weekEnd->format('Y-m-d'),
+        'dry_mode' => $dryMode,
+        'source' => $dryMode ? 'dry_sample_events' : 'database',
         'source_events_count' => count($sourceEvents),
         'included_events_count' => count($validEvents),
         'skipped_invalid_count' => count($sourceEvents) - count($validEvents),
