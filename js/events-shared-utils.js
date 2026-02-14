@@ -199,9 +199,7 @@ export function isMultiDayEvent(ev){
   const start = getEventStartDate(ev);
   const end = getEventEndDate(ev);
   if (!start || !end) return false;
-  return start.getFullYear() !== end.getFullYear()
-    || start.getMonth() !== end.getMonth()
-    || start.getDate() !== end.getDate();
+  return (end.getTime() - start.getTime()) > 24 * 60 * 60 * 1000;
 }
 export function eventOverlaps(ev, from, to){ const s=getEventStartDate(ev), e=getEventEndDate(ev); return !!(s && e && e>=from && s<=to); }
 export function inRange(dateStr, from, to){ const d = parseISODateLocal(dateStr); return !!(d && d>=from && d<=to); }
