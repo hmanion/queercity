@@ -372,9 +372,15 @@ async function renderInteractiveMap(pridesByBorough, now) {
     panelOpen = true;
     panel.classList.add('is-open');
     panel.setAttribute('aria-hidden', 'false');
-    backdrop.hidden = false;
-    backdrop.classList.add('is-open');
-    if (isMobileViewport()) document.body.classList.add('prides-panel-open');
+    if (isMobileViewport()) {
+      backdrop.hidden = false;
+      backdrop.classList.add('is-open');
+      document.body.classList.add('prides-panel-open');
+    } else {
+      backdrop.hidden = true;
+      backdrop.classList.remove('is-open');
+      document.body.classList.remove('prides-panel-open');
+    }
 
     announce(announceText);
     closeBtn.focus();
@@ -464,6 +470,19 @@ async function renderInteractiveMap(pridesByBorough, now) {
 
   closeBtn.addEventListener('click', closePanel);
   backdrop.addEventListener('click', closePanel);
+
+  window.addEventListener('resize', () => {
+    if (!panelOpen) return;
+    if (isMobileViewport()) {
+      backdrop.hidden = false;
+      backdrop.classList.add('is-open');
+      document.body.classList.add('prides-panel-open');
+    } else {
+      backdrop.hidden = true;
+      backdrop.classList.remove('is-open');
+      document.body.classList.remove('prides-panel-open');
+    }
+  });
 
   document.addEventListener('keydown', (event) => {
     if (!panelOpen) return;
