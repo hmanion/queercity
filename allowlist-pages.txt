@@ -9,6 +9,7 @@ allowlist-pages.txt
 index.html
 archive/index.html
 weekdays/index.html
+genres/index.html
 style.css
 extended.woff2
 output.json
@@ -17,3 +18,4 @@ js/events-main.module.js
 js/events-shared-utils.js
 js/weekday.module.js
 js/archive.module.js
+js/genre.module.js

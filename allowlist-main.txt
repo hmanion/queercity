@@ -10,6 +10,7 @@ config/db.sample.php
 index.html
 archive/index.html
 weekdays/index.html
+genres/index.html
 style.css
 extended.woff2
 output.json
@@ -18,10 +19,14 @@ js/events-main.module.js
 js/events-shared-utils.js
 js/weekday.module.js
 js/archive.module.js
+js/genre.module.js
 admin/add-event.html
 admin/add-event.js
 admin/admin.css
 api/output.php
+api/lib/events_query.php
 api/directory.php
 api/admin-options.php
 api/admin-add-event.php
+newsletter/generate_weekly_newsletter.php
+newsletter/README_NEWSLETTER.md

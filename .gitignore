@@ -3,5 +3,6 @@ CHAT_CONTEXT.md
 **/.DS_Store
 output/
 scripts/
+newsletter/output/
 schema.sql
 organization_candidates_from_recurring.csv
