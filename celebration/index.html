@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Queer City - Archive</title>
+  <title>Queer City - Celebration</title>
   <link rel="stylesheet" href="../style.css" />
-  <script type="module" src="../js/archive.module.js"></script>
+  <script type="module" src="../js/genre-page.module.js"></script>
 </head>
-<body>
+<body id="genrepage" data-genre-slug="celebration" data-genre-label="Celebration" data-genre-title="Celebration">
   <div class="header">
     <nav>
       <a href="../">EVENTS</a> |
@@ -15,7 +15,7 @@
       <a href="../activities/">ACTIVITIES</a> |
       <a href="../arts/">ARTS</a> |
       <a href="../clubs/">CLUB</a> |
-      <a href="../celebration/">CELEBRATION</a> |
+      <a href="../celebration/" aria-current="page">CELEBRATION</a> |
       <a href="../life/">LIFE</a> |
       <a href="../sexy/">SEXY</a>
     </nav>
@@ -24,8 +24,8 @@
     <div class="subtitle">BIGGER THAN A VILLAGE</div>
   </div>
 
-  <section id="category-filter-bar" class="category-filter-bar" data-show-genres="1" data-show-recurring="1"></section>
-  <div id="archivelist"></div>
+  <section id="category-filter-bar" class="category-filter-bar" data-show-genres="0" data-show-recurring="1"></section>
+  <div id="genrelist"></div>
 
   <footer class="qc-footer">
     <a class="qc-footer-archive" href="../archive/">PAST EVENTS</a>

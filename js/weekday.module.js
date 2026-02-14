@@ -4,74 +4,17 @@
 // Also: rotates days so today is first, sorts by time, formats ordinals & times with en‑dash.
 
 import {
-  SEP_EN, EN_DASH,
+  SEP_EN,
   formatTimeRange, parseTimeToMinutes,
-  formatOccurrenceDisplay, createSection,
-  getCategory, getLocationParts, getEventUrl,
+  createSection,
   getEventStartTime, getEventEndTime,
-  getRecurringFrequency, getRecurringOccurrence, getRecurringDayWeek
+  getRecurringDayWeek
 } from './events-shared-utils.js';
+import { buildEventCard } from './event-card.module.js';
+import { fetchJsonWithFallback } from './fetch-json.module.js';
 
 function normalizeWeekday(s) { return String(s || '').trim().toLowerCase(); }
 function titleCase(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
-
-function buildEventBox(event, index) {
-  const i = index + 1;
-  const eventBox = document.createElement('div');
-  eventBox.id = `weekdayEvent${i}`;
-  eventBox.className = 'eventbox';
-
-  const eventBoxTop = document.createElement('div');
-  eventBoxTop.id = `weekdayEventTop${i}`;
-  eventBoxTop.className = 'eventboxtop';
-
-  const eventBoxBottom = document.createElement('div');
-  eventBoxBottom.id = `weekdayEventBottom${i}`;
-  eventBoxBottom.className = 'eventboxbottom';
-
-  const eventTime = document.createElement('div');
-  eventTime.className = 'date';
-  eventTime.textContent = formatTimeRange(getEventStartTime(event), getEventEndTime(event), SEP_EN);
-
-  const link = document.createElement('a');
-  const url = getEventUrl(event);
-  if (url) { link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
-
-  const nameDiv = document.createElement('div');
-  nameDiv.className = 'name';
-  nameDiv.id = `weekdayName${i}`;
-  nameDiv.textContent = event.name || 'Untitled event';
-  link.appendChild(nameDiv);
-
-  const catDiv = document.createElement('div');
-  const category = getCategory(event);
-  catDiv.className = 'category ' + category;
-  catDiv.id = `weekdayCategory${i}`;
-  catDiv.textContent = category;
-
-  const locDiv = document.createElement('div');
-  locDiv.className = 'location';
-  locDiv.id = `weekdayLocation${i}`;
-  locDiv.textContent = getLocationParts(event).join(', ');
-
-  eventBoxTop.appendChild(eventTime);
-  eventBoxTop.appendChild(link);
-  eventBoxTop.appendChild(locDiv);
-  eventBox.appendChild(eventBoxTop);
-  eventBoxBottom.appendChild(catDiv);
-
-  const freq = getRecurringFrequency(event);
-  if (freq) {
-    const label = document.createElement('div');
-    label.className = 'category recurring';
-    const occ = formatOccurrenceDisplay(getRecurringOccurrence(event));
-    label.textContent = occ ? `${freq} ${EN_DASH} ${occ}` : String(freq);
-    eventBoxBottom.appendChild(label);
-  }
-
-  eventBox.appendChild(eventBoxBottom);
-  return eventBox;
-}
 
 function groupByWeekday(events) {
   const groups = { monday: [], tuesday: [], wednesday: [], thursday: [], friday: [], saturday: [], sunday: [] };
@@ -94,13 +37,6 @@ function sortByTimeThenName(arr) {
   });
 }
 
-function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
-  return fetch(primaryUrl)
-    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
-    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
-    .catch(() => []);
-}
-
 fetchJsonWithFallback('../api/directory.php?limit=2000', '../directory.json')
   .then(directory => {
     const container = document.getElementById('weekdaylist');
@@ -120,7 +56,20 @@ fetchJsonWithFallback('../api/directory.php?limit=2000', '../directory.json')
       const arr = sortByTimeThenName(groups[wd] || []);
       if (!arr.length) { listEl.parentElement.style.display = 'none'; return; }
       const frag = document.createDocumentFragment();
-      arr.forEach(ev => { const box = buildEventBox(ev, counter++); frag.appendChild(box); });
+      arr.forEach(ev => {
+        const box = buildEventCard(ev, counter++, {
+          idPrefix: 'weekdayEvent',
+          topIdPrefix: 'weekdayEventTop',
+          bottomIdPrefix: 'weekdayEventBottom',
+          nameIdPrefix: 'weekdayName',
+          categoryIdPrefix: 'weekdayCategory',
+          locationIdPrefix: 'weekdayLocation',
+          dateBeforeLink: true,
+          dateText: (item) => formatTimeRange(getEventStartTime(item), getEventEndTime(item), SEP_EN),
+          recurringLabelMode: 'weekday',
+        });
+        frag.appendChild(box);
+      });
       listEl.appendChild(frag);
       listEl.parentElement.style.display = '';
     });

@@ -9,6 +9,7 @@ export const EN_DASH = "\u2013"
 export const EM_DASH = "\u2014";
 export const SEP_EN = NBSP + EN_DASH + NBSP; // preferred time/date sep: 19:00 – 21:00
 export const SEP_EM = NBSP + EM_DASH + NBSP; // alt sep if you prefer em dash
+export const FILTER_CATEGORIES = ['Activity', 'Arts', 'Club', 'Celebration', 'Life', 'Sexy'];
 
 // Date helpers (local, day-precise)
 export function parseISODateLocal(iso) {
@@ -88,12 +89,33 @@ export function getEventEndTime(ev) {
   const m = s.match(/T(\d{2}:\d{2})(?::\d{2})?/);
   return m ? m[1] : '';
 }
+export function formatEventDateTime(ev, sep = SEP_EN) {
+  if (!ev) return '';
+  const start = formatDate(ev.startDate);
+  if (!start) return '';
+  const startTime = getEventStartTime(ev);
+  const endTime = getEventEndTime(ev);
+  if (ev.endDate && !endTime) {
+    const end = formatDate(ev.endDate);
+    return `${start}${sep}${end}`;
+  }
+  if (startTime && endTime) return `${start} ${formatTimeRange(startTime, endTime, sep)}`;
+  if (startTime) return `${start} ${startTime}`;
+  return start;
+}
+function isManchesterLocality(value) {
+  const norm = String(value || '').trim().toLowerCase().replace(/[^a-z]/g, '');
+  return norm === 'manchester' || norm === 'cityofmanchester';
+}
 export function getLocationParts(ev) {
   if (!ev) return [];
-  if (ev.locName || ev.locStreet || ev.locTown || ev.locPost) return [ev.locName, ev.locStreet, ev.locTown, ev.locPost].filter(Boolean);
+  const includeTown = (town) => (town && !isManchesterLocality(town) ? town : '');
+  if (ev.locName || ev.locStreet || ev.locTown || ev.locPost) {
+    return [ev.locName, ev.locStreet, includeTown(ev.locTown), ev.locPost].filter(Boolean);
+  }
   const loc = ev.location || {};
   const addr = loc.address || {};
-  return [loc.name, addr.streetAddress, addr.addressLocality, addr.postalCode].filter(Boolean);
+  return [loc.name, addr.streetAddress, includeTown(addr.addressLocality), addr.postalCode].filter(Boolean);
 }
 export function getTagsList(ev) {
   if (!ev) return [];

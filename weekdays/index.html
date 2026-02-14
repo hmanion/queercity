@@ -1,36 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-qc-json-fallback="1">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Queer City - Directory</title>
-  <link rel="stylesheet" href="../style.css">
-  <link rel="preconnect" href="../api/output.php">
-  <link rel="preconnect" href="../api/directory.php">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Queer City - Weekdays</title>
+  <link rel="stylesheet" href="../style.css" />
   <script type="module" src="../js/weekday.module.js"></script>
 </head>
-
 <body>
-
   <div class="header">
     <nav>
       <a href="../">EVENTS</a> |
-      <a href="./">WEEKDAYS</a> <!--| 
-        <a href="../Pride">PRIDE</a> | 
-        <a href="../Editorial">EDITORIAL</a> -->
+      <a href="./" aria-current="page">WEEKDAYS</a> |
+      <a href="../activities/">ACTIVITIES</a> |
+      <a href="../arts/">ARTS</a> |
+      <a href="../clubs/">CLUB</a> |
+      <a href="../celebration/">CELEBRATION</a> |
+      <a href="../life/">LIFE</a> |
+      <a href="../sexy/">SEXY</a>
     </nav>
     <div class="title">QUEER CITY</div>
     <span class="circle"></span>
     <div class="subtitle">BIGGER THAN A VILLAGE</div>
-
   </div>
 
   <div id="weekdaylist"></div>
 
-  <section>
-    <a href="https://github.com/hmanion/queercity" target="_blank" rel="noopener noreferrer">SOURCE / LICENSE</a>
-  </section>
-
+  <footer class="qc-footer">
+    <a class="qc-footer-archive" href="../archive/">PAST EVENTS</a>
+    <a class="qc-footer-source" href="https://github.com/hmanion/queercity" target="_blank" rel="noopener noreferrer">SOURCE / LICENSE</a>
+  </footer>
 </body>
-
 </html>
