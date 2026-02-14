@@ -12,19 +12,7 @@
 
 <body>
 
-  <div class="header">
-    <nav>
-      <a href="../">EVENTS</a> |
-      <a href="./">WEEKDAYS</a> |
-      <a href="../activities/">ACTIVITIES</a> <!--| 
-        <a href="../Pride">PRIDE</a> | 
-        <a href="../Editorial">EDITORIAL</a> -->
-    </nav>
-    <div class="title">QUEER CITY</div>
-    <span class="circle"></span>
-    <div class="subtitle">BIGGER THAN A VILLAGE</div>
-
-  </div>
+  <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'weekdays'); ?>
 
   <div id="weekdaylist"></div>
 

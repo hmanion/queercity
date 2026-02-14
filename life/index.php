@@ -3,7 +3,7 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Queer City - Charity</title>
+  <title>Queer City - Life</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="preconnect" href="../api/output.php">
   <link rel="preconnect" href="../api/directory.php">
@@ -11,17 +11,8 @@
   <script type="module" src="../js/genre-page.module.js"></script>
 </head>
 
-<body id="genrepage" data-genre-slug="charity" data-genre-label="Charity" data-genre-title="Charity">
-  <div class="header">
-    <nav>
-      <a href="../">EVENTS</a> |
-      <a href="../weekdays/">WEEKDAYS</a> |
-      <a href="../activities/">ACTIVITIES</a>
-    </nav>
-    <div class="title">QUEER CITY</div>
-    <span class="circle"></span>
-    <div class="subtitle">BIGGER THAN A VILLAGE</div>
-  </div>
+<body id="genrepage" data-genre-slug="life" data-genre-label="Life" data-genre-title="Life">
+  <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'life'); ?>
 
   <section id="genre-links"></section>
   <div id="genrelist"></div>

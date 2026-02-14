@@ -12,16 +12,7 @@
 </head>
 
 <body id="genrepage" data-genre-slug="social" data-genre-label="Social" data-genre-title="Social">
-  <div class="header">
-    <nav>
-      <a href="../">EVENTS</a> |
-      <a href="../weekdays/">WEEKDAYS</a> |
-      <a href="../activities/">ACTIVITIES</a>
-    </nav>
-    <div class="title">QUEER CITY</div>
-    <span class="circle"></span>
-    <div class="subtitle">BIGGER THAN A VILLAGE</div>
-  </div>
+  <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'social'); ?>
 
   <section id="genre-links"></section>
   <div id="genrelist"></div>

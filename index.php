@@ -7,33 +7,18 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="api/output.php">
   <link rel="preconnect" href="api/directory.php">
-  <!-- <script src="events.js"></script> -->
   <meta charset="utf-8" />
   <script type="module" src="./js/events-main.module.js"></script>
 </head>
 
 <body>
 
-  <div class="header">
-    <nav>
-      <a href="">EVENTS</a> |
-      <a href="weekdays">WEEKDAYS</a> |
-      <a href="activities/">ACTIVITIES</a> <!--| 
-      <a href="pride">PRIDE</a> | 
-      <a href="editorial">EDITORIAL</a> -->
-    </nav>
-    <div class="title">QUEER CITY</div>
-    <span class="circle"></span>
-    <div class="subtitle">BIGGER THAN A VILLAGE</div>
+  <?php require __DIR__ . '/includes/header.php'; qc_render_header('', 'events'); ?>
 
-  </div>
-
-  <div id="eventlist">
-  </div>
-
+  <div id="eventlist"></div>
 
   <section>
-    <a href="archive">PAST EVENTS</a>
+    <a href="archive/">PAST EVENTS</a>
   </section>
 
   <section>
