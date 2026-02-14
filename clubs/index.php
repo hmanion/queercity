@@ -3,7 +3,7 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Queer City - Clubs</title>
+  <title>Queer City - Club</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="preconnect" href="../api/output.php">
   <link rel="preconnect" href="../api/directory.php">
@@ -11,7 +11,7 @@
   <script type="module" src="../js/genre-page.module.js"></script>
 </head>
 
-<body id="genrepage" data-genre-slug="clubs" data-genre-label="Club" data-genre-title="Clubs">
+<body id="genrepage" data-genre-slug="clubs" data-genre-label="Club" data-genre-title="Club">
   <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'clubs'); ?>
   <?php require __DIR__ . '/../includes/filter-bar.php'; qc_render_filter_bar(false, true); ?>
 
