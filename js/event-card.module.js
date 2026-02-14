@@ -6,6 +6,8 @@ import {
   getRecurringFrequency,
   getRecurringOccurrence,
   formatOccurrenceDisplay,
+  isMultiDayEvent,
+  getAudienceLabel,
 } from './events-shared-utils.js';
 
 export function buildEventCard(event, index, options = {}) {
@@ -34,6 +36,10 @@ export function buildEventCard(event, index, options = {}) {
   const bottom = document.createElement('div');
   if (bottomIdPrefix) bottom.id = `${bottomIdPrefix}${i}`;
   bottom.className = 'eventboxbottom';
+  const leftBadges = document.createElement('div');
+  leftBadges.className = 'eventbadges-left';
+  const rightBadges = document.createElement('div');
+  rightBadges.className = 'eventbadges-right';
 
   const link = document.createElement('a');
   const url = getEventUrl(event);
@@ -73,13 +79,28 @@ export function buildEventCard(event, index, options = {}) {
   catDiv.className = 'category ' + category;
   if (categoryIdPrefix) catDiv.id = `${categoryIdPrefix}${i}`;
   catDiv.textContent = category;
-  bottom.appendChild(catDiv);
+  rightBadges.appendChild(catDiv);
+
+  const audience = getAudienceLabel(event);
+  if (audience) {
+    const label = document.createElement('div');
+    label.className = 'category audience';
+    label.textContent = audience;
+    leftBadges.appendChild(label);
+  }
+
+  if (isMultiDayEvent(event)) {
+    const label = document.createElement('div');
+    label.className = 'category multiday';
+    label.textContent = 'Multi-day';
+    leftBadges.appendChild(label);
+  }
 
   if (recurringLabelMode === 'main' && event._isRecurring && event._recurrenceFrequency) {
     const label = document.createElement('div');
     label.className = 'category recurring';
     label.textContent = String(event._recurrenceFrequency);
-    bottom.appendChild(label);
+    leftBadges.appendChild(label);
   }
 
   if (recurringLabelMode === 'weekday') {
@@ -89,9 +110,12 @@ export function buildEventCard(event, index, options = {}) {
       label.className = 'category recurring';
       const occ = formatOccurrenceDisplay(getRecurringOccurrence(event));
       label.textContent = occ ? `${freq} ${EN_DASH} ${occ}` : String(freq);
-      bottom.appendChild(label);
+      leftBadges.appendChild(label);
     }
   }
+
+  bottom.appendChild(leftBadges);
+  bottom.appendChild(rightBadges);
 
   eventBox.appendChild(top);
   eventBox.appendChild(bottom);

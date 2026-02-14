@@ -60,6 +60,16 @@ button.active {
   color: white;
 }
 
+.multiday {
+  background-color: #1f6f8b;
+  color: white;
+}
+
+.audience {
+  background-color: #0b4f2d;
+  color: white;
+}
+
 .off {
   color: grey;
 }
@@ -136,9 +146,24 @@ a:hover{
 
 .eventboxbottom {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: space-between;
   margin: 0.4rem 0 0 0;
+  gap: 0.4rem;
+}
+
+.eventbadges-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: flex-start;
+}
+
+.eventbadges-right {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.3rem;
 }
 
 .name {
@@ -156,7 +181,6 @@ a:hover{
     font-variant-caps: all-small-caps;
     font-weight: bold;
     font-style: italic;
-    align-self: flex-end;
     padding: 0.1rem 0.3rem;
   border-radius: 2px;
 }
