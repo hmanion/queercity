@@ -3,8 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Find LGBTQ+ events happening on weekdays across Manchester and Greater Manchester, from socials and arts to club nights and community meetups." />
   <title>Queer City - Weekdays</title>
   <link rel="stylesheet" href="../style.css" />
+  <link rel="preload" href="../extended.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="modulepreload" href="../js/event-card.module.js" />
+  <link rel="modulepreload" href="../js/fetch-json.module.js" />
+  <link rel="modulepreload" href="../js/events-shared-utils.js" />
   <script type="module" src="../js/weekday.module.js"></script>
 </head>
 <body>
@@ -25,7 +30,9 @@
     <div class="subtitle">BIGGER THAN A VILLAGE</div>
   </div>
 
-  <div id="weekdaylist"></div>
+  <main id="main-content">
+    <div id="weekdaylist"></div>
+  </main>
 
   <footer class="qc-footer">
     <a class="qc-footer-archive" href="../archive/">PAST EVENTS</a>

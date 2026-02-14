@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://queercity.uk/sitemap.xml

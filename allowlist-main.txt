@@ -11,6 +11,8 @@ index.html
 archive/index.html
 weekdays/index.html
 style.css
+robots.txt
+sitemap.xml
 extended.woff2
 output.json
 directory.json

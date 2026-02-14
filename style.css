@@ -1,6 +1,9 @@
 @font-face {
   font-family: Extended;
-  src: url(extended.woff2);
+  src: url(extended.woff2) format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
 }
 
 body {
@@ -9,7 +12,7 @@ body {
 }
 
 .header {
-    font-family: Extended;
+    font-family: Extended, "Arial Narrow", Arial, sans-serif;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     grid-template-rows: 1fr 4fr;
@@ -27,7 +30,7 @@ h1 {
 }
 
 h2 {
-    font-family: Extended;
+    font-family: Extended, "Arial Narrow", Arial, sans-serif;
     font-size: 1rem;
   margin: 0;
   padding: 0.9rem 0 0.5rem;

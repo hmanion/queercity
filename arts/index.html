@@ -3,8 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="See upcoming LGBTQ+ arts events in Manchester and Greater Manchester, including exhibitions, performances, screenings and creative gatherings." />
   <title>Queer City - Arts</title>
   <link rel="stylesheet" href="../style.css" />
+  <link rel="preload" href="../extended.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="modulepreload" href="../js/event-card.module.js" />
+  <link rel="modulepreload" href="../js/fetch-json.module.js" />
+  <link rel="modulepreload" href="../js/filter-bar.module.js" />
+  <link rel="modulepreload" href="../js/time-buckets.module.js" />
+  <link rel="modulepreload" href="../js/event-filters.module.js" />
+  <link rel="modulepreload" href="../js/tag-filter.module.js" />
+  <link rel="modulepreload" href="../js/events-shared-utils.js" />
   <script type="module" src="../js/genre-page.module.js"></script>
 </head>
 <body id="genrepage" data-genre-slug="arts" data-genre-label="Arts" data-genre-title="Arts">
@@ -25,8 +34,10 @@
     <div class="subtitle">BIGGER THAN A VILLAGE</div>
   </div>
 
-  <section id="category-filter-bar" class="category-filter-bar" data-show-genres="0" data-show-recurring="1"></section>
-  <div id="genrelist"></div>
+  <main id="main-content">
+    <section id="category-filter-bar" class="category-filter-bar" data-show-genres="0" data-show-recurring="1"></section>
+    <div id="genrelist"></div>
+  </main>
 
   <footer class="qc-footer">
     <a class="qc-footer-archive" href="../archive/">PAST EVENTS</a>
