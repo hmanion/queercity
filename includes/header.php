@@ -7,10 +7,9 @@ if (!function_exists('qc_render_header')) {
             ['id' => 'events', 'href' => $basePath . './', 'label' => 'EVENTS'],
             ['id' => 'weekdays', 'href' => $basePath . 'weekdays/', 'label' => 'WEEKDAYS'],
             ['id' => 'activities', 'href' => $basePath . 'activities/', 'label' => 'ACTIVITIES'],
-            ['id' => 'charity', 'href' => $basePath . 'charity/', 'label' => 'CHARITY'],
-            ['id' => 'social', 'href' => $basePath . 'social/', 'label' => 'SOCIAL'],
             ['id' => 'arts', 'href' => $basePath . 'arts/', 'label' => 'ARTS'],
             ['id' => 'clubs', 'href' => $basePath . 'clubs/', 'label' => 'CLUBS'],
+            ['id' => 'celebration', 'href' => $basePath . 'celebration/', 'label' => 'CELEBRATION'],
             ['id' => 'life', 'href' => $basePath . 'life/', 'label' => 'LIFE'],
             ['id' => 'sexy', 'href' => $basePath . 'sexy/', 'label' => 'SEXY'],
         ];

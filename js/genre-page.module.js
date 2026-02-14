@@ -25,10 +25,9 @@ import { createTagDropdown } from './tag-filter.module.js';
 const RANGE_DAYS = 42;
 const KNOWN_GENRES = [
   { slug: 'activities', label: 'Activity' },
-  { slug: 'charity', label: 'Charity' },
-  { slug: 'social', label: 'Social' },
   { slug: 'arts', label: 'Arts' },
   { slug: 'clubs', label: 'Club' },
+  { slug: 'celebration', label: 'Celebration' },
   { slug: 'life', label: 'Life' },
   { slug: 'sexy', label: 'Sexy' },
 ];

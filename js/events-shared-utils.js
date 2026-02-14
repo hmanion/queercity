@@ -9,7 +9,7 @@ export const EN_DASH = "\u2013"
 export const EM_DASH = "\u2014";
 export const SEP_EN = NBSP + EN_DASH + NBSP; // preferred time/date sep: 19:00 – 21:00
 export const SEP_EM = NBSP + EM_DASH + NBSP; // alt sep if you prefer em dash
-export const FILTER_CATEGORIES = ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
+export const FILTER_CATEGORIES = ['Activity', 'Arts', 'Club', 'Celebration', 'Life', 'Sexy'];
 
 // Date helpers (local, day-precise)
 export function parseISODateLocal(iso) {

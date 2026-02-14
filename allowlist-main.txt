@@ -14,10 +14,9 @@ index.php
 archive/index.php
 weekdays/index.php
 activities/index.php
-charity/index.php
-social/index.php
 arts/index.php
 clubs/index.php
+celebration/index.php
 life/index.php
 sexy/index.php
 style.css
