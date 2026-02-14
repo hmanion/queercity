@@ -5,3 +5,5 @@ output/
 scripts/
 schema.sql
 organization_candidates_from_recurring.csv
+HANDOFF_*.md
+.ops/
