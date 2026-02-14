@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 420" role="img" aria-labelledby="gm-map-title gm-map-desc">
+  <title id="gm-map-title">Greater Manchester Boroughs</title>
+  <desc id="gm-map-desc">Interactive silhouettes of ten Greater Manchester boroughs.</desc>
+
+  <path id="borough-wigan" data-borough="wigan" d="M20 170 L120 130 L180 180 L160 250 L70 275 L20 235 Z" />
+  <path id="borough-bolton" data-borough="bolton" d="M150 95 L230 75 L285 125 L265 190 L195 205 L145 155 Z" />
+  <path id="borough-bury" data-borough="bury" d="M255 35 L335 20 L385 75 L355 130 L285 125 Z" />
+  <path id="borough-rochdale" data-borough="rochdale" d="M385 45 L465 30 L530 85 L510 145 L430 155 L355 120 Z" />
+  <path id="borough-oldham" data-borough="oldham" d="M410 145 L505 135 L560 190 L525 255 L455 250 L395 205 Z" />
+  <path id="borough-tameside" data-borough="tameside" d="M390 220 L460 220 L505 275 L470 340 L385 330 L350 275 Z" />
+  <path id="borough-stockport" data-borough="stockport" d="M295 275 L365 270 L400 340 L345 395 L265 380 L245 325 Z" />
+  <path id="borough-trafford" data-borough="trafford" d="M190 235 L265 210 L305 260 L275 325 L210 325 L170 285 Z" />
+  <path id="borough-salford" data-borough="salford" d="M210 165 L285 145 L325 200 L290 260 L230 250 L190 215 Z" />
+  <path id="borough-manchester" data-borough="manchester" d="M280 170 L350 155 L395 205 L350 275 L285 270 L250 225 Z" />
+</svg>

@@ -18,6 +18,7 @@ sexy/index.html
 prides/index.html
 style.css
 extended.woff2
+assets/maps/gm-boroughs.svg
 output.json
 directory.json
 prides.json
