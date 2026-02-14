@@ -1,34 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 430" role="img" aria-labelledby="gm-map-title gm-map-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 560" role="img" aria-labelledby="gm-map-title gm-map-desc">
   <title id="gm-map-title">Greater Manchester Boroughs</title>
   <desc id="gm-map-desc">Interactive silhouettes of ten Greater Manchester boroughs.</desc>
 
-  <!-- Wigan borders Bolton and Salford -->
-  <path id="borough-wigan" data-borough="wigan" d="M60 240 L130 230 L160 240 L160 280 L120 330 L60 300 Z" />
+  <!-- Wigan: borders Bolton + Salford -->
+  <path id="borough-wigan" data-borough="wigan" d="M60 200 L105 160 L95 210 L130 255 L215 270 L215 330 L110 350 L60 300 Z" />
 
-  <!-- Bolton borders Wigan, Salford and Bury -->
-  <path id="borough-bolton" data-borough="bolton" d="M130 230 L140 180 L220 90 L240 170 L180 210 L160 240 Z" />
+  <!-- Bolton: borders Wigan + Salford + Bury -->
+  <path id="borough-bolton" data-borough="bolton" d="M130 130 L190 150 L240 220 L215 270 L130 255 L95 210 L105 160 Z" />
 
-  <!-- Bury borders Bolton, Salford, Manchester and Rochdale -->
-  <path id="borough-bury" data-borough="bury" d="M220 90 L300 80 L330 120 L340 150 L300 150 L280 200 L240 170 Z" />
+  <!-- Bury: borders Bolton + Salford + Manchester + Rochdale -->
+  <path id="borough-bury" data-borough="bury" d="M210 95 L285 85 L345 176 L305 180 L275 205 L240 220 L190 150 Z" />
 
-  <!-- Rochdale borders Bury, Manchester and Oldham -->
-  <path id="borough-rochdale" data-borough="rochdale" d="M330 120 L410 90 L470 130 L430 180 L360 200 L340 150 Z" />
+  <!-- Rochdale: borders Bury + Manchester + Oldham -->
+  <path id="borough-rochdale" data-borough="rochdale" d="M285 85 L390 92 L470 118 L455 170 L380 165 L360 230 L345 176 Z" />
 
-  <!-- Oldham borders Rochdale, Manchester and Tameside -->
-  <path id="borough-oldham" data-borough="oldham" d="M430 180 L500 170 L540 220 L500 280 L430 250 L360 270 L360 200 Z" />
+  <!-- Oldham: borders Rochdale + Manchester + Tameside -->
+  <path id="borough-oldham" data-borough="oldham" d="M380 165 L455 170 L525 230 L490 285 L430 255 L355 300 L360 230 Z" />
 
-  <!-- Salford borders Wigan, Bolton, Bury, Manchester and Trafford -->
-  <path id="borough-salford" data-borough="salford" d="M160 240 L180 210 L240 170 L280 200 L280 270 L250 320 L190 320 L160 280 Z" />
+  <!-- Salford: borders Wigan + Bolton + Bury + Manchester + Trafford -->
+  <path id="borough-salford" data-borough="salford" d="M305 180 L298 238 L286 388 L248 390 L215 330 L215 270 L240 220 L275 205 Z" />
 
-  <!-- Trafford borders Salford and Manchester -->
-  <path id="borough-trafford" data-borough="trafford" d="M190 320 L250 320 L280 270 L295 315 L260 360 L210 360 Z" />
+  <!-- Trafford: borders Salford + Manchester -->
+  <path id="borough-trafford" data-borough="trafford" d="M286 388 L294 420 L304 424 L345 510 L250 525 L175 490 L200 435 L248 390 Z" />
 
-  <!-- Manchester borders Trafford, Salford, Bury, Rochdale, Oldham, Tameside and Stockport -->
-  <path id="borough-manchester" data-borough="manchester" d="M300 150 L340 150 L360 200 L360 270 L340 320 L300 320 L280 270 L280 200 Z" />
+  <!-- Manchester (long/thin): borders Trafford + Salford + Bury + Rochdale + Oldham + Tameside + Stockport -->
+  <path id="borough-manchester" data-borough="manchester" d="M305 180 L345 176 L360 230 L355 300 L348 368 L316 428 L294 420 L298 238 Z" />
 
-  <!-- Tameside borders Oldham, Manchester and Stockport -->
-  <path id="borough-tameside" data-borough="tameside" d="M360 270 L430 250 L500 280 L480 340 L410 340 L340 320 Z" />
+  <!-- Tameside: borders Oldham + Manchester + Stockport -->
+  <path id="borough-tameside" data-borough="tameside" d="M355 300 L348 368 L405 378 L445 420 L490 355 L490 285 L430 255 Z" />
 
-  <!-- Stockport borders Manchester and Tameside -->
-  <path id="borough-stockport" data-borough="stockport" d="M300 320 L340 320 L410 340 L380 390 L310 400 L272 364 Z" />
+  <!-- Stockport: borders Manchester + Tameside -->
+  <path id="borough-stockport" data-borough="stockport" d="M348 368 L316 428 L330 500 L395 510 L455 485 L445 420 L405 378 Z" />
 </svg>
