@@ -109,10 +109,8 @@ if (!root || !target) {
     const genreEvents = allWindowEvents.filter((ev) => normalizeGenreValue(getCategory(ev)) === wanted);
 
     target.innerHTML = '';
-    const filterHost = document.createElement('section');
-    filterHost.id = 'genre-filter-bar';
-    filterHost.className = 'category-filter-bar';
-    target.appendChild(filterHost);
+    const filterHost = document.getElementById('category-filter-bar');
+    if (filterHost) filterHost.innerHTML = '';
 
     const thisMonthName = now.toLocaleString('en-GB', { month: 'long' });
     const todayEnd = endOfDay(now);
@@ -174,8 +172,27 @@ if (!root || !target) {
 
     let selectedTags = null;
     let tagMode = 'any';
+    let showRecurring = false;
+    if (filterHost) {
+      const right = document.createElement('div');
+      right.className = 'filter-right';
+      const recBtn = document.createElement('button');
+      recBtn.className = 'toggle recurring off';
+      recBtn.setAttribute('aria-pressed', 'false');
+      recBtn.textContent = 'Recurring: Hidden';
+      right.appendChild(recBtn);
+      filterHost.appendChild(right);
+      recBtn.addEventListener('click', () => {
+        const on = recBtn.classList.toggle('on');
+        recBtn.classList.toggle('off', !on);
+        recBtn.setAttribute('aria-pressed', String(on));
+        recBtn.textContent = on ? 'Recurring: Shown' : 'Recurring: Hidden';
+        showRecurring = on;
+        render();
+      });
+    }
     const filterCtrl = createTagDropdown(
-      filterHost,
+      filterHost || target,
       getUniqueTags(genreEvents),
       (tagsSet, mode) => {
       selectedTags = tagsSet;
@@ -221,11 +238,11 @@ if (!root || !target) {
       const shown = new Set();
       const counterRef = { n: 0 };
       const preTag = {
-        today: base.today,
-        tomorrow: base.tomorrow,
-        thisWeek: base.thisWeek,
-        restOfMonth: base.restOfMonth,
-        months: base.months.map((m) => ({ key: m.key, items: m.items })),
+        today: base.today.filter((ev) => (showRecurring ? true : !ev._isRecurring)),
+        tomorrow: base.tomorrow.filter((ev) => (showRecurring ? true : !ev._isRecurring)),
+        thisWeek: base.thisWeek.filter((ev) => (showRecurring ? true : !ev._isRecurring)),
+        restOfMonth: base.restOfMonth.filter((ev) => (showRecurring ? true : !ev._isRecurring)),
+        months: base.months.map((m) => ({ key: m.key, items: m.items.filter((ev) => (showRecurring ? true : !ev._isRecurring)) })),
       };
 
       const allForTagChoices = [

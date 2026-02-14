@@ -10,7 +10,7 @@ import {
   getEventStartDate,
   getEventEndDate,
   eventOverlaps,
-  getUniqueCategories,
+  FILTER_CATEGORIES,
   getUniqueTags,
   eventKey,
   expandAllRecurring,
@@ -173,7 +173,7 @@ Promise.all([
   if (!eventList) return;
 
   const filterBar = ensureFilterBar(eventList);
-  const categories = getUniqueCategories(allEvents);
+  const categories = FILTER_CATEGORIES;
   const tags = getUniqueTags(allEvents);
 
   const base = {

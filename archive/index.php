@@ -13,6 +13,7 @@
 <body>
 
   <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'archive'); ?>
+  <?php require __DIR__ . '/../includes/filter-bar.php'; qc_render_filter_bar(true, true); ?>
 
   <div id="archivelist"></div>
 

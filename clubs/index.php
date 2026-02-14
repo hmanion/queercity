@@ -13,6 +13,7 @@
 
 <body id="genrepage" data-genre-slug="clubs" data-genre-label="Club" data-genre-title="Clubs">
   <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'clubs'); ?>
+  <?php require __DIR__ . '/../includes/filter-bar.php'; qc_render_filter_bar(false, true); ?>
 
   <section id="genre-links"></section>
   <div id="genrelist"></div>

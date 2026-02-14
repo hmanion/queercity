@@ -13,6 +13,7 @@
 
 <body id="genrepage" data-genre-slug="arts" data-genre-label="Arts" data-genre-title="Arts">
   <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'arts'); ?>
+  <?php require __DIR__ . '/../includes/filter-bar.php'; qc_render_filter_bar(false, true); ?>
 
   <section id="genre-links"></section>
   <div id="genrelist"></div>

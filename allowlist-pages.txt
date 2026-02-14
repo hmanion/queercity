@@ -8,6 +8,7 @@ allowlist-main.txt
 allowlist-pages.txt
 includes/header.php
 includes/footer.php
+includes/filter-bar.php
 index.php
 archive/index.php
 weekdays/index.php

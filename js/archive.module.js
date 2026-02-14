@@ -14,12 +14,13 @@ import {
   // dates & formatting
   parseISODateLocal, startOfDay, toISODate,
   formatEventDateTime,
+  FILTER_CATEGORIES,
   // event helper
   getEventEndDate,
   // small DOM helper
   createSection,
   getCategory,
-  getUniqueCategories, getUniqueTags, getTagsList
+  getUniqueTags, getTagsList
 } from './events-shared-utils.js';
 import { buildEventCard } from './event-card.module.js';
 import { fetchJsonWithFallback } from './fetch-json.module.js';
@@ -50,7 +51,7 @@ function ensureFilterBar(beforeEl) {
   return bar;
 }
 
-function buildFilters(barEl, categories, initialTags, onChangeCats, onChangeTags) {
+function buildFilters(barEl, categories, initialTags, onChangeCats, onToggleRecurring, onChangeTags) {
   let selectedCats = null;
   const row = document.createElement('div');
   row.className = 'filter-row';
@@ -99,6 +100,23 @@ function buildFilters(barEl, categories, initialTags, onChangeCats, onChangeTags
     });
   });
 
+  const right = document.createElement('div');
+  right.className = 'filter-right';
+  const recBtn = document.createElement('button');
+  recBtn.className = 'toggle recurring off';
+  recBtn.setAttribute('aria-pressed', 'false');
+  recBtn.textContent = 'Recurring: Hidden';
+  right.appendChild(recBtn);
+  barEl.appendChild(right);
+
+  recBtn.addEventListener('click', () => {
+    const on = recBtn.classList.toggle('on');
+    recBtn.classList.toggle('off', !on);
+    recBtn.setAttribute('aria-pressed', String(on));
+    recBtn.textContent = on ? 'Recurring: Shown' : 'Recurring: Hidden';
+    onToggleRecurring(on);
+  });
+
   const tagCtrl = createTagDropdown(barEl, initialTags, onChangeTags);
   updateCatsUI();
   return { setTagOptions: (tags) => tagCtrl.setOptions(tags) };
@@ -139,18 +157,20 @@ fetchJsonWithFallback(
     }
 
     const filterBar = ensureFilterBar(container);
-    const categories = getUniqueCategories(pastSingles);
+    const categories = FILTER_CATEGORIES;
     const tags = getUniqueTags(pastSingles);
 
     let selectedCats = null;
     let selectedTags = null;
     let tagMode = 'any';
+    let showRecurring = false;
 
     const filterCtrl = buildFilters(
       filterBar,
       categories,
       tags,
       (cats) => { selectedCats = cats; render(); },
+      (on) => { showRecurring = on; render(); },
       (tagsSet, mode) => { selectedTags = tagsSet; tagMode = mode || tagMode; render(); },
     );
 
@@ -159,7 +179,8 @@ fetchJsonWithFallback(
         if (!selectedCats) return true;
         return selectedCats.has(getCategory(ev));
       };
-      const preTag = items.filter(byCategory);
+      const byRecurring = (ev) => (showRecurring ? true : !ev._isRecurring);
+      const preTag = items.filter(byCategory).filter(byRecurring);
 
       const availableTags = getUniqueTags(preTag);
       filterCtrl.setTagOptions(availableTags);

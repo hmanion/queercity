@@ -14,6 +14,7 @@
 <body>
 
   <?php require __DIR__ . '/includes/header.php'; qc_render_header('', 'events'); ?>
+  <?php require __DIR__ . '/includes/filter-bar.php'; qc_render_filter_bar(true, true); ?>
 
   <div id="eventlist"></div>
 
