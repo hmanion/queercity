@@ -24,9 +24,12 @@ output.json
 directory.json
 js/events-main.module.js
 js/events-shared-utils.js
+js/event-filters.module.js
 js/event-card.module.js
 js/fetch-json.module.js
+js/filter-bar.module.js
 js/tag-filter.module.js
+js/time-buckets.module.js
 js/weekday.module.js
 js/archive.module.js
 js/genre-page.module.js
