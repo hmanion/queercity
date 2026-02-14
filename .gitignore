@@ -4,5 +4,9 @@ CHAT_CONTEXT.md
 output/
 scripts/
 newsletter/output/
+.ops/
+coordination/
 schema.sql
 organization_candidates_from_recurring.csv
+
+HANDOFF_*.md

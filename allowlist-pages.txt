@@ -4,6 +4,7 @@
 README.md
 LICENSE
 DATA_LICENSE.md
+HANDOFF_NEWSLETTER_STATUS.md
 allowlist-main.txt
 allowlist-pages.txt
 index.html
