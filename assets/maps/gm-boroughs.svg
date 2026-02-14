@@ -2,33 +2,33 @@
   <title id="gm-map-title">Greater Manchester Boroughs</title>
   <desc id="gm-map-desc">Interactive silhouettes of ten Greater Manchester boroughs.</desc>
 
-  <!-- Wigan borders Bolton + Salford -->
-  <path id="borough-wigan" data-borough="wigan" d="M60 240 L130 230 L170 250 L170 290 L120 330 L60 300 Z" />
+  <!-- Wigan borders Bolton and Salford -->
+  <path id="borough-wigan" data-borough="wigan" d="M60 240 L130 230 L160 240 L160 280 L120 330 L60 300 Z" />
 
-  <!-- Bolton borders Wigan + Salford + Bury -->
-  <path id="borough-bolton" data-borough="bolton" d="M130 230 L140 180 L200 150 L250 170 L220 210 L170 250 Z" />
+  <!-- Bolton borders Wigan, Salford and Bury -->
+  <path id="borough-bolton" data-borough="bolton" d="M130 230 L140 180 L220 90 L240 170 L180 210 L160 240 Z" />
 
-  <!-- Bury borders Bolton + Salford + Manchester + Rochdale -->
-  <path id="borough-bury" data-borough="bury" d="M200 150 L220 95 L300 90 L330 120 L300 130 L280 190 L250 170 Z" />
+  <!-- Bury borders Bolton, Salford, Manchester and Rochdale -->
+  <path id="borough-bury" data-borough="bury" d="M220 90 L300 80 L330 120 L340 150 L300 150 L280 200 L240 170 Z" />
 
-  <!-- Rochdale borders Bury + Manchester + Oldham -->
-  <path id="borough-rochdale" data-borough="rochdale" d="M300 130 L330 120 L410 95 L470 130 L430 180 L370 190 L350 130 Z" />
+  <!-- Rochdale borders Bury, Manchester and Oldham -->
+  <path id="borough-rochdale" data-borough="rochdale" d="M330 120 L410 90 L470 130 L430 180 L360 200 L340 150 Z" />
 
-  <!-- Oldham borders Rochdale + Manchester + Tameside -->
-  <path id="borough-oldham" data-borough="oldham" d="M370 190 L430 180 L500 170 L540 220 L500 280 L430 250 Z" />
+  <!-- Oldham borders Rochdale, Manchester and Tameside -->
+  <path id="borough-oldham" data-borough="oldham" d="M430 180 L500 170 L540 220 L500 280 L430 250 L360 270 L360 200 Z" />
 
-  <!-- Salford borders Wigan + Bolton + Bury + Manchester + Trafford -->
-  <path id="borough-salford" data-borough="salford" d="M170 250 L220 210 L250 170 L280 190 L280 280 L250 320 L190 320 L170 290 Z" />
+  <!-- Salford borders Wigan, Bolton, Bury, Manchester and Trafford -->
+  <path id="borough-salford" data-borough="salford" d="M160 240 L180 210 L240 170 L280 200 L280 270 L250 320 L190 320 L160 280 Z" />
 
-  <!-- Trafford borders Salford + Manchester -->
-  <path id="borough-trafford" data-borough="trafford" d="M190 320 L250 320 L280 280 L300 340 L260 360 L210 350 Z" />
+  <!-- Trafford borders Salford and Manchester -->
+  <path id="borough-trafford" data-borough="trafford" d="M190 320 L250 320 L280 270 L295 315 L260 360 L210 360 Z" />
 
-  <!-- Manchester (long/narrow) borders Trafford + Salford + Bury + Rochdale + Oldham + Tameside + Stockport -->
-  <path id="borough-manchester" data-borough="manchester" d="M300 130 L350 130 L370 190 L370 280 L350 340 L300 340 L280 280 L280 190 Z" />
+  <!-- Manchester borders Trafford, Salford, Bury, Rochdale, Oldham, Tameside and Stockport -->
+  <path id="borough-manchester" data-borough="manchester" d="M300 150 L340 150 L360 200 L360 270 L340 320 L300 320 L280 270 L280 200 Z" />
 
-  <!-- Tameside borders Oldham + Manchester + Stockport -->
-  <path id="borough-tameside" data-borough="tameside" d="M370 190 L430 250 L500 280 L480 340 L410 340 L370 280 Z" />
+  <!-- Tameside borders Oldham, Manchester and Stockport -->
+  <path id="borough-tameside" data-borough="tameside" d="M360 270 L430 250 L500 280 L480 340 L410 340 L340 320 Z" />
 
-  <!-- Stockport borders Manchester + Tameside -->
-  <path id="borough-stockport" data-borough="stockport" d="M300 340 L350 340 L410 340 L380 390 L300 400 L260 360 Z" />
+  <!-- Stockport borders Manchester and Tameside -->
+  <path id="borough-stockport" data-borough="stockport" d="M300 320 L340 320 L410 340 L380 390 L310 400 L272 364 Z" />
 </svg>
