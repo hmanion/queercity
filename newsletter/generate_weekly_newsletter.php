@@ -7,7 +7,11 @@ require_once __DIR__ . '/../api/lib/events_query.php';
 
 function stderr(string $message): void
 {
-    fwrite(STDERR, $message . PHP_EOL);
+    if (PHP_SAPI === 'cli' && defined('STDERR')) {
+        fwrite(STDERR, $message . PHP_EOL);
+        return;
+    }
+    error_log($message);
 }
 
 function html_escape(string $value): string
@@ -458,5 +462,10 @@ try {
     exit(0);
 } catch (Throwable $e) {
     stderr('Newsletter generation failed: ' . $e->getMessage());
+    if (PHP_SAPI !== 'cli') {
+        http_response_code(500);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo "Internal Server Error\n";
+    }
     exit(1);
 }

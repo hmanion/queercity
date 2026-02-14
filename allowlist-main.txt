@@ -41,4 +41,5 @@ api/admin-options.php
 api/admin-add-event.php
 api/lib/events_query.php
 newsletter/generate_weekly_newsletter.php
+newsletter/index.php
 newsletter/README_NEWSLETTER.md

@@ -34,7 +34,7 @@ php /path/to/queercity/newsletter/generate_weekly_newsletter.php --dry
 If the script is accessed via URL, it now requires the same admin secret token (`import_token` from `config/db.php`):
 
 ```text
-https://your-domain/queercity/newsletter/generate_weekly_newsletter.php?token=YOUR_IMPORT_TOKEN
+https://your-domain/queercity/newsletter/?token=YOUR_IMPORT_TOKEN
 ```
 
 Without a valid token it returns `403 Forbidden`.
@@ -42,7 +42,7 @@ Without a valid token it returns `403 Forbidden`.
 For web dry mode tests, keep the token and add `dry=1`:
 
 ```text
-https://your-domain/queercity/newsletter/generate_weekly_newsletter.php?token=YOUR_IMPORT_TOKEN&dry=1
+https://your-domain/queercity/newsletter/?token=YOUR_IMPORT_TOKEN&dry=1
 ```
 
 ## Cron setup (Ionos)
