@@ -22,15 +22,7 @@ import { buildEventCard } from './event-card.module.js';
 import { fetchJsonWithFallback } from './fetch-json.module.js';
 import { createTagDropdown } from './tag-filter.module.js';
 
-const RANGE_DAYS = 42;
-const KNOWN_GENRES = [
-  { slug: 'activities', label: 'Activity' },
-  { slug: 'arts', label: 'Arts' },
-  { slug: 'clubs', label: 'Club' },
-  { slug: 'celebration', label: 'Celebration' },
-  { slug: 'life', label: 'Life' },
-  { slug: 'sexy', label: 'Sexy' },
-];
+const FUTURE_MONTHS_AHEAD = 3;
 
 function normalizeGenreValue(value) {
   const raw = String(value || '').trim().toLowerCase();
@@ -40,24 +32,6 @@ function normalizeGenreValue(value) {
   if (compact.endsWith('ies') && compact.length > 3) return compact.slice(0, -3) + 'y';
   if (compact.endsWith('s') && compact.length > 1) return compact.slice(0, -1);
   return compact;
-}
-
-function renderGenreLinks(container, activeSlug) {
-  if (!container) return;
-  container.innerHTML = '';
-  KNOWN_GENRES.forEach((genre) => {
-    const link = document.createElement('a');
-    link.href = `../${genre.slug}/`;
-    link.textContent = genre.label.toUpperCase();
-    if (genre.slug === activeSlug) {
-      const strong = document.createElement('strong');
-      strong.appendChild(link);
-      container.appendChild(strong);
-    } else {
-      container.appendChild(link);
-    }
-    container.appendChild(document.createTextNode(' '));
-  });
 }
 
 function setTitleCountForList(listEl, count) {
@@ -70,7 +44,17 @@ function setTitleCountForList(listEl, count) {
 
 const now = new Date();
 const todayStart = startOfDay(now);
-const rangeEnd = endOfDay(new Date(now.getFullYear(), now.getMonth(), now.getDate() + RANGE_DAYS));
+const futureMonths = Array.from({ length: Math.max(1, FUTURE_MONTHS_AHEAD) }, (_, index) => {
+  const date = new Date(now.getFullYear(), now.getMonth() + (index + 1), 1);
+  return {
+    date,
+    key: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`,
+    title: index === 0
+      ? `Next Month - ${date.toLocaleString('en-GB', { month: 'long' })}`
+      : date.toLocaleString('en-GB', { month: 'long', year: 'numeric' }),
+  };
+});
+const rangeEnd = endOfMonth(futureMonths[futureMonths.length - 1].date);
 const fromParam = toISODate(todayStart);
 const toParam = toISODate(rangeEnd);
 const recurringStart = startOfWeek(todayStart);
@@ -80,7 +64,6 @@ const target = document.getElementById('genrelist');
 if (!root || !target) {
   console.error('Genre page container missing');
 } else {
-  const pageSlug = String(root.dataset.genreSlug || '').trim().toLowerCase();
   const genreLabel = String(root.dataset.genreLabel || '').trim();
   const genreTitle = String(root.dataset.genreTitle || genreLabel).trim();
 
@@ -120,19 +103,6 @@ if (!root || !target) {
     const weekStart = startOfWeek(now);
     const weekEnd = endOfWeek(now);
 
-    const futureMonths = [];
-    let monthCursor = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    while (monthCursor <= rangeEnd) {
-      const mDate = new Date(monthCursor);
-      const mKey = `${mDate.getFullYear()}-${String(mDate.getMonth() + 1).padStart(2, '0')}`;
-      const isFirst = futureMonths.length === 0;
-      const mTitle = isFirst
-        ? `Next Month - ${mDate.toLocaleString('en-GB', { month: 'long' })}`
-        : mDate.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
-      futureMonths.push({ date: mDate, key: mKey, title: mTitle });
-      monthCursor = new Date(mDate.getFullYear(), mDate.getMonth() + 1, 1);
-    }
-
     const base = {
       today: genreEvents.filter((e) => eventOverlaps(e, todayStart, todayEnd)),
       tomorrow: genreEvents.filter((e) => eventOverlaps(e, tomorrowStart, tomorrowEnd)),
@@ -171,14 +141,14 @@ if (!root || !target) {
 
     let selectedTags = null;
     let tagMode = 'any';
-    let showRecurring = false;
+    let showRecurring = true;
     if (filterHost) {
       const right = document.createElement('div');
       right.className = 'filter-right';
       const recBtn = document.createElement('button');
-      recBtn.className = 'toggle recurring off';
-      recBtn.setAttribute('aria-pressed', 'false');
-      recBtn.textContent = 'Recurring: Hidden';
+      recBtn.className = 'toggle recurring on';
+      recBtn.setAttribute('aria-pressed', 'true');
+      recBtn.textContent = 'Recurring: Shown';
       right.appendChild(recBtn);
       filterHost.appendChild(right);
       recBtn.addEventListener('click', () => {
@@ -269,12 +239,11 @@ if (!root || !target) {
       if (shown.size === 0) {
         const empty = document.createElement('p');
         empty.id = 'genre-empty-message';
-        empty.textContent = 'No events found for this genre in the next six weeks.';
+        empty.textContent = 'No events found for this genre in the current time window.';
         target.appendChild(empty);
       }
     }
 
     render();
-    renderGenreLinks(document.getElementById('genre-links'), pageSlug);
   }).catch((err) => console.error('Error loading genre data:', err));
 }
