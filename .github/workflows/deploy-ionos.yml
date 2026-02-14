@@ -54,5 +54,6 @@ jobs:
               --exclude-glob csvimport/ \
               --exclude-glob output.json \
               --exclude-glob directory.json \
+              --exclude-glob newsletter/output/ \
               ./ .; \
             bye"
