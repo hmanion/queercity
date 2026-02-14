@@ -3,26 +3,27 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Queer City - Genres</title>
+  <title>Queer City - Charity</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="preconnect" href="../api/output.php">
   <link rel="preconnect" href="../api/directory.php">
   <meta charset="utf-8" />
-  <script type="module" src="../js/genre.module.js"></script>
+  <script type="module" src="../js/genre-page.module.js"></script>
 </head>
 
-<body>
+<body id="genrepage" data-genre-slug="charity" data-genre-label="Charity" data-genre-title="Charity">
   <div class="header">
     <nav>
       <a href="../">EVENTS</a> |
       <a href="../weekdays/">WEEKDAYS</a> |
-      <a href="./">GENRES</a>
+      <a href="../activities/">ACTIVITIES</a>
     </nav>
     <div class="title">QUEER CITY</div>
     <span class="circle"></span>
     <div class="subtitle">BIGGER THAN A VILLAGE</div>
   </div>
 
+  <section id="genre-links"></section>
   <div id="genrelist"></div>
 
   <section>

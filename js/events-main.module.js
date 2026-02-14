@@ -6,7 +6,7 @@ import {
   endOfWeek,
   endOfMonth,
   isSameMonth,
-  formatDate,
+  formatEventDateTime,
   getEventStartDate,
   getEventEndDate,
   eventOverlaps,
@@ -15,93 +15,16 @@ import {
   eventKey,
   expandAllRecurring,
   createSection,
-  formatTimeRange,
   getCategory,
-  getLocationParts,
-  getEventUrl,
-  getEventStartTime,
-  getEventEndTime,
   getTagsList,
   toISODate,
 } from './events-shared-utils.js';
+import { buildEventCard } from './event-card.module.js';
+import { fetchJsonWithFallback } from './fetch-json.module.js';
+import { createTagDropdown } from './tag-filter.module.js';
 
 const FUTURE_MONTHS_AHEAD = 3;
 const LOOKBACK_DAYS = 0;
-
-function formatDateTime(event) {
-  const start = formatDate(event.startDate);
-  if (!start) return '';
-  const startTime = getEventStartTime(event);
-  const endTime = getEventEndTime(event);
-  if (event.endDate && !endTime) {
-    const end = formatDate(event.endDate);
-    return `${start}${SEP_EN}${end}`;
-  }
-  if (startTime && endTime) return `${start} ${formatTimeRange(startTime, endTime, SEP_EN)}`;
-  if (startTime) return `${start} ${startTime}`;
-  return start;
-}
-
-function buildEventBox(event, index) {
-  const i = index + 1;
-  const eventBox = document.createElement('div');
-  eventBox.id = `event${i}`;
-  eventBox.className = 'eventbox';
-
-  const top = document.createElement('div');
-  top.id = `eventTop${i}`;
-  top.className = 'eventboxtop';
-
-  const bottom = document.createElement('div');
-  bottom.id = `eventBottom${i}`;
-  bottom.className = 'eventboxbottom';
-
-  const link = document.createElement('a');
-  const url = getEventUrl(event);
-  if (url) {
-    link.href = url;
-    link.rel = 'noopener noreferrer';
-    link.target = '_blank';
-  }
-
-  const nameDiv = document.createElement('div');
-  nameDiv.className = 'name';
-  nameDiv.id = `name${i}`;
-  nameDiv.textContent = event.name || 'Untitled event';
-  link.appendChild(nameDiv);
-
-  const dateDiv = document.createElement('div');
-  dateDiv.className = 'date';
-  dateDiv.id = `date${i}`;
-  dateDiv.textContent = formatDateTime(event);
-
-  const category = getCategory(event);
-  const catDiv = document.createElement('div');
-  catDiv.className = 'category ' + category;
-  catDiv.id = `category${i}`;
-  catDiv.textContent = category;
-
-  const locDiv = document.createElement('div');
-  locDiv.className = 'location';
-  locDiv.id = `location${i}`;
-  locDiv.textContent = getLocationParts(event).join(', ');
-
-  top.appendChild(link);
-  top.appendChild(dateDiv);
-  top.appendChild(locDiv);
-  eventBox.appendChild(top);
-
-  bottom.appendChild(catDiv);
-  if (event._isRecurring && event._recurrenceFrequency) {
-    const label = document.createElement('div');
-    label.className = 'category recurring';
-    label.textContent = String(event._recurrenceFrequency);
-    bottom.appendChild(label);
-  }
-
-  eventBox.appendChild(bottom);
-  return eventBox;
-}
 
 function ensureFilterBar(beforeEl) {
   let bar = document.getElementById('category-filter-bar');
@@ -114,133 +37,6 @@ function ensureFilterBar(beforeEl) {
     bar.innerHTML = '';
   }
   return bar;
-}
-
-function buildTagDropdown(barEl, initialTags, onChangeTagsWithMode) {
-  let selected = new Set();
-  let mode = 'any';
-
-  const wrap = document.createElement('div');
-  wrap.className = 'tag-filter dropdown';
-
-  const toggleBtn = document.createElement('button');
-  toggleBtn.type = 'button';
-  toggleBtn.className = 'tags-toggle';
-  toggleBtn.setAttribute('aria-expanded', 'false');
-  toggleBtn.textContent = 'Tags';
-
-  const panel = document.createElement('div');
-  panel.className = 'tags-panel';
-  panel.style.display = 'none';
-
-  const modeWrap = document.createElement('div');
-  modeWrap.className = 'tags-mode';
-  const modeLabel = document.createElement('span');
-  modeLabel.textContent = 'Match:';
-  const anyBtn = document.createElement('button');
-  anyBtn.type = 'button';
-  anyBtn.className = 'tag-mode any active';
-  anyBtn.textContent = 'Any';
-  anyBtn.setAttribute('aria-pressed', 'true');
-  const allBtn = document.createElement('button');
-  allBtn.type = 'button';
-  allBtn.className = 'tag-mode all';
-  allBtn.textContent = 'All';
-  allBtn.setAttribute('aria-pressed', 'false');
-  modeWrap.appendChild(modeLabel);
-  modeWrap.appendChild(anyBtn);
-  modeWrap.appendChild(allBtn);
-
-  const list = document.createElement('div');
-  list.className = 'tags-list';
-
-  const actions = document.createElement('div');
-  actions.className = 'tags-actions';
-  const clearBtn = document.createElement('button');
-  clearBtn.type = 'button';
-  clearBtn.className = 'tags-clear';
-  clearBtn.textContent = 'Clear';
-  actions.appendChild(clearBtn);
-
-  panel.appendChild(modeWrap);
-  panel.appendChild(list);
-  panel.appendChild(actions);
-  wrap.appendChild(toggleBtn);
-  wrap.appendChild(panel);
-  barEl.appendChild(wrap);
-
-  function emit() {
-    onChangeTagsWithMode(selected.size ? new Set(selected) : null, mode);
-  }
-
-  function updateModeUI() {
-    const isAny = mode === 'any';
-    anyBtn.classList.toggle('active', isAny);
-    allBtn.classList.toggle('active', !isAny);
-    anyBtn.setAttribute('aria-pressed', String(isAny));
-    allBtn.setAttribute('aria-pressed', String(!isAny));
-  }
-
-  let currentOptions = initialTags || [];
-  function renderOptions(tags) {
-    list.innerHTML = '';
-    tags.forEach((tag) => {
-      const id = `tag-${tag.replace(/[^a-z0-9]+/g, '-')}`;
-      const label = document.createElement('label');
-      label.className = 'tag-option';
-      label.setAttribute('for', id);
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.id = id;
-      cb.value = tag;
-      cb.checked = selected.has(tag);
-      cb.addEventListener('change', () => {
-        if (cb.checked) selected.add(tag); else selected.delete(tag);
-        emit();
-      });
-      const txt = document.createElement('span');
-      txt.textContent = tag;
-      label.appendChild(cb);
-      label.appendChild(txt);
-      list.appendChild(label);
-    });
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    const open = panel.style.display === 'none';
-    panel.style.display = open ? 'block' : 'none';
-    toggleBtn.setAttribute('aria-expanded', String(open));
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!wrap.contains(e.target)) {
-      panel.style.display = 'none';
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  clearBtn.addEventListener('click', () => {
-    selected.clear();
-    renderOptions(currentOptions);
-    emit();
-  });
-
-  anyBtn.addEventListener('click', () => { mode = 'any'; updateModeUI(); emit(); });
-  allBtn.addEventListener('click', () => { mode = 'all'; updateModeUI(); emit(); });
-
-  updateModeUI();
-  renderOptions(currentOptions);
-
-  return {
-    setOptions(newTags) {
-      currentOptions = Array.from(newTags);
-      const before = new Set(selected);
-      selected = new Set(Array.from(selected).filter((t) => currentOptions.includes(t)));
-      const changed = before.size !== selected.size || Array.from(before).some((t) => !selected.has(t));
-      renderOptions(currentOptions);
-      if (changed) emit();
-    },
-  };
 }
 
 function buildFilters(barEl, categories, initialTags, onChangeCats, onToggleRecurring, onChangeTags) {
@@ -309,7 +105,7 @@ function buildFilters(barEl, categories, initialTags, onChangeCats, onToggleRecu
     onToggleRecurring(on);
   });
 
-  const tagCtrl = buildTagDropdown(barEl, initialTags, onChangeTags);
+  const tagCtrl = createTagDropdown(barEl, initialTags, onChangeTags);
   updateCatsUI();
   return { setTagOptions: (tags) => tagCtrl.setOptions(tags) };
 }
@@ -341,13 +137,6 @@ const futureMonths = Array.from({ length: Math.max(1, FUTURE_MONTHS_AHEAD) }, (_
 const endRange = endOfMonth(futureMonths[futureMonths.length - 1].date);
 const fromParam = toISODate(lookback);
 const toParam = toISODate(endRange);
-
-function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
-  return fetch(primaryUrl)
-    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
-    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
-    .catch(() => []);
-}
 
 Promise.all([
   fetchJsonWithFallback(
@@ -429,7 +218,17 @@ Promise.all([
 
     const frag = document.createDocumentFragment();
     filtered.forEach((ev) => {
-      frag.appendChild(buildEventBox(ev, counter++));
+      frag.appendChild(buildEventCard(ev, counter++, {
+        idPrefix: 'event',
+        topIdPrefix: 'eventTop',
+        bottomIdPrefix: 'eventBottom',
+        nameIdPrefix: 'name',
+        dateIdPrefix: 'date',
+        categoryIdPrefix: 'category',
+        locationIdPrefix: 'location',
+        dateText: (item) => formatEventDateTime(item, SEP_EN),
+        recurringLabelMode: 'main',
+      }));
     });
     listEl.appendChild(frag);
 

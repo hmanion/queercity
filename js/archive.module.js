@@ -13,32 +13,17 @@ import {
   SEP_EN,
   // dates & formatting
   parseISODateLocal, startOfDay, toISODate,
-  formatDate, formatTimeRange,
+  formatEventDateTime,
   // event helper
   getEventEndDate,
   // small DOM helper
   createSection,
-  getEventStartTime, getEventEndTime, getCategory, getEventUrl, getLocationParts,
+  getCategory,
   getUniqueCategories, getUniqueTags, getTagsList
 } from './events-shared-utils.js';
-
-function formatDateTime(ev) {
-  const start = formatDate(ev.startDate);
-  if (!start) return '';
-  const startTime = getEventStartTime(ev);
-  const endTime = getEventEndTime(ev);
-  if (ev.endDate && !endTime) {
-    const end = formatDate(ev.endDate);
-    return `${start}${SEP_EN}${end}`; // e.g., "Mon 1 Sep – Thu 4 Sep"
-  }
-  if (startTime && endTime) {
-    return `${start} ${formatTimeRange(startTime, endTime, SEP_EN)}`; // e.g., "Mon 1 Sep 19:00 – 21:00"
-  }
-  if (startTime && !endTime) {
-    return `${start} ${startTime}`;
-  }
-  return start;
-}
+import { buildEventCard } from './event-card.module.js';
+import { fetchJsonWithFallback } from './fetch-json.module.js';
+import { createTagDropdown } from './tag-filter.module.js';
 
 function monthKeyTitleFromISO(iso) {
   const d = parseISODateLocal(iso);
@@ -46,49 +31,6 @@ function monthKeyTitleFromISO(iso) {
   const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
   const title = d.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
   return { key, title, date: d };
-}
-
-function buildEventBox(ev, idx) {
-  const i = idx + 1;
-  const eventBox = document.createElement('div');
-  eventBox.id = `archiveEvent${i}`;
-  eventBox.className = 'eventbox';
-
-  const top = document.createElement('div');
-  top.className = 'eventboxtop';
-
-  const bottom = document.createElement('div');
-  bottom.className = 'eventboxbottom';
-
-  const dateDiv = document.createElement('div');
-  dateDiv.className = 'date';
-  dateDiv.textContent = formatDateTime(ev);
-
-  const link = document.createElement('a');
-  const url = getEventUrl(ev);
-  if (url) { link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer'; }
-  const nameDiv = document.createElement('div');
-  nameDiv.className = 'name';
-  nameDiv.textContent = ev.name || 'Untitled event';
-  link.appendChild(nameDiv);
-
-  const locDiv = document.createElement('div');
-  locDiv.className = 'location';
-  locDiv.textContent = getLocationParts(ev).join(', ');
-
-  top.appendChild(link);
-  top.appendChild(dateDiv);
-  top.appendChild(locDiv);
-
-  const catDiv = document.createElement('div');
-  const category = getCategory(ev);
-  catDiv.className = 'category ' + category;
-  catDiv.textContent = category;
-  bottom.appendChild(catDiv);
-
-  eventBox.appendChild(top);
-  eventBox.appendChild(bottom);
-  return eventBox;
 }
 
 function ensureMonthSection(container, title, id) {
@@ -106,132 +48,6 @@ function ensureFilterBar(beforeEl) {
     bar.innerHTML = '';
   }
   return bar;
-}
-
-function buildTagDropdown(barEl, initialTags, onChangeTagsWithMode) {
-  let selected = new Set();
-  let mode = 'any';
-
-  const wrap = document.createElement('div');
-  wrap.className = 'tag-filter dropdown';
-  const toggleBtn = document.createElement('button');
-  toggleBtn.type = 'button';
-  toggleBtn.className = 'tags-toggle';
-  toggleBtn.setAttribute('aria-expanded', 'false');
-  toggleBtn.textContent = 'Tags';
-
-  const panel = document.createElement('div');
-  panel.className = 'tags-panel';
-  panel.style.display = 'none';
-
-  const modeWrap = document.createElement('div');
-  modeWrap.className = 'tags-mode';
-  const modeLabel = document.createElement('span');
-  modeLabel.textContent = 'Match:';
-  const anyBtn = document.createElement('button');
-  anyBtn.type = 'button';
-  anyBtn.className = 'tag-mode any active';
-  anyBtn.textContent = 'Any';
-  anyBtn.setAttribute('aria-pressed', 'true');
-  const allBtn = document.createElement('button');
-  allBtn.type = 'button';
-  allBtn.className = 'tag-mode all';
-  allBtn.textContent = 'All';
-  allBtn.setAttribute('aria-pressed', 'false');
-  modeWrap.appendChild(modeLabel);
-  modeWrap.appendChild(anyBtn);
-  modeWrap.appendChild(allBtn);
-
-  const list = document.createElement('div');
-  list.className = 'tags-list';
-
-  const actions = document.createElement('div');
-  actions.className = 'tags-actions';
-  const clearBtn = document.createElement('button');
-  clearBtn.type = 'button';
-  clearBtn.className = 'tags-clear';
-  clearBtn.textContent = 'Clear';
-  actions.appendChild(clearBtn);
-
-  panel.appendChild(modeWrap);
-  panel.appendChild(list);
-  panel.appendChild(actions);
-  wrap.appendChild(toggleBtn);
-  wrap.appendChild(panel);
-  barEl.appendChild(wrap);
-
-  function emit() {
-    onChangeTagsWithMode(selected.size ? new Set(selected) : null, mode);
-  }
-
-  function updateModeUI() {
-    const isAny = mode === 'any';
-    anyBtn.classList.toggle('active', isAny);
-    allBtn.classList.toggle('active', !isAny);
-    anyBtn.setAttribute('aria-pressed', String(isAny));
-    allBtn.setAttribute('aria-pressed', String(!isAny));
-  }
-
-  let currentOptions = initialTags || [];
-  function renderOptions(tags) {
-    list.innerHTML = '';
-    tags.forEach((tag) => {
-      const id = `tag-${tag.replace(/[^a-z0-9]+/g, '-')}`;
-      const label = document.createElement('label');
-      label.className = 'tag-option';
-      label.setAttribute('for', id);
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.id = id;
-      cb.value = tag;
-      cb.checked = selected.has(tag);
-      cb.addEventListener('change', () => {
-        if (cb.checked) selected.add(tag); else selected.delete(tag);
-        emit();
-      });
-      const txt = document.createElement('span');
-      txt.textContent = tag;
-      label.appendChild(cb);
-      label.appendChild(txt);
-      list.appendChild(label);
-    });
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    const open = panel.style.display === 'none';
-    panel.style.display = open ? 'block' : 'none';
-    toggleBtn.setAttribute('aria-expanded', String(open));
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!wrap.contains(e.target)) {
-      panel.style.display = 'none';
-      toggleBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  clearBtn.addEventListener('click', () => {
-    selected.clear();
-    renderOptions(currentOptions);
-    emit();
-  });
-
-  anyBtn.addEventListener('click', () => { mode = 'any'; updateModeUI(); emit(); });
-  allBtn.addEventListener('click', () => { mode = 'all'; updateModeUI(); emit(); });
-
-  updateModeUI();
-  renderOptions(currentOptions);
-
-  return {
-    setOptions(newTags) {
-      currentOptions = Array.from(newTags);
-      const before = new Set(selected);
-      selected = new Set(Array.from(selected).filter((t) => currentOptions.includes(t)));
-      const changed = before.size !== selected.size || Array.from(before).some((t) => !selected.has(t));
-      renderOptions(currentOptions);
-      if (changed) emit();
-    },
-  };
 }
 
 function buildFilters(barEl, categories, initialTags, onChangeCats, onChangeTags) {
@@ -283,7 +99,7 @@ function buildFilters(barEl, categories, initialTags, onChangeCats, onChangeTags
     });
   });
 
-  const tagCtrl = buildTagDropdown(barEl, initialTags, onChangeTags);
+  const tagCtrl = createTagDropdown(barEl, initialTags, onChangeTags);
   updateCatsUI();
   return { setTagOptions: (tags) => tagCtrl.setOptions(tags) };
 }
@@ -294,13 +110,6 @@ const to = new Date(now);
 to.setDate(to.getDate() - 1);
 const fromParam = toISODate(from);
 const toParam = toISODate(to);
-
-function fetchJsonWithFallback(primaryUrl, fallbackUrl) {
-  return fetch(primaryUrl)
-    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Primary fetch failed'))))
-    .catch(() => fetch(fallbackUrl).then((r) => (r.ok ? r.json() : [])))
-    .catch(() => []);
-}
 
 fetchJsonWithFallback(
   `../api/output.php?from=${encodeURIComponent(fromParam)}&to=${encodeURIComponent(toParam)}`,
@@ -385,7 +194,12 @@ fetchJsonWithFallback(
           if (h2) h2.textContent = `${title} (${filteredItems.length})`;
         }
         const frag = document.createDocumentFragment();
-        filteredItems.forEach(ev => { frag.appendChild(buildEventBox(ev, counter++)); });
+        filteredItems.forEach(ev => {
+          frag.appendChild(buildEventCard(ev, counter++, {
+            idPrefix: 'archiveEvent',
+            dateText: (item) => formatEventDateTime(item, SEP_EN),
+          }));
+        });
         listEl.appendChild(frag);
       }
     }

@@ -88,6 +88,20 @@ export function getEventEndTime(ev) {
   const m = s.match(/T(\d{2}:\d{2})(?::\d{2})?/);
   return m ? m[1] : '';
 }
+export function formatEventDateTime(ev, sep = SEP_EN) {
+  if (!ev) return '';
+  const start = formatDate(ev.startDate);
+  if (!start) return '';
+  const startTime = getEventStartTime(ev);
+  const endTime = getEventEndTime(ev);
+  if (ev.endDate && !endTime) {
+    const end = formatDate(ev.endDate);
+    return `${start}${sep}${end}`;
+  }
+  if (startTime && endTime) return `${start} ${formatTimeRange(startTime, endTime, sep)}`;
+  if (startTime) return `${start} ${startTime}`;
+  return start;
+}
 function isManchesterLocality(value) {
   const norm = String(value || '').trim().toLowerCase().replace(/[^a-z]/g, '');
   return norm === 'manchester' || norm === 'cityofmanchester';
