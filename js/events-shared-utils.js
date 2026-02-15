@@ -159,8 +159,48 @@ export function getRecurringOccurrence(ev) {
   return '';
 }
 
+function normalizeAudienceToken(value) {
+  return String(value || '').trim().toLowerCase().replace(/[^a-z]/g, '');
+}
+
+export function getAudienceLabel(ev) {
+  if (!ev || typeof ev !== 'object') return '';
+  const candidates = [
+    ev.audienceLabel,
+    ev.audience_label,
+    ev.audience_label_name,
+    ev.eventAudienceLabel,
+    ev.event_audience_label,
+    ev.forAudience,
+    ev?.audience?.label,
+    ev?.audience?.name,
+  ];
+
+  const raw = candidates.find((v) => String(v || '').trim() !== '');
+  if (!raw) return '';
+
+  const token = normalizeAudienceToken(raw);
+  if (!token || token === 'all' || token === 'everyone' || token === 'general') return '';
+  if (token === 'flinta') return 'FLINTA';
+  if (token === 'lesbian') return 'Lesbian';
+  if (token === 'gay') return 'Gay';
+  if (token === 'bi' || token === 'bisexual') return 'Bi';
+  if (token === 'trans' || token === 'transgender') return 'Trans';
+  if (token === 'men') return 'Men';
+
+  const base = String(raw).trim();
+  if (!base) return '';
+  return base.charAt(0).toUpperCase() + base.slice(1);
+}
+
 export function getEventStartDate(ev){ return ev && ev.startDate ? parseISODateLocal(ev.startDate) : null; }
 export function getEventEndDate(ev){ if(!ev) return null; return ev.endDate ? parseISODateLocal(ev.endDate) : (ev.startDate ? parseISODateLocal(ev.startDate) : null); }
+export function isMultiDayEvent(ev){
+  const start = getEventStartDate(ev);
+  const end = getEventEndDate(ev);
+  if (!start || !end) return false;
+  return (end.getTime() - start.getTime()) > 24 * 60 * 60 * 1000;
+}
 export function eventOverlaps(ev, from, to){ const s=getEventStartDate(ev), e=getEventEndDate(ev); return !!(s && e && e>=from && s<=to); }
 export function inRange(dateStr, from, to){ const d = parseISODateLocal(dateStr); return !!(d && d>=from && d<=to); }
 
