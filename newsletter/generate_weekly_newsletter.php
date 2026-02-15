@@ -124,8 +124,8 @@ function is_ongoing_event(array $event, DateTimeZone $tz): bool
     if ($start === null || $end === null) {
         return false;
     }
-    // Treat as "ongoing" only when it lasts at least 24h.
-    return ($end->getTimestamp() - $start->getTimestamp()) >= 86400;
+    // Treat as "ongoing" only when it lasts strictly longer than 24h.
+    return ($end->getTimestamp() - $start->getTimestamp()) > 86400;
 }
 
 function split_ongoing_events(array $events, DateTimeZone $tz): array
