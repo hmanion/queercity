@@ -201,7 +201,16 @@ export function isMultiDayEvent(ev){
   if (!start || !end) return false;
   return (end.getTime() - start.getTime()) > 24 * 60 * 60 * 1000;
 }
-export function eventOverlaps(ev, from, to){ const s=getEventStartDate(ev), e=getEventEndDate(ev); return !!(s && e && e>=from && s<=to); }
+export function eventOverlaps(ev, from, to){
+  const s = getEventStartDate(ev);
+  const e = getEventEndDate(ev);
+  if (!s || !e) return false;
+  // Short events (<=24h) should only appear on the day they start.
+  if (!isMultiDayEvent(ev)) {
+    return s >= from && s <= to;
+  }
+  return e >= from && s <= to;
+}
 export function inRange(dateStr, from, to){ const d = parseISODateLocal(dateStr); return !!(d && d>=from && d<=to); }
 
 // Time helpers
