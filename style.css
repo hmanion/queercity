@@ -249,31 +249,31 @@ section{
 }
 
 #monday {
-  background-color: #FF6CE3;
+  background-color: var(--qc-pink);
 }
 
 #tuesday {
-  background-color: #FF1515;
+  background-color: var(--qc-red);
 }
 
 #wednesday {
-  background-color: #FF7A00;
+  background-color: var(--qc-orange);
 }
 
 #thursday {
-  background-color: #FFD429;
+  background-color: var(--qc-yellow);
 }
 
 #friday {
-  background-color: #06C054;
+  background-color: var(--qc-green);
 }
 
 #saturday {
-  background-color: #004CFF;
+  background-color: var(--qc-blue);
 }
 
 #sunday {
-  background-color: #BC2FFF;
+  background-color: var(--qc-purple);
 }
 
 @media (min-width: 40em) {
