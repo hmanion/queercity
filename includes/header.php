@@ -6,13 +6,13 @@ if (!function_exists('qc_render_header')) {
         $links = [
             ['id' => 'events', 'href' => $basePath . './', 'label' => 'EVENTS'],
             ['id' => 'weekdays', 'href' => $basePath . 'weekdays/', 'label' => 'WEEKDAYS'],
-            ['id' => 'active', 'href' => $basePath . 'active/', 'label' => 'ACTIVE'],
-            ['id' => 'arts', 'href' => $basePath . 'arts/', 'label' => 'ARTS'],
-            ['id' => 'music', 'href' => $basePath . 'music/', 'label' => 'MUSIC'],
-            ['id' => 'celebration', 'href' => $basePath . 'celebration/', 'label' => 'CELEBRATION'],
             ['id' => 'life', 'href' => $basePath . 'life/', 'label' => 'LIFE'],
-            ['id' => 'social', 'href' => $basePath . 'social/', 'label' => 'SOCIAL'],
             ['id' => 'sex', 'href' => $basePath . 'sex/', 'label' => 'SEX'],
+            ['id' => 'social', 'href' => $basePath . 'social/', 'label' => 'SOCIAL'],
+            ['id' => 'active', 'href' => $basePath . 'active/', 'label' => 'ACTIVE'],
+            ['id' => 'music', 'href' => $basePath . 'music/', 'label' => 'MUSIC'],
+            ['id' => 'arts', 'href' => $basePath . 'arts/', 'label' => 'ARTS'],
+            ['id' => 'celebration', 'href' => $basePath . 'celebration/', 'label' => 'CELEBRATION'],
         ];
         ?>
         <div class="header">

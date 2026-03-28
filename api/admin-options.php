@@ -88,7 +88,7 @@ try {
         'places' => $places,
         'organizations' => $organizations,
         'audience_labels' => $audienceLabels,
-        'event_categories' => ['Active', 'Arts', 'Music', 'Celebration', 'Life', 'Sex', 'Social'],
+        'event_categories' => ['Life', 'Sex', 'Social', 'Active', 'Music', 'Arts', 'Celebration'],
         'organization_categories' => ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
         'tags' => $tags,
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

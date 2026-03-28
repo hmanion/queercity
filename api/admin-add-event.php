@@ -4,7 +4,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 const ORG_CATEGORIES = ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
-const EVENT_GENRES = ['Active', 'Arts', 'Music', 'Celebration', 'Life', 'Sex', 'Social'];
+const EVENT_GENRES = ['Life', 'Sex', 'Social', 'Active', 'Music', 'Arts', 'Celebration'];
 
 function fail_json($code, $message) {
     http_response_code($code);

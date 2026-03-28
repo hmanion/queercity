@@ -43,7 +43,7 @@ const mockOptions = {
     { id: 105, name: 'flinta' },
     { id: 106, name: 'all' },
   ],
-  event_categories: ['Active', 'Arts', 'Music', 'Celebration', 'Life', 'Sex', 'Social'],
+  event_categories: ['Life', 'Sex', 'Social', 'Active', 'Music', 'Arts', 'Celebration'],
   organization_categories: ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
   tags: [
     { id: 30, name: 'community' },
