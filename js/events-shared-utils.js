@@ -11,13 +11,13 @@ export const SEP_EN = NBSP + EN_DASH + NBSP; // preferred time/date sep: 19:00 
 export const SEP_EM = NBSP + EM_DASH + NBSP; // alt sep if you prefer em dash
 
 const CATEGORY_MODEL = [
-  { slug: 'active', label: 'Active', aliases: ['activity', 'activities', 'active'] },
-  { slug: 'arts', label: 'Arts', aliases: ['arts', 'art'] },
-  { slug: 'music', label: 'Music', aliases: ['club', 'clubs', 'music'] },
-  { slug: 'celebration', label: 'Celebration', aliases: ['celebration', 'celebrations'] },
   { slug: 'life', label: 'Life', aliases: ['life'] },
   { slug: 'sex', label: 'Sex', aliases: ['sex', 'sexy'] },
   { slug: 'social', label: 'Social', aliases: ['social', 'socials'] },
+  { slug: 'active', label: 'Active', aliases: ['activity', 'activities', 'active'] },
+  { slug: 'music', label: 'Music', aliases: ['club', 'clubs', 'music'] },
+  { slug: 'arts', label: 'Arts', aliases: ['arts', 'art'] },
+  { slug: 'celebration', label: 'Celebration', aliases: ['celebration', 'celebrations'] },
 ];
 
 const CATEGORY_ALIAS_TO_SLUG = CATEGORY_MODEL.reduce((map, item) => {
