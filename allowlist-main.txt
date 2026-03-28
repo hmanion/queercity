@@ -1,11 +1,16 @@
 .github/workflows/deploy-ionos.yml
 .github/workflows/runtime-allowlist.yml
+.github/workflows/test.yml
 .gitignore
 README.md
 LICENSE
 DATA_LICENSE.md
 allowlist-main.txt
 allowlist-pages.txt
+package.json
+package-lock.json
+playwright.config.js
+vitest.config.js
 config/db.sample.php
 includes/header.php
 includes/footer.php
@@ -53,3 +58,8 @@ api/lib/events_query.php
 newsletter/generate_weekly_newsletter.php
 newsletter/index.php
 newsletter/README_NEWSLETTER.md
+tests/unit/events-shared-utils.test.js
+tests/unit/event-filters.test.js
+tests/dom/event-card.test.js
+tests/dom/filter-bar.test.js
+tests/e2e/site-smoke.spec.js
