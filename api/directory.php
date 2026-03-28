@@ -3,6 +3,40 @@
 
 $config = require __DIR__ . '/../config/db.php';
 
+function normalize_event_genre_label($value): ?string {
+    $text = trim((string)($value ?? ''));
+    if ($text === '') return null;
+    $token = strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
+    $map = [
+        'activity' => 'Active',
+        'activities' => 'Active',
+        'active' => 'Active',
+        'arts' => 'Arts',
+        'art' => 'Arts',
+        'club' => 'Music',
+        'clubs' => 'Music',
+        'music' => 'Music',
+        'celebration' => 'Celebration',
+        'celebrations' => 'Celebration',
+        'life' => 'Life',
+        'sex' => 'Sex',
+        'sexy' => 'Sex',
+        'social' => 'Social',
+        'socials' => 'Social',
+    ];
+    return $map[$token] ?? $text;
+}
+
+function genre_filter_variants($value): array {
+    $normalized = normalize_event_genre_label($value);
+    if ($normalized === null) return [];
+    $variants = [$normalized];
+    if ($normalized === 'Active') $variants[] = 'Activity';
+    if ($normalized === 'Music') $variants[] = 'Club';
+    if ($normalized === 'Sex') $variants[] = 'Sexy';
+    return array_values(array_unique($variants));
+}
+
 $pdo = new PDO(
     "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4",
     $config['user'],
@@ -19,9 +53,16 @@ $params = [];
 if ($genre) {
     $genres = array_filter(array_map('trim', explode(',', $genre)));
     if (!empty($genres)) {
-        $placeholders = implode(',', array_fill(0, count($genres), '?'));
+        $expanded = [];
+        foreach ($genres as $g) {
+            foreach (genre_filter_variants($g) as $variant) {
+                $expanded[] = $variant;
+            }
+        }
+        $expanded = array_values(array_unique($expanded));
+        $placeholders = implode(',', array_fill(0, count($expanded), '?'));
         $where[] = "e.genre IN ($placeholders)";
-        $params = array_merge($params, $genres);
+        $params = array_merge($params, $expanded);
     }
 }
 
@@ -116,7 +157,7 @@ foreach ($rows as $r) {
         'url' => $r['url'],
         'description' => $r['description'],
         'image' => $r['image_url'],
-        'genre' => $r['genre'],
+        'genre' => normalize_event_genre_label($r['genre']),
         'keywords' => $r['keywords_text'],
         'location' => [
             '@type' => 'Place',

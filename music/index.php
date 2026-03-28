@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Find upcoming LGBTQ+ sexy events in Manchester and Greater Manchester, including kinky nightlife and adult-only events.">
-  <title>Queer City - Sexy</title>
+  <meta name="description" content="Discover upcoming LGBTQ+ music events in Manchester and Greater Manchester, including nightlife, DJs, dance floors and late-night parties.">
+  <title>Queer City - Music</title>
   <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
   <link rel="shortcut icon" href="/favicon/favicon.ico" />
@@ -18,8 +18,8 @@
   <script type="module" src="../js/genre-page.module.js"></script>
 </head>
 
-<body id="genrepage" data-genre-slug="sexy" data-genre-label="Sexy" data-genre-title="Sexy">
-  <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'sexy'); ?>
+<body id="genrepage" data-genre-slug="music" data-genre-label="Music" data-genre-title="Music">
+  <?php require __DIR__ . '/../includes/header.php'; qc_render_header('../', 'music'); ?>
   <?php require __DIR__ . '/../includes/filter-bar.php'; qc_render_filter_bar(false, true); ?>
 
   <div id="genrelist"></div>

@@ -14,6 +14,7 @@ const orgSelect = document.getElementById('organization_id');
 const orgExistingFields = document.getElementById('organization-existing-fields');
 const orgNewFields = document.getElementById('organization-new-fields');
 const eventAudienceSelect = document.getElementById('event_audience_label_id');
+const eventGenreSelect = document.getElementById('event-genre');
 const newOrgAudienceSelect = document.getElementById('new_organization_audience_label_id');
 const newOrgCategorySelect = document.getElementById('new_organization_category');
 
@@ -42,6 +43,7 @@ const mockOptions = {
     { id: 105, name: 'flinta' },
     { id: 106, name: 'all' },
   ],
+  event_categories: ['Active', 'Arts', 'Music', 'Celebration', 'Life', 'Sex', 'Social'],
   organization_categories: ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
   tags: [
     { id: 30, name: 'community' },
@@ -117,6 +119,24 @@ function fillCategorySelect(categories) {
   });
 }
 
+function fillEventCategorySelect(categories) {
+  if (!eventGenreSelect) return;
+  const current = eventGenreSelect.value;
+  eventGenreSelect.innerHTML = '';
+  const placeholderOption = document.createElement('option');
+  placeholderOption.value = '';
+  placeholderOption.textContent = 'Select a category';
+  eventGenreSelect.appendChild(placeholderOption);
+
+  (categories || []).forEach((category) => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    eventGenreSelect.appendChild(option);
+  });
+  if (current) eventGenreSelect.value = current;
+}
+
 async function loadOptions() {
   if (isMockMode) {
     fillSelect(citySelect, mockOptions.cities, 'id', 'name', 'Select city');
@@ -124,6 +144,7 @@ async function loadOptions() {
     fillSelect(orgSelect, mockOptions.organizations, 'id', 'name', 'Select organization');
     fillAudienceSelect(eventAudienceSelect, mockOptions.audience_labels, 'No label');
     fillAudienceSelect(newOrgAudienceSelect, mockOptions.audience_labels, 'No label');
+    fillEventCategorySelect(mockOptions.event_categories);
     fillCategorySelect(mockOptions.organization_categories);
     fillTagSelect(mockOptions.tags);
     citySelect.value = '1';
@@ -152,6 +173,7 @@ async function loadOptions() {
   fillSelect(orgSelect, data.organizations || [], 'id', 'name', 'Select organization');
   fillAudienceSelect(eventAudienceSelect, data.audience_labels || [], 'No label');
   fillAudienceSelect(newOrgAudienceSelect, data.audience_labels || [], 'No label');
+  fillEventCategorySelect(data.event_categories || mockOptions.event_categories);
   fillCategorySelect(data.organization_categories || []);
   fillTagSelect(data.tags || []);
 
