@@ -1,7 +1,6 @@
 import { fetchJsonWithFallback } from './fetch-json.module.js';
 
-const DISABLED_BOROUGH = 'tameside';
-const DISABLED_MESSAGE = 'No Pride listed this year.';
+const DISABLED_MESSAGE = 'No published pride currently listed.';
 
 const BOROUGH_META = {
   bolton: { label: 'Bolton' },
@@ -389,15 +388,14 @@ async function renderInteractiveMap(pridesByBorough, now) {
   function selectBorough(node) {
     const slug = String(node.dataset.borough || '');
     const label = BOROUGH_META[slug]?.label || slug;
-
-    if (slug === DISABLED_BOROUGH) {
+    const boroughPrides = pridesByBorough.get(slug) || [];
+    if (boroughPrides.length === 0) {
       const text = `${label}: ${DISABLED_MESSAGE}`;
       setTooltip(text);
       announce(text);
       return;
     }
 
-    const boroughPrides = pridesByBorough.get(slug) || [];
     const html = renderBoroughPanelContent(slug, boroughPrides, now);
     const announceText = boroughPrides.length
       ? `${label} selected. ${boroughPrides.length} pride${boroughPrides.length === 1 ? '' : 's'} listed.`
@@ -409,8 +407,8 @@ async function renderInteractiveMap(pridesByBorough, now) {
   boroughNodes.forEach((node) => {
     const slug = String(node.dataset.borough || '');
     const label = BOROUGH_META[slug]?.label || slug;
-    const isDisabled = slug === DISABLED_BOROUGH;
     const count = (pridesByBorough.get(slug) || []).length;
+    const isDisabled = count === 0;
 
     node.classList.add('borough-shape', `borough-${slug}`);
     node.setAttribute('tabindex', '0');
@@ -437,7 +435,7 @@ async function renderInteractiveMap(pridesByBorough, now) {
 
     node.addEventListener('mouseleave', () => {
       node.classList.remove('is-hover');
-      if (!isDisabled) setTooltip('');
+      setTooltip('');
     });
 
     node.addEventListener('focus', () => {
@@ -451,7 +449,7 @@ async function renderInteractiveMap(pridesByBorough, now) {
 
     node.addEventListener('blur', () => {
       node.classList.remove('is-hover');
-      if (!isDisabled) setTooltip('');
+      setTooltip('');
     });
 
     node.addEventListener('click', () => {
