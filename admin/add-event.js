@@ -456,11 +456,11 @@ async function loadEvents() {
   }
 
   setStatus('Loading events...');
-    const data = await apiRequest('GET');
-    events = Array.isArray(data.events) ? data.events.slice() : [];
-    populateEventFilters();
-    renderEvents();
-    setStatus(`Loaded ${events.length} events.`);
+  const data = await apiRequest('POST', { action: 'list' });
+  events = Array.isArray(data.events) ? data.events.slice() : [];
+  populateEventFilters();
+  renderEvents();
+  setStatus(`Loaded ${events.length} events.`);
 }
 
 async function saveEvent(event) {

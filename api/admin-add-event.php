@@ -398,6 +398,10 @@ try {
 
     $schemaFlags = fetch_schema_flags($pdo);
 
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+        fail_json(405, 'Method not allowed');
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode([
             'events' => fetch_admin_events($pdo, $schemaFlags),
@@ -405,13 +409,16 @@ try {
         exit;
     }
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        fail_json(405, 'Method not allowed');
-    }
-
     $action = strtolower(trim((string)($data['action'] ?? 'save')));
     if ($action === '') {
         $action = 'save';
+    }
+
+    if ($action === 'list') {
+        echo json_encode([
+            'events' => fetch_admin_events($pdo, $schemaFlags),
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
     if ($action === 'delete') {
