@@ -9,7 +9,28 @@ export const EN_DASH = "\u2013"
 export const EM_DASH = "\u2014";
 export const SEP_EN = NBSP + EN_DASH + NBSP; // preferred time/date sep: 19:00 – 21:00
 export const SEP_EM = NBSP + EM_DASH + NBSP; // alt sep if you prefer em dash
-export const FILTER_CATEGORIES = ['Activity', 'Arts', 'Club', 'Celebration', 'Life', 'Sexy'];
+
+const CATEGORY_MODEL = [
+  { slug: 'active', label: 'Active', aliases: ['activity', 'activities', 'active'] },
+  { slug: 'arts', label: 'Arts', aliases: ['arts', 'art'] },
+  { slug: 'music', label: 'Music', aliases: ['club', 'clubs', 'music'] },
+  { slug: 'celebration', label: 'Celebration', aliases: ['celebration', 'celebrations'] },
+  { slug: 'life', label: 'Life', aliases: ['life'] },
+  { slug: 'sex', label: 'Sex', aliases: ['sex', 'sexy'] },
+  { slug: 'social', label: 'Social', aliases: ['social', 'socials'] },
+];
+
+const CATEGORY_ALIAS_TO_SLUG = CATEGORY_MODEL.reduce((map, item) => {
+  item.aliases.forEach((alias) => { map.set(alias, item.slug); });
+  return map;
+}, new Map());
+
+const CATEGORY_SLUG_TO_LABEL = CATEGORY_MODEL.reduce((map, item) => {
+  map.set(item.slug, item.label);
+  return map;
+}, new Map());
+
+export const FILTER_CATEGORIES = CATEGORY_MODEL.map((item) => item.label);
 
 // Date helpers (local, day-precise)
 export function parseISODateLocal(iso) {
@@ -60,11 +81,34 @@ function normalizeCategoryLabel(value) {
   return raw;
 }
 
+function normalizeCategoryToken(value) {
+  return String(value || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+export function normalizeCategorySlug(value) {
+  const token = normalizeCategoryToken(value);
+  if (!token) return '';
+  if (CATEGORY_ALIAS_TO_SLUG.has(token)) return CATEGORY_ALIAS_TO_SLUG.get(token);
+  if (token.endsWith('ies') && token.length > 3) {
+    const singularY = token.slice(0, -3) + 'y';
+    if (CATEGORY_ALIAS_TO_SLUG.has(singularY)) return CATEGORY_ALIAS_TO_SLUG.get(singularY);
+  }
+  if (token.endsWith('s') && token.length > 1) {
+    const singular = token.slice(0, -1);
+    if (CATEGORY_ALIAS_TO_SLUG.has(singular)) return CATEGORY_ALIAS_TO_SLUG.get(singular);
+  }
+  return '';
+}
+
+export function categoryLabelFromSlug(slug) {
+  return CATEGORY_SLUG_TO_LABEL.get(String(slug || '').trim().toLowerCase()) || '';
+}
+
 export function getCategory(ev) {
   const v = ev && (ev.category || ev.genre || ev.eventType);
-  const label = v ? normalizeCategoryLabel(v) : '';
-  if (label.toLowerCase() === 'music') return 'Club';
-  return label;
+  const slug = normalizeCategorySlug(v);
+  if (slug) return categoryLabelFromSlug(slug);
+  return v ? normalizeCategoryLabel(v) : '';
 }
 export function getEventUrl(ev) { return ev && ev.url ? String(ev.url) : ''; }
 export function getEventImage(ev) { return ev && ev.image ? ev.image : ''; }
@@ -201,7 +245,15 @@ export function isMultiDayEvent(ev){
   if (!start || !end) return false;
   return (end.getTime() - start.getTime()) > 24 * 60 * 60 * 1000;
 }
-export function eventOverlaps(ev, from, to){ const s=getEventStartDate(ev), e=getEventEndDate(ev); return !!(s && e && e>=from && s<=to); }
+export function eventOverlaps(ev, from, to){
+  const s = getEventStartDate(ev);
+  const e = getEventEndDate(ev);
+  if (!s || !e) return false;
+  if (!isMultiDayEvent(ev)) {
+    return s >= from && s <= to;
+  }
+  return e >= from && s <= to;
+}
 export function inRange(dateStr, from, to){ const d = parseISODateLocal(dateStr); return !!(d && d>=from && d<=to); }
 
 // Time helpers

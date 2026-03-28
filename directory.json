@@ -34,7 +34,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.eventbrite.com/e/queer-bachata-class-and-social-tickets-669074689407"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -71,7 +71,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.meetup.com/manchester-lgbtq-meetup/events/310653930/?eventOrigin=group_upcoming_events"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -101,7 +101,7 @@
     },
     "url": "https://ncbadminton.co.uk",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -131,7 +131,7 @@
     },
     "url": "https://ncbadminton.co.uk",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -161,7 +161,7 @@
     },
     "url": "https://ncbadminton.co.uk",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -197,7 +197,7 @@
       "priceCurrency": "GBP",
       "url": "https://manchesterleathermen.com"
     },
-    "genre": "Sexy"
+    "genre": "Sex"
   },
   {
     "@context": "https://schema.org",
@@ -227,7 +227,7 @@
     },
     "url": "https://www.rainbownoirmcr.com",
     "keywords": "social",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -257,7 +257,7 @@
     },
     "url": "http://www.manchesterprairiedogs.co.uk",
     "keywords": "dance",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -287,7 +287,7 @@
     },
     "url": "https://www.manchesterfrontrunners.org/thursday-run",
     "keywords": "sport, outside",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -317,7 +317,7 @@
     },
     "url": "https://www.manchesterfrontrunners.org/saturday-run",
     "keywords": "sport, outside",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -347,7 +347,7 @@
     },
     "url": "https://www.manchesterfrontrunners.org/tuesday-run",
     "keywords": "sport, outside",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -377,7 +377,7 @@
     },
     "url": "https://gaycitybowlers.com",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -407,7 +407,7 @@
     },
     "url": "https://gaycitybowlers.com",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -437,7 +437,7 @@
     },
     "url": "https://www.manchesterproudchorus.org",
     "keywords": "sing",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -467,7 +467,7 @@
     },
     "url": "https://linktr.ee/villagespartans",
     "keywords": "sport, outside",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -497,7 +497,7 @@
     },
     "url": "https://linktr.ee/villagespartans",
     "keywords": "sport, outside",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -527,7 +527,7 @@
     },
     "url": "https://www.outdoorlads.com/events?event_type%5B13%5D=13&region%5B51%5D=51&location_proximity_center%5Bcoordinates%5D%5Blat%5D=&location_proximity_center%5Bcoordinates%5D%5Blng%5D=&location_proximity_center%5Bgeocoder%5D%5Bgeolocation_geocoder_address%5D=&location_proximity=0&start_date=2025-09-11&end_date=",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -563,7 +563,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.socialrefuge.com/event-list"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -593,7 +593,7 @@
     },
     "url": "thesundayboys.com",
     "keywords": "sing",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -623,7 +623,7 @@
     },
     "url": "http://clublocked.com",
     "keywords": "kink, sexpositive",
-    "genre": "Sexy"
+    "genre": "Sex"
   },
   {
     "@context": "https://schema.org",
@@ -653,7 +653,7 @@
     },
     "url": "https://www.socialrefuge.com/event-details/run-with-pride-2025-09-21-10-00",
     "keywords": "sport, outside",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -683,7 +683,7 @@
     },
     "url": "https://www.gay-gordons-manchester.co.uk/index.html",
     "keywords": "dance, class",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -713,7 +713,7 @@
     },
     "url": "https://www.instagram.com/transclimbingmcr/",
     "keywords": "sport",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",

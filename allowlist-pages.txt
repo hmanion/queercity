@@ -9,12 +9,13 @@ allowlist-pages.txt
 index.html
 archive/index.html
 weekdays/index.html
-activities/index.html
+active/index.html
 arts/index.html
-clubs/index.html
+music/index.html
 celebration/index.html
 life/index.html
-sexy/index.html
+sex/index.html
+social/index.html
 prides/index.html
 style.css
 robots.txt

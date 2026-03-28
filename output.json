@@ -68,7 +68,7 @@
     "endDate": "2025-09-06T04:00:00",
     "url": "https://ra.co/events/2221578",
     "keywords": "house, disco",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -218,7 +218,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.socialrefuge.com/event-details/sister-bingo-returns"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -290,7 +290,7 @@
     "endDate": "2025-09-13T17:00:00",
     "url": "https://www.socialrefuge.com/event-details/afro-queer-writers-workshop",
     "keywords": "literature, create",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -362,7 +362,7 @@
     "endDate": "2025-09-20T23:00:00",
     "url": "https://ra.co/events/2230497",
     "keywords": "house",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -458,7 +458,7 @@
     "endDate": "2025-09-25T22:30:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/Fairfield-Social-Club/Red-Rodeo-Club/41293002/",
     "keywords": "dance",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -567,7 +567,7 @@
     "endDate": "2025-10-06",
     "url": "https://manchesterleathermen.com/manchesterleatherweekend/2025",
     "keywords": "Kink, leather",
-    "genre": "Sexy"
+    "genre": "Sex"
   },
   {
     "@context": "https://schema.org",
@@ -591,7 +591,7 @@
     "endDate": "2025-10-11T08:00:00",
     "url": "https://ra.co/events/2230497",
     "keywords": "techno, house",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -622,7 +622,7 @@
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2252073"
     },
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -646,7 +646,7 @@
     "endDate": "2025-10-11T23:59:00",
     "url": "https://ra.co/events/2230992",
     "keywords": "techno, house, dayparty",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -670,7 +670,7 @@
     "endDate": "2025-10-11T23:59:00",
     "url": "https://www.socialrefuge.com/event-details/sapphic-mixer-october",
     "keywords": "dating",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -694,7 +694,7 @@
     "endDate": "2025-10-18T07:00:00",
     "url": "https://ra.co/events/2224151",
     "keywords": "house",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -718,7 +718,7 @@
     "endDate": "2025-10-18T04:00:00",
     "url": "https://ra.co/events/2244423",
     "keywords": "techno, house, rave",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -766,7 +766,7 @@
     "endDate": "2025-10-25T23:59:00",
     "url": "https://ra.co/events/2188957",
     "keywords": "house, dayparty, rave",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -814,7 +814,7 @@
     "endDate": "2025-11-01T04:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/Area-Manchester/The-Cavalcade-Club---Queer-RockPop-Circus-Cabaret--Club-Night/41284157/",
     "keywords": "cabaret, sexpositive",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -893,7 +893,7 @@
     "endDate": "2025-11-29T07:00:00",
     "url": "https://ra.co/events/2224151",
     "keywords": "house",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -964,7 +964,7 @@
     "endDate": "2025-12-07T04:00:00",
     "url": "https://www.homobloc.co.uk/",
     "keywords": "festival",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -994,7 +994,7 @@
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2190702"
     },
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1018,7 +1018,7 @@
     "endDate": "2025-10-26T04:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/New-Century/Freak-Queer-Rave--Sam-Quealy--LSDXOXO--more/41310695/",
     "keywords": "house, techno, pop, rave",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1042,7 +1042,7 @@
     "endDate": "2025-09-20T23:00:00",
     "url": "https://www.skiddle.com/whats-on/Manchester/The-Feel-Good-Club/The-Big-Send-Off/41353042/#about",
     "keywords": "cabaret",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1073,7 +1073,7 @@
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2252033"
     },
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1122,7 +1122,7 @@
     "url": "https://ra.co/events/2258167",
     "image": "https://images.ra.co/3d44ca33498a658a046a148bd8dfc1060a17c7db.png",
     "keywords": "rnb, garage",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1175,7 +1175,7 @@
       "priceCurrency": "GBP",
       "url": "https://ra.co/events/2218514"
     },
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1199,7 +1199,7 @@
     "endDate": "2025-09-19T22:00:00",
     "url": "https://www.ticketsource.co.uk/smut-slam-manchester/smut-slam-manchester-lessons-learned/e-qmvelp",
     "keywords": "poetry, literature",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1223,7 +1223,7 @@
     "endDate": "2025-09-14T18:00:00",
     "url": "https://www.instagram.com/queerbookswapmcr/",
     "keywords": "literature",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1253,7 +1253,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1283,7 +1283,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1313,7 +1313,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30172/queer-life-drawing-south-manchester"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1343,7 +1343,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1373,7 +1373,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1403,7 +1403,7 @@
       "priceCurrency": "GBP",
       "url": "https://www.outsavvy.com/event/30174/queer-life-drawing-manchester-city-centre"
     },
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1478,7 +1478,7 @@
     "url": "https://www.socialrefuge.com/event-details/queer-lit-book-club-october",
     "description": "Featured Book: 99 Erics: A Kat Cataclysm Faux Novel by Julia Serano",
     "keywords": "literature",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1526,7 +1526,7 @@
     "endDate": "2025-11-28T21:30:00",
     "url": "https://www.socialrefuge.com/event-details/switched-up-2",
     "keywords": "market",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1598,7 +1598,7 @@
     },
     "endDate": "2025-09-27T16:00:00",
     "url": "https://lgbt.foundation/event/community-photoshoot-open-call-for-lgbtq-men/",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1622,7 +1622,7 @@
     "endDate": "2025-09-26T20:30:00",
     "url": "https://lgbt.foundation/event/september-sober-social-quiz-night/",
     "keywords": "quiz",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1739,7 +1739,7 @@
     "url": "https://www.skiddle.com/whats-on/Manchester/The-Carlton-Club-Manchester/The-Carlton-Queer-Clubhouse-2/41381156/#tickets",
     "description": "Celebrating the queers of The Carlton Club with a night filled with Performers, Acts, & Music! A variety show of happenings in a club night setting!",
     "keywords": "cabaret",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1763,7 +1763,7 @@
     "endDate": "2025-10-19T01:00:00",
     "url": "https://www.skiddle.com/whats-on/Salford/Un.Titled-Studio/Transient-Shift/41218172/",
     "description": "A first of it's kind (to the UK) celebration of groundbreaking music produced by transgender and GNC artists.",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -1812,7 +1812,7 @@
     "endDate": "2025-10-08T22:00:00",
     "url": "https://www.fatsoma.com/e/8vw917c6/stripped-sketch",
     "keywords": "art, drawing",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1940,7 +1940,7 @@
     "endDate": "2025-10-25T12:30:00",
     "url": "https://lgbt.foundation/event/join-the-lgbtq-equality-panel-open-day-events/",
     "description": "Join the LGBTQ+ Equality Panel and help shape LGBTQ+ inclusive policy in Greater Manchester!",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1964,7 +1964,7 @@
     "endDate": "2025-10-11T17:00:00",
     "url": "https://www.socialrefuge.com/event-details/afro-queer-writers-workshop",
     "keywords": "literature, create",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -1988,7 +1988,7 @@
     "endDate": "2025-10-15T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/burlesque-workshop-2025-10-15-19-00",
     "keywords": "burlesque, class",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2012,7 +2012,7 @@
     "endDate": "2025-10-18T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-comedy-halloween-special",
     "keywords": "comedy",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2036,7 +2036,7 @@
     "endDate": "2025-10-26T15:00:00",
     "url": "https://www.socialrefuge.com/event-details/gay-mens-erotic-fiction-workshop",
     "keywords": "literature, create, sexpositive",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2059,7 +2059,7 @@
     },
     "endDate": "2025-10-31T23:00:00",
     "url": "https://www.socialrefuge.com/event-details/haunted-homo-halloween-party",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2083,7 +2083,7 @@
     "endDate": "2025-11-03T21:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-in-faith",
     "keywords": "literature, talk",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2130,7 +2130,7 @@
     },
     "endDate": "2025-11-07T22:00:00",
     "url": "https://www.socialrefuge.com/event-details/queer-diary",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2154,7 +2154,7 @@
     "endDate": "2025-09-28T02:00:00",
     "url": "https://www.instagram.com/p/DOqV9iGjUOl/",
     "keywords": "fundraiser",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -2177,7 +2177,7 @@
     },
     "endDate": "2025-09-27T02:00:00",
     "url": "https://www.instagram.com/p/DOvkQucjY-d/",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -2201,7 +2201,7 @@
     "endDate": "2025-11-15T04:00:00",
     "url": "https://ra.co/events/2263533",
     "keywords": "fundraiser",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -2247,7 +2247,7 @@
     },
     "endDate": "2025-11-01T18:30:00",
     "url": "https://www.fatout.info/oram100workshop",
-    "genre": "Activity"
+    "genre": "Active"
   },
   {
     "@context": "https://schema.org",
@@ -2295,7 +2295,7 @@
     "endDate": "2025-11-09T03:00:00",
     "url": "https://www.fatout.info/kinx-clubsodom",
     "keywords": "Sexpositive, kink",
-    "genre": "Club"
+    "genre": "Music"
   },
   {
     "@context": "https://schema.org",
@@ -2319,6 +2319,6 @@
     "endDate": "2025-10-06T19:30:00",
     "url": "https://www.eventbrite.co.uk/e/black-queer-history-a-community-session-tickets-1682373106249?aff=ebdssbdestsearch",
     "keywords": "talk, history",
-    "genre": "Activity"
+    "genre": "Active"
   }
 ]
