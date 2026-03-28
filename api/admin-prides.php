@@ -3,6 +3,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/lib/prides_query.php';
+require_once __DIR__ . '/lib/admin_auth.php';
 
 function qc_admin_prides_fail(int $code, string $message): void
 {
@@ -35,7 +36,6 @@ if (!file_exists($configPath)) {
 }
 
 $config = require $configPath;
-$requiredToken = $config['import_token'] ?? '';
 
 $rawBody = file_get_contents('php://input');
 $payload = json_decode($rawBody ?: '{}', true);
@@ -43,8 +43,8 @@ if (!is_array($payload)) {
     $payload = [];
 }
 
-$providedToken = $_GET['token'] ?? $payload['token'] ?? $_POST['token'] ?? '';
-if ($requiredToken === '' || $providedToken !== $requiredToken) {
+$providedToken = qc_admin_extract_token([$payload['token'] ?? null]);
+if (!qc_admin_token_is_valid($providedToken)) {
     qc_admin_prides_fail(403, 'Forbidden');
 }
 

@@ -4,6 +4,7 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/lib/prides_query.php';
 require_once __DIR__ . '/lib/event_domain.php';
+require_once __DIR__ . '/lib/admin_auth.php';
 
 $configPath = __DIR__ . '/../config/db.php';
 if (!file_exists($configPath)) {
@@ -13,10 +14,8 @@ if (!file_exists($configPath)) {
 }
 
 $config = require $configPath;
-$requiredToken = $config['import_token'] ?? '';
-$providedToken = $_GET['token'] ?? $_POST['token'] ?? '';
-
-if ($requiredToken === '' || $providedToken !== $requiredToken) {
+$providedToken = qc_admin_extract_token();
+if (!qc_admin_token_is_valid($providedToken)) {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden']);
     exit;

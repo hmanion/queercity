@@ -177,13 +177,11 @@ async function loadOptions() {
   }
 
   const token = tokenInput.value.trim();
-  if (!token) {
-    setStatus('Enter token first.', true);
-    return;
-  }
 
   setStatus('Loading options...');
-  const url = `../api/admin-options.php?token=${encodeURIComponent(token)}`;
+  const url = token
+    ? `../api/admin-options.php?token=${encodeURIComponent(token)}`
+    : '../api/admin-options.php';
 
   const response = await fetch(url, { method: 'GET' });
   const data = await response.json().catch(() => ({}));
@@ -345,5 +343,5 @@ updateOrgModeUI();
 if (isMockMode) {
   setStatus('Mock mode enabled. Click "Load existing DB options" to populate local test data.');
 } else {
-  setStatus('Enter token, click "Load existing DB options", then submit.');
+  setStatus('Click "Load existing DB options", then submit.');
 }

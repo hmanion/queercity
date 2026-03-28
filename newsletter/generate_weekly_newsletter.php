@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../api/lib/events_query.php';
+require_once __DIR__ . '/../api/lib/admin_auth.php';
 
 function stderr(string $message): void
 {
@@ -387,15 +388,9 @@ try {
     $dryMode = cli_has_flag('--dry');
 
     $config = require __DIR__ . '/../config/db.php';
-    $requiredToken = (string)($config['import_token'] ?? '');
     if (!$isCli) {
-        $providedToken = '';
-        if (isset($_GET['token'])) {
-            $providedToken = (string)$_GET['token'];
-        } elseif (isset($_POST['token'])) {
-            $providedToken = (string)$_POST['token'];
-        }
-        if ($requiredToken === '' || !hash_equals($requiredToken, $providedToken)) {
+        $providedToken = qc_admin_extract_token();
+        if (!qc_admin_token_is_valid($providedToken)) {
             http_response_code(403);
             header('Content-Type: text/plain; charset=utf-8');
             echo "Forbidden\n";

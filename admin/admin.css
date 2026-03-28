@@ -76,6 +76,20 @@ button {
   gap: 8px;
 }
 
+.button-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  font-style: normal;
+}
+
+.button-link:hover {
+  text-decoration: underline;
+}
+
 .admin-checkbox {
   display: flex;
   align-items: center;

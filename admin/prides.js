@@ -83,12 +83,8 @@ function renderList() {
 
 async function request(method, body) {
   const token = tokenInput.value.trim();
-  if (!token) {
-    throw new Error('Enter token first.');
-  }
-
   const url = method === 'GET'
-    ? `../api/admin-prides.php?token=${encodeURIComponent(token)}`
+    ? (token ? `../api/admin-prides.php?token=${encodeURIComponent(token)}` : '../api/admin-prides.php')
     : '../api/admin-prides.php';
 
   const response = await fetch(url, method === 'GET'
@@ -96,7 +92,7 @@ async function request(method, body) {
     : {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, ...body }),
+        body: JSON.stringify(token ? { token, ...body } : { ...body }),
       });
 
   const data = await response.json().catch(() => ({}));
@@ -217,4 +213,4 @@ form.addEventListener('submit', async (event) => {
 });
 
 resetForm();
-setStatus('Enter token, then load prides.');
+setStatus('Click "Load prides" to begin.');

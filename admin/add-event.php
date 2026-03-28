@@ -1,3 +1,9 @@
+<?php
+
+require_once __DIR__ . '/../api/lib/admin_auth.php';
+
+qc_admin_require_page_token('Add Event Admin');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +18,9 @@
   <div class="header">
     <nav>
       <a href="../">EVENTS</a> |
-      <a href="./prides.html">PRIDES ADMIN</a> |
-      <a href="../weekdays">WEEKDAYS</a> |
-      <a href="../archive">PAST EVENTS</a>
+      <a href="../prides/">PRIDES</a> |
+      <a href="../weekdays/">WEEKDAYS</a> |
+      <a href="../archive/">PAST EVENTS</a>
     </nav>
     <div class="title">QUEER CITY</div>
     <span class="circle"></span>
@@ -30,7 +36,7 @@
         <h2>Auth + Options</h2>
         <label>
           Admin token
-          <input id="token" name="token" type="password" required>
+          <input id="token" name="token" type="password" placeholder="Optional override">
         </label>
         <button id="load-options" type="button">Load existing DB options</button>
       </section>
@@ -227,8 +233,13 @@
     </form>
   </main>
 
-  <section>
+  <footer class="qc-footer">
+    <a class="button-link" href="./index.php">ADMIN DASHBOARD</a>
+    <a class="button-link" href="./add-event.php">ADD EVENT</a>
+    <a class="button-link" href="./prides.php">PRIDES ADMIN</a>
+    <a class="button-link" href="../newsletter/">NEWSLETTER</a>
+    <a class="button-link" href="./index.php?logout=1">LOG OUT</a>
     <a href="https://github.com/hmanion/queercity" target="_blank" rel="noopener noreferrer">SOURCE / LICENSE</a>
-  </section>
+  </footer>
 </body>
 </html>
