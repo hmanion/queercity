@@ -16,7 +16,9 @@ jobs:
       name: production
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Install lftp
         run: |
@@ -77,6 +79,12 @@ jobs:
           BEFORE="${{ github.event.before }}"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
             echo "Running full deploy."
+            full_deploy
+            exit 0
+          fi
+
+          if ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
+            echo "Base commit $BEFORE is unavailable on runner; running full deploy."
             full_deploy
             exit 0
           fi
