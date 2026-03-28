@@ -66,7 +66,7 @@ fetchJsonWithFallback(
       categories: FILTER_CATEGORIES,
       showCategories: true,
       initialTags: getUniqueTags(pastSingles),
-      showRecurringToggle: true,
+      showRecurringToggle: false,
       recurringDefaultOn: showRecurring,
       onChangeCategories: (cats) => {
         selectedCats = cats;

@@ -22,12 +22,17 @@ Strict enforcement is in CI via branch-specific allowlists.
 
 ## Pages Branch (`pages`)
 
-This branch is static-only and intended for GitHub Pages testing.
+This branch is static-only and is the branch deployed to GitHub Pages for testing.
 
 Included runtime:
 - `/`, `/weekdays/`, `/archive/`
 - static assets (`style.css`, `extended.woff2`, `/js/*.module.js`)
 - fallback data (`output.json`, `directory.json`)
+
+Frontend behaviour notes for `pages`:
+- the main listings page intentionally keeps recurring events visible in the `Today` and `Tomorrow` sections even when the recurring toggle is off
+- this is a deliberate design choice so those two sections do not accidentally render empty
+- the recurring toggle still applies to later time buckets (`Rest of this week`, `Rest of this month`, future months)
 
 Excluded on this branch:
 - `/api/*`
