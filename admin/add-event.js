@@ -14,6 +14,7 @@ const orgSelect = document.getElementById('organization_id');
 const orgExistingFields = document.getElementById('organization-existing-fields');
 const orgNewFields = document.getElementById('organization-new-fields');
 const eventAudienceSelect = document.getElementById('event_audience_label_id');
+const prideSelect = document.getElementById('pride_id');
 const eventGenreSelect = document.getElementById('event-genre');
 const newOrgAudienceSelect = document.getElementById('new_organization_audience_label_id');
 const newOrgCategorySelect = document.getElementById('new_organization_category');
@@ -45,6 +46,10 @@ const mockOptions = {
   ],
   event_categories: ['Life', 'Sex', 'Social', 'Active', 'Music', 'Arts', 'Celebration'],
   organization_categories: ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
+  prides: [
+    { id: 200, name: 'Manchester Village Pride', borough: 'Manchester', location: 'Gay Village' },
+    { id: 201, name: 'Stockport Pride', borough: 'Stockport', location: 'Stockport' },
+  ],
   tags: [
     { id: 30, name: 'community' },
     { id: 31, name: 'club' },
@@ -104,6 +109,24 @@ function fillAudienceSelect(selectEl, audienceLabels, placeholder) {
   fillSelect(selectEl, audienceLabels || [], 'id', 'name', placeholder);
 }
 
+function fillPrideSelect(prides) {
+  if (!prideSelect) return;
+  prideSelect.innerHTML = '';
+
+  const placeholderOption = document.createElement('option');
+  placeholderOption.value = '';
+  placeholderOption.textContent = 'No linked pride';
+  prideSelect.appendChild(placeholderOption);
+
+  (prides || []).forEach((pride) => {
+    const option = document.createElement('option');
+    option.value = String(pride.id);
+    const extras = [pride.location, pride.borough].filter(Boolean).join(', ');
+    option.textContent = extras ? `${pride.name} (${extras})` : pride.name;
+    prideSelect.appendChild(option);
+  });
+}
+
 function fillCategorySelect(categories) {
   newOrgCategorySelect.innerHTML = '';
   const placeholderOption = document.createElement('option');
@@ -144,6 +167,7 @@ async function loadOptions() {
     fillSelect(orgSelect, mockOptions.organizations, 'id', 'name', 'Select organization');
     fillAudienceSelect(eventAudienceSelect, mockOptions.audience_labels, 'No label');
     fillAudienceSelect(newOrgAudienceSelect, mockOptions.audience_labels, 'No label');
+    fillPrideSelect(mockOptions.prides);
     fillEventCategorySelect(mockOptions.event_categories);
     fillCategorySelect(mockOptions.organization_categories);
     fillTagSelect(mockOptions.tags);
@@ -153,13 +177,11 @@ async function loadOptions() {
   }
 
   const token = tokenInput.value.trim();
-  if (!token) {
-    setStatus('Enter token first.', true);
-    return;
-  }
 
   setStatus('Loading options...');
-  const url = `../api/admin-options.php?token=${encodeURIComponent(token)}`;
+  const url = token
+    ? `../api/admin-options.php?token=${encodeURIComponent(token)}`
+    : '../api/admin-options.php';
 
   const response = await fetch(url, { method: 'GET' });
   const data = await response.json().catch(() => ({}));
@@ -173,6 +195,7 @@ async function loadOptions() {
   fillSelect(orgSelect, data.organizations || [], 'id', 'name', 'Select organization');
   fillAudienceSelect(eventAudienceSelect, data.audience_labels || [], 'No label');
   fillAudienceSelect(newOrgAudienceSelect, data.audience_labels || [], 'No label');
+  fillPrideSelect(data.prides || []);
   fillEventCategorySelect(data.event_categories || mockOptions.event_categories);
   fillCategorySelect(data.organization_categories || []);
   fillTagSelect(data.tags || []);
@@ -232,6 +255,7 @@ function buildPayload() {
     new_organization_audience_label_id: Number(fd.get('new_organization_audience_label_id') || 0),
     organization_role: organizationRole,
     event_audience_label_id: Number(fd.get('event_audience_label_id') || 0),
+    pride_id: Number(fd.get('pride_id') || 0),
 
     tag_ids: selectedTagIds(),
     new_tags: csvToArray(String(fd.get('new_tags_csv') || '')),
@@ -319,5 +343,5 @@ updateOrgModeUI();
 if (isMockMode) {
   setStatus('Mock mode enabled. Click "Load existing DB options" to populate local test data.');
 } else {
-  setStatus('Enter token, click "Load existing DB options", then submit.');
+  setStatus('Click "Load existing DB options", then submit.');
 }

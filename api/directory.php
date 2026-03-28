@@ -1,41 +1,9 @@
 <?php
 // directory.php - recurring events JSON (Schema.org-like) from MySQL
 
+require_once __DIR__ . '/lib/event_domain.php';
+
 $config = require __DIR__ . '/../config/db.php';
-
-function normalize_event_genre_label($value): ?string {
-    $text = trim((string)($value ?? ''));
-    if ($text === '') return null;
-    $token = strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
-    $map = [
-        'activity' => 'Active',
-        'activities' => 'Active',
-        'active' => 'Active',
-        'arts' => 'Arts',
-        'art' => 'Arts',
-        'club' => 'Music',
-        'clubs' => 'Music',
-        'music' => 'Music',
-        'celebration' => 'Celebration',
-        'celebrations' => 'Celebration',
-        'life' => 'Life',
-        'sex' => 'Sex',
-        'sexy' => 'Sex',
-        'social' => 'Social',
-        'socials' => 'Social',
-    ];
-    return $map[$token] ?? $text;
-}
-
-function genre_filter_variants($value): array {
-    $normalized = normalize_event_genre_label($value);
-    if ($normalized === null) return [];
-    $variants = [$normalized];
-    if ($normalized === 'Active') $variants[] = 'Activity';
-    if ($normalized === 'Music') $variants[] = 'Club';
-    if ($normalized === 'Sex') $variants[] = 'Sexy';
-    return array_values(array_unique($variants));
-}
 
 $pdo = new PDO(
     "mysql:host={$config['host']};port={$config['port']};dbname={$config['name']};charset=utf8mb4",
@@ -55,7 +23,7 @@ if ($genre) {
     if (!empty($genres)) {
         $expanded = [];
         foreach ($genres as $g) {
-            foreach (genre_filter_variants($g) as $variant) {
+            foreach (event_genre_filter_variants($g) as $variant) {
                 $expanded[] = $variant;
             }
         }
@@ -147,30 +115,8 @@ foreach ($rows as $r) {
         $byDay = array_map(fn($d) => $day_map[$d] ?? $d, $days);
     }
 
-    $item = [
-        '@context' => 'https://schema.org',
-        '@type' => 'Event',
-        'identifier' => $r['identifier'],
-        'name' => $r['name'],
-        'eventStatus' => $r['event_status'],
-        'eventAttendanceMode' => $r['attendance_mode'],
-        'url' => $r['url'],
-        'description' => $r['description'],
-        'image' => $r['image_url'],
-        'genre' => normalize_event_genre_label($r['genre']),
-        'keywords' => $r['keywords_text'],
-        'location' => [
-            '@type' => 'Place',
-            'name' => $r['place_name'],
-            'address' => [
-                '@type' => 'PostalAddress',
-                'streetAddress' => $r['street_address'],
-                'addressLocality' => $r['address_locality'],
-                'postalCode' => $r['postal_code'],
-                'addressCountry' => $r['address_country'],
-            ]
-        ],
-        'eventSchedule' => [
+    $item = shape_base_event($r);
+    $item['eventSchedule'] = [
             '@type' => 'Schedule',
             'repeatFrequency' => $r['repeat_frequency'],
             'scheduleTimezone' => $r['schedule_timezone'],
@@ -180,8 +126,7 @@ foreach ($rows as $r) {
             'endDate' => $r['end_date'],
             'repeatCount' => $r['repeat_count'],
             'byDay' => $byDay,
-        ]
-    ];
+        ];
 
     $out[] = $item;
 }

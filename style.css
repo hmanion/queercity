@@ -245,6 +245,254 @@ section{
     gap: 0.5rem;
 }
 
+.prides-summary {
+  padding: 0 1rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.prides-map-section {
+  padding: 0 1rem 1rem;
+}
+
+.prides-map-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.8rem;
+}
+
+.prides-map-wrap {
+  position: relative;
+  background: #fff4fb;
+  border: 3px solid #ffeaf6;
+  border-radius: 5px;
+  padding: 0.6rem;
+}
+
+.prides-map {
+  width: 100%;
+}
+
+.gm-borough-map {
+  width: 100%;
+  height: auto;
+}
+
+.borough-shape {
+  stroke: #fff;
+  stroke-width: 2.2;
+  fill-opacity: 0.95;
+  cursor: pointer;
+  transition: transform 100ms ease, fill-opacity 100ms ease;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;
+}
+
+.borough-shape.is-hover,
+.borough-shape.is-active,
+.borough-shape:focus-visible {
+  fill-opacity: 1;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.borough-shape.is-disabled {
+  fill: #8d8d8d !important;
+  cursor: not-allowed;
+  stroke: #b8b8b8;
+}
+
+.borough-bolton { fill: #fc7e32; }
+.borough-bury { fill: #ffe42e; }
+.borough-manchester { fill: #ff80ff; }
+.borough-oldham { fill: #ff6ce3; }
+.borough-rochdale { fill: #b6f7ff; }
+.borough-salford { fill: #f2d7ff; }
+.borough-stockport { fill: #06c054; }
+.borough-trafford { fill: #ffd429; }
+.borough-wigan { fill: #bc2fff; }
+
+.prides-map-tooltip {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.35rem;
+  max-width: calc(100% - 0.7rem);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.prides-map-tooltip.is-visible {
+  opacity: 1;
+}
+
+.prides-borough-panel {
+  background: #fff4fb;
+  border: 3px solid #ffeaf6;
+  border-radius: 5px;
+  padding: 0.65rem;
+}
+
+.prides-borough-panel[aria-hidden="true"] {
+  display: none;
+}
+
+.prides-borough-panel h3 {
+  margin: 0 0 0.5rem;
+}
+
+.prides-borough-count {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #555;
+}
+
+.prides-borough-close {
+  margin: 0 0 0.5rem;
+}
+
+.prides-borough-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.prides-borough-item {
+  border: 2px solid #ffeaf6;
+  border-radius: 3px;
+  background: #fff;
+  padding: 0.45rem;
+}
+
+.prides-borough-name {
+  font-weight: 700;
+}
+
+.prides-borough-meta {
+  font-size: 0.9rem;
+}
+
+.prides-borough-empty {
+  margin: 0;
+}
+
+.prides-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 40;
+}
+
+.prides-panel-backdrop[hidden] {
+  display: none;
+}
+
+.prides-stat {
+  background: #ffeaf6;
+  border-radius: 4px;
+  padding: 0.6rem;
+}
+
+.prides-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.prides-stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.prides-filter-bar {
+  padding: 0 1rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.prides-filter-bar select {
+  min-height: 2rem;
+}
+
+.prides-checkbox {
+  font-size: 0.95rem;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.prides-list {
+  padding: 0 1rem 1rem;
+}
+
+.prides-month {
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.prides-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pride-row {
+  border: 3px solid #ffeaf6;
+  background-color: #ffeaf6;
+  border-radius: 3px;
+  padding: 0.6rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.3rem;
+}
+
+.pride-main h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.pride-meta,
+.pride-dates,
+.pride-events {
+  font-size: 0.95rem;
+}
+
+.pride-status {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+}
+
+.pride-status-upcoming { background: #b6f7ff; }
+.pride-status-live { background: #ccff2e; }
+.pride-status-finished { background: #ddd; }
+.pride-status-tbc { background: #f2d7ff; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .weekday {
 }
 
@@ -315,6 +563,26 @@ section{
     align-items: center;
     gap: 1rem;
   }
+
+  .prides-summary {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .prides-map-layout {
+    grid-template-columns: 1.45fr 1fr;
+    align-items: start;
+  }
+
+  .prides-borough-panel[aria-hidden="true"] {
+    display: block;
+    visibility: hidden;
+  }
+
+  .pride-row {
+    grid-template-columns: 2.2fr 1.2fr auto auto;
+    align-items: center;
+    column-gap: 1rem;
+  }
   
   .eventboxtoprow {
     display: flex;
@@ -337,17 +605,48 @@ section{
   }
 }
 
+@media (max-width: 54em) {
+  .prides-borough-panel {
+    position: fixed;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 50;
+    max-height: 72vh;
+    overflow: auto;
+    border-width: 3px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    transform: translateY(105%);
+    transition: transform 140ms ease;
+  }
+
+  .prides-borough-panel.is-open {
+    transform: translateY(0);
+  }
+
+  .prides-borough-panel[aria-hidden="true"] {
+    display: block;
+    visibility: visible;
+    transform: translateY(105%);
+  }
+
+  body.prides-panel-open {
+    overflow: hidden;
+  }
+}
+
 @media (min-width: 55em) {
-	.event-section-list{
+		.event-section-list{
     	display: grid;
     	justify-content: space-between;
     	grid-template: auto / repeat(9, 1fr);
     	column-gap: 1rem;
     	row-gap: 1rem;
 	}
+}
 
 @media (min-width: 86em) {
-	.event-section-list{
+		.event-section-list{
     	display: grid;
     	justify-content: space-between;
     	grid-template: auto / repeat(12, 1fr);

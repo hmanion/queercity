@@ -1,10 +1,13 @@
 <?php
 // admin-add-event.php - creates a one-off event and related entities.
 
+require_once __DIR__ . '/lib/event_domain.php';
+require_once __DIR__ . '/lib/prides_query.php';
+require_once __DIR__ . '/lib/admin_auth.php';
+
 header('Content-Type: application/json; charset=utf-8');
 
 const ORG_CATEGORIES = ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
-const EVENT_GENRES = ['Life', 'Sex', 'Social', 'Active', 'Music', 'Arts', 'Celebration'];
 
 function fail_json($code, $message) {
     http_response_code($code);
@@ -26,34 +29,6 @@ function normalize_spaces($value) {
         return null;
     }
     return preg_replace('/\s+/u', ' ', $text);
-}
-
-function normalize_event_genre($value) {
-    $text = normalize_text($value);
-    if ($text === null) {
-        return null;
-    }
-
-    $token = strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
-    $map = [
-        'activity' => 'Active',
-        'activities' => 'Active',
-        'active' => 'Active',
-        'arts' => 'Arts',
-        'art' => 'Arts',
-        'club' => 'Music',
-        'clubs' => 'Music',
-        'music' => 'Music',
-        'celebration' => 'Celebration',
-        'celebrations' => 'Celebration',
-        'life' => 'Life',
-        'sex' => 'Sex',
-        'sexy' => 'Sex',
-        'social' => 'Social',
-        'socials' => 'Social',
-    ];
-
-    return $map[$token] ?? null;
 }
 
 function abbreviate_street_words($value) {
@@ -118,22 +93,6 @@ function parse_datetime_local($value) {
         return null;
     }
     return str_replace('T', ' ', $v) . ':00';
-}
-
-function table_exists(PDO $pdo, $tableName) {
-    $stmt = $pdo->prepare(
-        'SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ? LIMIT 1'
-    );
-    $stmt->execute([$tableName]);
-    return (bool)$stmt->fetchColumn();
-}
-
-function column_exists(PDO $pdo, $tableName, $columnName) {
-    $stmt = $pdo->prepare(
-        'SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ? LIMIT 1'
-    );
-    $stmt->execute([$tableName, $columnName]);
-    return (bool)$stmt->fetchColumn();
 }
 
 function find_or_create_address(PDO $pdo, $street, $locality, $postalCode, $country) {
@@ -238,7 +197,6 @@ if (!file_exists($configPath)) {
 }
 
 $config = require $configPath;
-$requiredToken = $config['import_token'] ?? '';
 
 $rawBody = file_get_contents('php://input');
 $data = json_decode($rawBody ?: '{}', true);
@@ -246,8 +204,8 @@ if (!is_array($data)) {
     fail_json(400, 'Invalid JSON body');
 }
 
-$providedToken = isset($data['token']) ? (string)$data['token'] : '';
-if ($requiredToken === '' || $providedToken !== $requiredToken) {
+$providedToken = qc_admin_extract_token([$data['token'] ?? null]);
+if (!qc_admin_token_is_valid($providedToken)) {
     fail_json(403, 'Forbidden');
 }
 
@@ -255,7 +213,7 @@ $name = normalize_text($data['name'] ?? null);
 $description = normalize_text($data['description'] ?? null);
 $url = normalize_text($data['url'] ?? null);
 $imageUrl = normalize_text($data['image_url'] ?? null);
-$genre = normalize_event_genre($data['genre'] ?? null);
+$genre = normalize_event_genre_for_write($data['genre'] ?? null);
 $keywordsText = normalize_text($data['keywords_text'] ?? null);
 $identifier = normalize_text($data['identifier'] ?? null);
 $eventStatus = normalize_text($data['event_status'] ?? null);
@@ -288,6 +246,7 @@ $organizationMode = $data['organization_mode'] ?? 'none';
 $organizationId = isset($data['organization_id']) ? (int)$data['organization_id'] : 0;
 $organizationRole = normalize_text($data['organization_role'] ?? null);
 $eventAudienceLabelId = isset($data['event_audience_label_id']) ? (int)$data['event_audience_label_id'] : 0;
+$prideId = isset($data['pride_id']) ? (int)$data['pride_id'] : 0;
 
 $selectedTagIds = [];
 if (isset($data['tag_ids']) && is_array($data['tag_ids'])) {
@@ -334,13 +293,15 @@ try {
     $pdo->beginTransaction();
 
     $schemaFlags = [
-        'hasAudienceLabelsTable' => table_exists($pdo, 'audience_labels'),
-        'hasOrganizationPlacesTable' => table_exists($pdo, 'organization_places'),
-        'hasOrgCategory' => column_exists($pdo, 'organizations', 'category'),
-        'hasOrgLogo' => column_exists($pdo, 'organizations', 'logo_url'),
-        'hasOrgAudience' => column_exists($pdo, 'organizations', 'audience_label_id'),
-        'hasOrgCity' => column_exists($pdo, 'organizations', 'city_id'),
-        'hasEventAudience' => column_exists($pdo, 'events', 'audience_label_id'),
+        'hasAudienceLabelsTable' => qc_table_exists($pdo, 'audience_labels'),
+        'hasOrganizationPlacesTable' => qc_table_exists($pdo, 'organization_places'),
+        'hasPridesTable' => qc_table_exists($pdo, 'prides'),
+        'hasOrgCategory' => qc_column_exists($pdo, 'organizations', 'category'),
+        'hasOrgLogo' => qc_column_exists($pdo, 'organizations', 'logo_url'),
+        'hasOrgAudience' => qc_column_exists($pdo, 'organizations', 'audience_label_id'),
+        'hasOrgCity' => qc_column_exists($pdo, 'organizations', 'city_id'),
+        'hasEventAudience' => qc_column_exists($pdo, 'events', 'audience_label_id'),
+        'hasEventPride' => qc_column_exists($pdo, 'events', 'pride_id'),
     ];
 
     $checkCity = $pdo->prepare('SELECT id FROM cities WHERE id = ?');
@@ -357,6 +318,19 @@ try {
         }
     } else {
         $eventAudienceLabelId = null;
+    }
+
+    if ($prideId > 0) {
+        if (!$schemaFlags['hasPridesTable'] || !$schemaFlags['hasEventPride']) {
+            fail_json(422, 'Prides support is not available in this database schema yet');
+        }
+        $checkPride = $pdo->prepare('SELECT id FROM prides WHERE id = ?');
+        $checkPride->execute([$prideId]);
+        if (!$checkPride->fetch()) {
+            fail_json(422, 'Selected pride does not exist');
+        }
+    } else {
+        $prideId = null;
     }
 
     if ($placeMode === 'existing') {
@@ -421,11 +395,19 @@ try {
     }
 
     if ($schemaFlags['hasEventAudience']) {
-        $insEvent = $pdo->prepare(
-            'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, audience_label_id, place_id, city_id, start_datetime, end_datetime)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        );
-        $insEvent->execute([
+        $eventColumns = [
+            'identifier',
+            'name',
+            'description',
+            'url',
+            'image_url',
+            'genre',
+            'keywords_text',
+            'event_status',
+            'attendance_mode',
+            'audience_label_id',
+        ];
+        $eventValues = [
             $identifier,
             $name,
             $description,
@@ -436,17 +418,34 @@ try {
             $eventStatus,
             $attendanceMode,
             $eventAudienceLabelId,
-            $placeId,
-            $cityId,
-            $startDateTime,
-            $endDateTime,
-        ]);
-    } else {
+        ];
+
+        if ($schemaFlags['hasEventPride']) {
+            $eventColumns[] = 'pride_id';
+            $eventValues[] = $prideId;
+        }
+
+        $eventColumns = array_merge($eventColumns, ['place_id', 'city_id', 'start_datetime', 'end_datetime']);
+        $eventValues = array_merge($eventValues, [$placeId, $cityId, $startDateTime, $endDateTime]);
+
         $insEvent = $pdo->prepare(
-            'INSERT INTO events (identifier, name, description, url, image_url, genre, keywords_text, event_status, attendance_mode, place_id, city_id, start_datetime, end_datetime)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO events (' . implode(', ', $eventColumns) . ')
+             VALUES (' . implode(', ', array_fill(0, count($eventColumns), '?')) . ')'
         );
-        $insEvent->execute([
+        $insEvent->execute($eventValues);
+    } else {
+        $eventColumns = [
+            'identifier',
+            'name',
+            'description',
+            'url',
+            'image_url',
+            'genre',
+            'keywords_text',
+            'event_status',
+            'attendance_mode',
+        ];
+        $eventValues = [
             $identifier,
             $name,
             $description,
@@ -456,11 +455,21 @@ try {
             $keywordsText,
             $eventStatus,
             $attendanceMode,
-            $placeId,
-            $cityId,
-            $startDateTime,
-            $endDateTime,
-        ]);
+        ];
+
+        if ($schemaFlags['hasEventPride']) {
+            $eventColumns[] = 'pride_id';
+            $eventValues[] = $prideId;
+        }
+
+        $eventColumns = array_merge($eventColumns, ['place_id', 'city_id', 'start_datetime', 'end_datetime']);
+        $eventValues = array_merge($eventValues, [$placeId, $cityId, $startDateTime, $endDateTime]);
+
+        $insEvent = $pdo->prepare(
+            'INSERT INTO events (' . implode(', ', $eventColumns) . ')
+             VALUES (' . implode(', ', array_fill(0, count($eventColumns), '?')) . ')'
+        );
+        $insEvent->execute($eventValues);
     }
     $eventId = (int)$pdo->lastInsertId();
 
