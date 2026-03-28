@@ -98,6 +98,7 @@ jobs:
 
           BATCH_FILE="$(mktemp)"
           trap 'rm -f "$BATCH_FILE"' EXIT
+          OPS_COUNT=0
 
           {
             echo "set sftp:auto-confirm yes"
@@ -128,6 +129,7 @@ jobs:
               if [ -z "${MADE_DIRS[$current]+x}" ]; then
                 printf 'mkdir -p "%s"\n' "$current" >> "$BATCH_FILE"
                 MADE_DIRS["$current"]=1
+                OPS_COUNT=$((OPS_COUNT + 1))
               fi
             done
           }
@@ -147,16 +149,19 @@ jobs:
               D*)
                 if ! is_excluded "$path1"; then
                   printf 'rm -f "%s"\n' "$path1" >> "$BATCH_FILE"
+                  OPS_COUNT=$((OPS_COUNT + 1))
                 fi
                 ;;
               R*|C*)
                 if ! is_excluded "$path1"; then
                   printf 'rm -f "%s"\n' "$path1" >> "$BATCH_FILE"
+                  OPS_COUNT=$((OPS_COUNT + 1))
                 fi
                 if ! is_excluded "$path2"; then
                   dir="$(dirname "$path2")"
                   [ "$dir" = "." ] || ensure_remote_dir "$dir"
                   printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path2" >> "$BATCH_FILE"
+                  OPS_COUNT=$((OPS_COUNT + 1))
                 fi
                 ;;
               *)
@@ -164,6 +169,7 @@ jobs:
                   dir="$(dirname "$path1")"
                   [ "$dir" = "." ] || ensure_remote_dir "$dir"
                   printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path1" >> "$BATCH_FILE"
+                  OPS_COUNT=$((OPS_COUNT + 1))
                 fi
                 ;;
             esac
@@ -171,9 +177,13 @@ jobs:
 
           echo "bye" >> "$BATCH_FILE"
 
-          if [ "$(wc -l < "$BATCH_FILE")" -le 5 ]; then
+          if [ "$OPS_COUNT" -eq 0 ]; then
             echo "No deployable file changes after exclusions."
             exit 0
           fi
+
+          echo "Queued deploy operations: $OPS_COUNT"
+          echo "Deploy operation preview:"
+          sed -n '/^\(mkdir -p\|put -O\|rm -f\) /p' "$BATCH_FILE" | sed -n '1,200p'
 
           lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" -e "source $BATCH_FILE; bye"
