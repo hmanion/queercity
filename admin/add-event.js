@@ -8,6 +8,10 @@ const submitBtn = document.getElementById('submit-btn');
 const statusEl = document.getElementById('status');
 const eventsListEl = document.getElementById('events-listing');
 const eventIdInput = document.getElementById('event-id');
+const eventsFilterSearch = document.getElementById('events-filter-search');
+const eventsFilterCategory = document.getElementById('events-filter-category');
+const eventsFilterMonth = document.getElementById('events-filter-month');
+const eventsFilterReset = document.getElementById('events-filter-reset');
 
 const citySelect = document.getElementById('city_id');
 const placeModeSelect = document.getElementById('place_mode');
@@ -191,12 +195,68 @@ function eventSummary(event) {
   return bits || 'No details';
 }
 
+function eventMonthKey(event) {
+  const value = String(event.start_datetime || '').trim();
+  if (!value || value.length < 7) return '';
+  return value.slice(0, 7);
+}
+
+function monthLabel(monthKey) {
+  if (!/^\d{4}-\d{2}$/.test(monthKey)) return monthKey;
+  const [y, m] = monthKey.split('-').map(Number);
+  const d = new Date(y, m - 1, 1);
+  return new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' }).format(d);
+}
+
+function populateEventFilters() {
+  const categories = Array.from(new Set(events.map((e) => String(e.genre || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+  const months = Array.from(new Set(events.map((e) => eventMonthKey(e)).filter(Boolean))).sort((a, b) => b.localeCompare(a));
+
+  eventsFilterCategory.innerHTML = '<option value="">All categories</option>';
+  categories.forEach((category) => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    eventsFilterCategory.appendChild(option);
+  });
+
+  eventsFilterMonth.innerHTML = '<option value="">All months</option>';
+  months.forEach((month) => {
+    const option = document.createElement('option');
+    option.value = month;
+    option.textContent = monthLabel(month);
+    eventsFilterMonth.appendChild(option);
+  });
+}
+
+function getFilteredEvents() {
+  const query = String(eventsFilterSearch.value || '').trim().toLowerCase();
+  const category = String(eventsFilterCategory.value || '').trim();
+  const month = String(eventsFilterMonth.value || '').trim();
+
+  return events.filter((event) => {
+    if (category && String(event.genre || '') !== category) return false;
+    if (month && eventMonthKey(event) !== month) return false;
+    if (!query) return true;
+
+    const haystack = [
+      event.id,
+      event.name,
+      event.genre,
+      event.keywords_text,
+      event.start_datetime,
+    ].map((v) => String(v || '').toLowerCase()).join(' ');
+    return haystack.includes(query);
+  });
+}
+
 function renderEvents() {
-  if (!events.length) {
+  const visible = getFilteredEvents();
+  if (!visible.length) {
     eventsListEl.innerHTML = '<p>No events found.</p>';
     return;
   }
-  const rows = events.map((event) => `
+  const rows = visible.map((event) => `
     <button type="button" class="admin-listing-item" data-event-id="${event.id}">
       <strong>${event.name || '(Untitled event)'}</strong>
       <span>${eventSummary(event)}</span>
@@ -396,10 +456,11 @@ async function loadEvents() {
   }
 
   setStatus('Loading events...');
-  const data = await apiRequest('GET');
-  events = Array.isArray(data.events) ? data.events.slice() : [];
-  renderEvents();
-  setStatus(`Loaded ${events.length} events.`);
+    const data = await apiRequest('GET');
+    events = Array.isArray(data.events) ? data.events.slice() : [];
+    populateEventFilters();
+    renderEvents();
+    setStatus(`Loaded ${events.length} events.`);
 }
 
 async function saveEvent(event) {
@@ -426,6 +487,7 @@ async function saveEvent(event) {
 
     const data = await apiRequest('POST', payload);
     events = Array.isArray(data.events) ? data.events.slice() : events;
+    populateEventFilters();
     renderEvents();
     const saved = events.find((item) => Number(item.id) === Number(data.event_id));
     if (saved) {
@@ -460,6 +522,7 @@ async function deleteEvent() {
 
     const data = await apiRequest('POST', { action: 'delete', id });
     events = Array.isArray(data.events) ? data.events.slice() : [];
+    populateEventFilters();
     renderEvents();
     resetEditor();
     setStatus(`Deleted event #${data.deleted_id}.`);
@@ -508,6 +571,15 @@ deleteEventBtn.addEventListener('click', async () => {
 placeModeSelect.addEventListener('change', updatePlaceModeUI);
 orgModeSelect.addEventListener('change', updateOrgModeUI);
 form.addEventListener('submit', saveEvent);
+eventsFilterSearch.addEventListener('input', renderEvents);
+eventsFilterCategory.addEventListener('change', renderEvents);
+eventsFilterMonth.addEventListener('change', renderEvents);
+eventsFilterReset.addEventListener('click', () => {
+  eventsFilterSearch.value = '';
+  eventsFilterCategory.value = '';
+  eventsFilterMonth.value = '';
+  renderEvents();
+});
 
 deleteEventBtn.disabled = true;
 updatePlaceModeUI();

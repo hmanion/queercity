@@ -240,6 +240,25 @@ qc_admin_require_page_token('Add Event Admin');
 
     <section class="panel">
       <h2>Existing Events</h2>
+      <div class="admin-actions">
+        <label>
+          Search
+          <input id="events-filter-search" type="text" placeholder="Search name, id, keyword">
+        </label>
+        <label>
+          Category
+          <select id="events-filter-category">
+            <option value="">All categories</option>
+          </select>
+        </label>
+        <label>
+          Month
+          <select id="events-filter-month">
+            <option value="">All months</option>
+          </select>
+        </label>
+        <button id="events-filter-reset" type="button">Clear filters</button>
+      </div>
       <div id="events-listing" class="admin-listing"></div>
     </section>
   </main>
