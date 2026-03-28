@@ -2,6 +2,8 @@
 
 This repository stores website runtime code only.
 
+Minimal repo-local test/config tooling is also kept here when it exists solely to validate the runtime behavior of these branches.
+
 Branch model:
 - `main`: live runtime for Ionos (public site + PHP APIs + admin runtime)
 - `pages`: static test runtime for GitHub Pages (public site only)
@@ -62,6 +64,18 @@ Current workflow deploys from `main` only.
 
 Run a local static server:
 - `python3 -m http.server`
+
+Install test dependencies:
+- `npm install`
+
+Run the test suite for the static `pages` runtime:
+- `npm test`
+- `npm run test:unit`
+- `npm run test:e2e`
+
+Expected local environment:
+- Node.js 20+
+- Playwright Chromium browser installed automatically in CI; locally run `npx playwright install chromium` if needed before `npm run test:e2e`
 
 For PHP/API testing, use `main` branch with PHP runtime available.
 

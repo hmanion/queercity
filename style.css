@@ -281,10 +281,11 @@ section{
 
 .borough-shape {
   stroke: #fff;
-  stroke-width: 3;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
   fill-opacity: 0.95;
   cursor: pointer;
-  transition: transform 100ms ease, fill-opacity 100ms ease;
+  transition: transform 100ms ease, fill-opacity 100ms ease, filter 100ms ease;
   transform-origin: center;
 }
 
@@ -293,6 +294,7 @@ section{
 .borough-shape:focus-visible {
   fill-opacity: 1;
   transform: translateY(-1px);
+  filter: brightness(1.03);
   outline: none;
 }
 

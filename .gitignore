@@ -7,3 +7,7 @@ schema.sql
 organization_candidates_from_recurring.csv
 HANDOFF_*.md
 .ops/
+node_modules/
+playwright-report/
+test-results/
+coverage/
