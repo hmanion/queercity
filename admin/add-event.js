@@ -1,7 +1,13 @@
 const form = document.getElementById('add-event-form');
 const tokenInput = document.getElementById('token');
 const loadOptionsBtn = document.getElementById('load-options');
+const loadEventsBtn = document.getElementById('load-events');
+const newEventBtn = document.getElementById('new-event');
+const deleteEventBtn = document.getElementById('delete-event');
+const submitBtn = document.getElementById('submit-btn');
 const statusEl = document.getElementById('status');
+const eventsListEl = document.getElementById('events-listing');
+const eventIdInput = document.getElementById('event-id');
 
 const citySelect = document.getElementById('city_id');
 const placeModeSelect = document.getElementById('place_mode');
@@ -18,8 +24,8 @@ const prideSelect = document.getElementById('pride_id');
 const eventGenreSelect = document.getElementById('event-genre');
 const newOrgAudienceSelect = document.getElementById('new_organization_audience_label_id');
 const newOrgCategorySelect = document.getElementById('new_organization_category');
-
 const tagSelect = document.getElementById('tag_ids');
+
 const isMockMode = new URLSearchParams(window.location.search).get('mock') === '1';
 
 const mockOptions = {
@@ -57,6 +63,9 @@ const mockOptions = {
     { id: 33, name: 'workshop' },
   ],
 };
+
+let optionsLoaded = false;
+let events = [];
 
 function setStatus(message, isError = false) {
   statusEl.textContent = message;
@@ -110,9 +119,7 @@ function fillAudienceSelect(selectEl, audienceLabels, placeholder) {
 }
 
 function fillPrideSelect(prides) {
-  if (!prideSelect) return;
   prideSelect.innerHTML = '';
-
   const placeholderOption = document.createElement('option');
   placeholderOption.value = '';
   placeholderOption.textContent = 'No linked pride';
@@ -143,7 +150,6 @@ function fillCategorySelect(categories) {
 }
 
 function fillEventCategorySelect(categories) {
-  if (!eventGenreSelect) return;
   const current = eventGenreSelect.value;
   eventGenreSelect.innerHTML = '';
   const placeholderOption = document.createElement('option');
@@ -157,7 +163,120 @@ function fillEventCategorySelect(categories) {
     option.textContent = category;
     eventGenreSelect.appendChild(option);
   });
-  if (current) eventGenreSelect.value = current;
+
+  if (current) {
+    eventGenreSelect.value = current;
+  }
+}
+
+function csvToArray(csvRaw) {
+  return csvRaw.split(',').map((x) => x.trim()).filter((x) => x.length > 0);
+}
+
+function selectedTagIds() {
+  return Array.from(tagSelect.selectedOptions)
+    .map((opt) => Number(opt.value))
+    .filter((v) => Number.isInteger(v) && v > 0);
+}
+
+function fromSqlDateTimeToLocalInput(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  return raw.replace(' ', 'T').slice(0, 16);
+}
+
+function eventSummary(event) {
+  const when = event.start_datetime ? fromSqlDateTimeToLocalInput(event.start_datetime).replace('T', ' ') : 'No date';
+  const bits = [event.genre, when].filter(Boolean).join(' | ');
+  return bits || 'No details';
+}
+
+function renderEvents() {
+  if (!events.length) {
+    eventsListEl.innerHTML = '<p>No events found.</p>';
+    return;
+  }
+  const rows = events.map((event) => `
+    <button type="button" class="admin-listing-item" data-event-id="${event.id}">
+      <strong>${event.name || '(Untitled event)'}</strong>
+      <span>${eventSummary(event)}</span>
+      <span>#${event.id}</span>
+    </button>
+  `).join('');
+  eventsListEl.innerHTML = rows;
+}
+
+function resetEditor() {
+  const token = tokenInput.value;
+  const selectedCity = citySelect.value;
+  form.reset();
+  tokenInput.value = token;
+  citySelect.value = selectedCity;
+  eventIdInput.value = '';
+  placeModeSelect.value = 'existing';
+  orgModeSelect.value = 'none';
+  updatePlaceModeUI();
+  updateOrgModeUI();
+  deleteEventBtn.disabled = true;
+  submitBtn.textContent = 'Create event';
+}
+
+function fillTagSelection(tagIds) {
+  const wanted = new Set((tagIds || []).map((id) => Number(id)));
+  Array.from(tagSelect.options).forEach((option) => {
+    option.selected = wanted.has(Number(option.value));
+  });
+}
+
+function editEvent(event) {
+  eventIdInput.value = String(event.id || '');
+  form.elements.name.value = event.name || '';
+  form.elements.description.value = event.description || '';
+  form.elements.url.value = event.url || '';
+  form.elements.image_url.value = event.image_url || '';
+  form.elements.genre.value = event.genre || '';
+  form.elements.keywords_text.value = event.keywords_text || '';
+  form.elements.start_datetime.value = fromSqlDateTimeToLocalInput(event.start_datetime);
+  form.elements.end_datetime.value = fromSqlDateTimeToLocalInput(event.end_datetime);
+  form.elements.city_id.value = event.city_id ? String(event.city_id) : '';
+  form.elements.event_audience_label_id.value = event.event_audience_label_id ? String(event.event_audience_label_id) : '';
+  form.elements.pride_id.value = event.pride_id ? String(event.pride_id) : '';
+  form.elements.place_mode.value = 'existing';
+  form.elements.place_id.value = event.place_id ? String(event.place_id) : '';
+  form.elements.organization_mode.value = event.organization_id ? 'existing' : 'none';
+  form.elements.organization_id.value = event.organization_id ? String(event.organization_id) : '';
+  form.elements.existing_organization_role.value = event.organization_role || '';
+  form.elements.price.value = event.price == null ? '' : String(event.price);
+  form.elements.price_currency.value = event.price_currency || '';
+  form.elements.offer_url.value = event.offer_url || '';
+  fillTagSelection(event.tag_ids || []);
+
+  updatePlaceModeUI();
+  updateOrgModeUI();
+  deleteEventBtn.disabled = !eventIdInput.value;
+  submitBtn.textContent = 'Save event';
+  setStatus(`Editing event #${event.id}.`);
+}
+
+async function apiRequest(method, body = null) {
+  const token = tokenInput.value.trim();
+  const url = method === 'GET'
+    ? (token ? `../api/admin-add-event.php?token=${encodeURIComponent(token)}` : '../api/admin-add-event.php')
+    : '../api/admin-add-event.php';
+
+  const response = await fetch(url, method === 'GET'
+    ? { method: 'GET' }
+    : {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(token ? { token, ...body } : { ...body }),
+      });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || `Request failed (${response.status})`);
+  }
+  return data;
 }
 
 async function loadOptions() {
@@ -172,20 +291,19 @@ async function loadOptions() {
     fillCategorySelect(mockOptions.organization_categories);
     fillTagSelect(mockOptions.tags);
     citySelect.value = '1';
-    setStatus('Mock mode: options loaded locally (no API call).');
+    optionsLoaded = true;
+    setStatus('Mock mode: options loaded locally.');
     return;
   }
 
   const token = tokenInput.value.trim();
-
-  setStatus('Loading options...');
   const url = token
     ? `../api/admin-options.php?token=${encodeURIComponent(token)}`
     : '../api/admin-options.php';
 
+  setStatus('Loading options...');
   const response = await fetch(url, { method: 'GET' });
   const data = await response.json().catch(() => ({}));
-
   if (!response.ok) {
     throw new Error(data.error || `Failed to load options (${response.status})`);
   }
@@ -205,21 +323,11 @@ async function loadOptions() {
     citySelect.value = String(manchester.id);
   }
 
-  setStatus('Options loaded. You can now pick existing records.');
+  optionsLoaded = true;
+  setStatus('Options loaded.');
 }
 
-function selectedTagIds() {
-  return Array.from(tagSelect.selectedOptions).map((opt) => Number(opt.value)).filter((v) => Number.isInteger(v) && v > 0);
-}
-
-function csvToArray(csvRaw) {
-  return csvRaw
-    .split(',')
-    .map((x) => x.trim())
-    .filter((x) => x.length > 0);
-}
-
-function buildPayload() {
+function buildSavePayload() {
   const fd = new FormData(form);
   const organizationMode = String(fd.get('organization_mode') || 'none');
   const organizationRole = organizationMode === 'new'
@@ -227,7 +335,8 @@ function buildPayload() {
     : String(fd.get('existing_organization_role') || '').trim();
 
   const payload = {
-    token: String(fd.get('token') || '').trim(),
+    action: 'save',
+    id: Number(fd.get('id') || 0),
     name: String(fd.get('name') || '').trim(),
     description: String(fd.get('description') || '').trim(),
     url: String(fd.get('url') || '').trim(),
@@ -237,7 +346,6 @@ function buildPayload() {
     start_datetime: String(fd.get('start_datetime') || '').trim(),
     end_datetime: String(fd.get('end_datetime') || '').trim(),
     city_id: Number(fd.get('city_id') || 0),
-
     place_mode: String(fd.get('place_mode') || 'existing'),
     place_id: Number(fd.get('place_id') || 0),
     new_place_name: String(fd.get('new_place_name') || '').trim(),
@@ -245,7 +353,6 @@ function buildPayload() {
     new_place_locality: String(fd.get('new_place_locality') || '').trim(),
     new_place_postal_code: String(fd.get('new_place_postal_code') || '').trim(),
     new_place_country: String(fd.get('new_place_country') || '').trim(),
-
     organization_mode: organizationMode,
     organization_id: Number(fd.get('organization_id') || 0),
     new_organization_name: String(fd.get('new_organization_name') || '').trim(),
@@ -256,10 +363,8 @@ function buildPayload() {
     organization_role: organizationRole,
     event_audience_label_id: Number(fd.get('event_audience_label_id') || 0),
     pride_id: Number(fd.get('pride_id') || 0),
-
     tag_ids: selectedTagIds(),
     new_tags: csvToArray(String(fd.get('new_tags_csv') || '')),
-
     price: String(fd.get('price') || '').trim(),
     price_currency: String(fd.get('price_currency') || '').trim().toUpperCase(),
     offer_url: String(fd.get('offer_url') || '').trim(),
@@ -268,63 +373,112 @@ function buildPayload() {
   if (payload.end_datetime === '') {
     delete payload.end_datetime;
   }
-
   return payload;
 }
 
-async function submitEvent(event) {
+async function loadEvents() {
+  if (isMockMode) {
+    const key = 'qc_mock_events';
+    events = JSON.parse(localStorage.getItem(key) || '[]').map((entry) => ({
+      id: entry.id,
+      ...entry.payload,
+      start_datetime: entry.payload.start_datetime ? `${entry.payload.start_datetime.replace('T', ' ')}:00` : null,
+      end_datetime: entry.payload.end_datetime ? `${entry.payload.end_datetime.replace('T', ' ')}:00` : null,
+      tag_ids: entry.payload.tag_ids || [],
+    }));
+    renderEvents();
+    setStatus(`Loaded ${events.length} mock events.`);
+    return;
+  }
+
+  if (!optionsLoaded) {
+    await loadOptions();
+  }
+
+  setStatus('Loading events...');
+  const data = await apiRequest('GET');
+  events = Array.isArray(data.events) ? data.events.slice() : [];
+  renderEvents();
+  setStatus(`Loaded ${events.length} events.`);
+}
+
+async function saveEvent(event) {
   event.preventDefault();
 
   try {
-    const payload = buildPayload();
-    setStatus('Creating event...');
+    const payload = buildSavePayload();
+    const isUpdate = payload.id > 0;
+    setStatus(isUpdate ? 'Saving event...' : 'Creating event...');
 
     if (isMockMode) {
       const key = 'qc_mock_events';
       const existing = JSON.parse(localStorage.getItem(key) || '[]');
-      const eventId = Date.now();
-      existing.push({
-        id: eventId,
-        created_at: new Date().toISOString(),
-        payload,
-      });
-      localStorage.setItem(key, JSON.stringify(existing, null, 2));
-      setStatus(`Mock mode: saved event #${eventId} to localStorage key "${key}".`);
-      const token = tokenInput.value;
-      const selectedCity = citySelect.value;
-      form.reset();
-      tokenInput.value = token;
-      citySelect.value = selectedCity;
-      updatePlaceModeUI();
-      updateOrgModeUI();
+      const id = payload.id > 0 ? payload.id : Date.now();
+      const next = existing.filter((item) => Number(item.id) !== Number(id));
+      next.push({ id, payload });
+      localStorage.setItem(key, JSON.stringify(next, null, 2));
+      await loadEvents();
+      const saved = events.find((item) => Number(item.id) === Number(id));
+      if (saved) editEvent(saved);
+      setStatus(isUpdate ? `Updated mock event #${id}.` : `Created mock event #${id}.`);
       return;
     }
 
-    const response = await fetch('../api/admin-add-event.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(data.error || `Failed to create event (${response.status})`);
+    const data = await apiRequest('POST', payload);
+    events = Array.isArray(data.events) ? data.events.slice() : events;
+    renderEvents();
+    const saved = events.find((item) => Number(item.id) === Number(data.event_id));
+    if (saved) {
+      editEvent(saved);
     }
-
-    const token = tokenInput.value;
-    const selectedCity = citySelect.value;
-    setStatus(`Created event #${data.event_id}.`);
-    form.reset();
-    tokenInput.value = token;
-    citySelect.value = selectedCity;
-    updatePlaceModeUI();
-    updateOrgModeUI();
+    setStatus(isUpdate ? `Saved event #${data.event_id}.` : `Created event #${data.event_id}.`);
   } catch (error) {
-    setStatus(error.message || 'Failed to create event.', true);
+    setStatus(error.message || 'Failed to save event.', true);
   }
 }
+
+async function deleteEvent() {
+  const id = Number(eventIdInput.value || 0);
+  if (!id) {
+    setStatus('Choose an existing event to delete.', true);
+    return;
+  }
+
+  try {
+    setStatus('Deleting event...');
+
+    if (isMockMode) {
+      const key = 'qc_mock_events';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      const next = existing.filter((item) => Number(item.id) !== id);
+      localStorage.setItem(key, JSON.stringify(next, null, 2));
+      await loadEvents();
+      resetEditor();
+      setStatus(`Deleted mock event #${id}.`);
+      return;
+    }
+
+    const data = await apiRequest('POST', { action: 'delete', id });
+    events = Array.isArray(data.events) ? data.events.slice() : [];
+    renderEvents();
+    resetEditor();
+    setStatus(`Deleted event #${data.deleted_id}.`);
+  } catch (error) {
+    setStatus(error.message || 'Failed to delete event.', true);
+  }
+}
+
+eventsListEl.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-event-id]');
+  if (!button) return;
+  const eventId = Number(button.dataset.eventId || 0);
+  const selected = events.find((item) => Number(item.id) === eventId);
+  if (!selected) return;
+  if (!optionsLoaded && !isMockMode) {
+    await loadOptions();
+  }
+  editEvent(selected);
+});
 
 loadOptionsBtn.addEventListener('click', async () => {
   try {
@@ -334,14 +488,32 @@ loadOptionsBtn.addEventListener('click', async () => {
   }
 });
 
+loadEventsBtn.addEventListener('click', async () => {
+  try {
+    await loadEvents();
+  } catch (error) {
+    setStatus(error.message || 'Failed to load events.', true);
+  }
+});
+
+newEventBtn.addEventListener('click', () => {
+  resetEditor();
+  setStatus('Ready to create a new event.');
+});
+
+deleteEventBtn.addEventListener('click', async () => {
+  await deleteEvent();
+});
+
 placeModeSelect.addEventListener('change', updatePlaceModeUI);
 orgModeSelect.addEventListener('change', updateOrgModeUI);
-form.addEventListener('submit', submitEvent);
+form.addEventListener('submit', saveEvent);
 
+deleteEventBtn.disabled = true;
 updatePlaceModeUI();
 updateOrgModeUI();
 if (isMockMode) {
-  setStatus('Mock mode enabled. Click "Load existing DB options" to populate local test data.');
+  setStatus('Mock mode enabled. Load options and events to begin.');
 } else {
-  setStatus('Click "Load existing DB options", then submit.');
+  setStatus('Load options, then load events to edit existing records.');
 }

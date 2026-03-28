@@ -38,11 +38,17 @@ qc_admin_require_page_token('Add Event Admin');
           Admin token
           <input id="token" name="token" type="password" placeholder="Optional override">
         </label>
-        <button id="load-options" type="button">Load existing DB options</button>
+        <div class="admin-actions">
+          <button id="load-options" type="button">Load DB options</button>
+          <button id="load-events" type="button">Load events</button>
+          <button id="new-event" type="button">New event</button>
+          <button id="delete-event" type="button">Delete event</button>
+        </div>
       </section>
 
       <section class="panel">
         <h2>Event Details</h2>
+        <input id="event-id" name="id" type="hidden">
         <label>
           Event name
           <input name="name" type="text" required>
@@ -228,9 +234,14 @@ qc_admin_require_page_token('Add Event Admin');
         </label>
       </section>
 
-      <button id="submit-btn" type="submit">Create event</button>
+      <button id="submit-btn" type="submit">Save event</button>
       <pre id="status" class="status"></pre>
     </form>
+
+    <section class="panel">
+      <h2>Existing Events</h2>
+      <div id="events-listing" class="admin-listing"></div>
+    </section>
   </main>
 
   <footer class="qc-footer">
