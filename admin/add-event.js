@@ -456,7 +456,16 @@ async function loadEvents() {
   }
 
   setStatus('Loading events...');
-  const data = await apiRequest('POST', { action: 'list' });
+  let data;
+  try {
+    data = await apiRequest('GET');
+  } catch (error) {
+    const message = String(error?.message || '').toLowerCase();
+    if (!message.includes('405')) {
+      throw error;
+    }
+    data = await apiRequest('POST', { action: 'list' });
+  }
   events = Array.isArray(data.events) ? data.events.slice() : [];
   populateEventFilters();
   renderEvents();
