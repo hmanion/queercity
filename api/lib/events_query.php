@@ -1,5 +1,30 @@
 <?php
 
+function normalize_event_genre_label($value): ?string
+{
+    $text = trim((string)($value ?? ''));
+    if ($text === '') return null;
+    $token = strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
+    $map = [
+        'activity' => 'Active',
+        'activities' => 'Active',
+        'active' => 'Active',
+        'arts' => 'Arts',
+        'art' => 'Arts',
+        'club' => 'Music',
+        'clubs' => 'Music',
+        'music' => 'Music',
+        'celebration' => 'Celebration',
+        'celebrations' => 'Celebration',
+        'life' => 'Life',
+        'sex' => 'Sex',
+        'sexy' => 'Sex',
+        'social' => 'Social',
+        'socials' => 'Social',
+    ];
+    return $map[$token] ?? $text;
+}
+
 function fetch_one_off_events(PDO $pdo, ?string $fromDate, ?string $toDate, int $limit = 0): array
 {
     $limit = ($limit > 0) ? min($limit, 2000) : 0;
@@ -81,7 +106,7 @@ ORDER BY e.start_datetime ASC
             'url' => $r['url'],
             'description' => $r['description'],
             'image' => $r['image_url'],
-            'genre' => $r['genre'],
+            'genre' => normalize_event_genre_label($r['genre']),
             'keywords' => $r['keywords_text'],
             'location' => [
                 '@type' => 'Place',

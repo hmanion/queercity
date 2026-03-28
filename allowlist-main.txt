@@ -13,12 +13,13 @@ includes/filter-bar.php
 index.php
 archive/index.php
 weekdays/index.php
-activities/index.php
+active/index.php
 arts/index.php
-clubs/index.php
+music/index.php
 celebration/index.php
 life/index.php
-sexy/index.php
+sex/index.php
+social/index.php
 style.css
 robots.txt
 sitemap.xml

@@ -4,6 +4,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 const ORG_CATEGORIES = ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'];
+const EVENT_GENRES = ['Active', 'Arts', 'Music', 'Celebration', 'Life', 'Sex', 'Social'];
 
 function fail_json($code, $message) {
     http_response_code($code);
@@ -25,6 +26,34 @@ function normalize_spaces($value) {
         return null;
     }
     return preg_replace('/\s+/u', ' ', $text);
+}
+
+function normalize_event_genre($value) {
+    $text = normalize_text($value);
+    if ($text === null) {
+        return null;
+    }
+
+    $token = strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
+    $map = [
+        'activity' => 'Active',
+        'activities' => 'Active',
+        'active' => 'Active',
+        'arts' => 'Arts',
+        'art' => 'Arts',
+        'club' => 'Music',
+        'clubs' => 'Music',
+        'music' => 'Music',
+        'celebration' => 'Celebration',
+        'celebrations' => 'Celebration',
+        'life' => 'Life',
+        'sex' => 'Sex',
+        'sexy' => 'Sex',
+        'social' => 'Social',
+        'socials' => 'Social',
+    ];
+
+    return $map[$token] ?? null;
 }
 
 function abbreviate_street_words($value) {
@@ -226,7 +255,7 @@ $name = normalize_text($data['name'] ?? null);
 $description = normalize_text($data['description'] ?? null);
 $url = normalize_text($data['url'] ?? null);
 $imageUrl = normalize_text($data['image_url'] ?? null);
-$genre = normalize_text($data['genre'] ?? null);
+$genre = normalize_event_genre($data['genre'] ?? null);
 $keywordsText = normalize_text($data['keywords_text'] ?? null);
 $identifier = normalize_text($data['identifier'] ?? null);
 $eventStatus = normalize_text($data['event_status'] ?? null);
@@ -239,6 +268,9 @@ if ($name === null) {
 }
 if ($startDateTime === null) {
     fail_json(422, 'Start date/time is required and must be valid');
+}
+if (($data['genre'] ?? null) !== null && $genre === null) {
+    fail_json(422, 'Category is invalid');
 }
 if ($endDateTime !== null && $endDateTime < $startDateTime) {
     fail_json(422, 'End date/time must be after start date/time');

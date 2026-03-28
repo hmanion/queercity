@@ -9,6 +9,7 @@ import {
   expandAllRecurring,
   formatEventDateTime,
   getCategory,
+  normalizeCategorySlug,
   eventKey,
   toISODate,
   getUniqueTags,
@@ -20,16 +21,6 @@ import { buildFutureMonths, buildTimeBuckets, createTimeBucketSections } from '.
 import { matchesRecurring, matchesTags, setSectionTitleCount } from './event-filters.module.js';
 
 const FUTURE_MONTHS_AHEAD = 3;
-
-function normalizeGenreValue(value) {
-  const raw = String(value || '').trim().toLowerCase();
-  if (!raw) return '';
-  const compact = raw.replace(/[^a-z0-9]+/g, '');
-  if (compact === 'activities') return 'activity';
-  if (compact.endsWith('ies') && compact.length > 3) return compact.slice(0, -3) + 'y';
-  if (compact.endsWith('s') && compact.length > 1) return compact.slice(0, -1);
-  return compact;
-}
 
 const now = new Date();
 const todayStart = startOfDay(now);
@@ -64,8 +55,8 @@ if (!root || !target) {
       })
       .sort((a, b) => (getEventStartDate(a) || new Date(8640000000000000)) - (getEventStartDate(b) || new Date(8640000000000000)));
 
-    const wanted = normalizeGenreValue(genreLabel);
-    const genreEvents = allWindowEvents.filter((ev) => normalizeGenreValue(getCategory(ev)) === wanted);
+    const wanted = normalizeCategorySlug(genreLabel);
+    const genreEvents = allWindowEvents.filter((ev) => normalizeCategorySlug(getCategory(ev)) === wanted);
 
     const filterBar = ensureFilterBar(target);
 

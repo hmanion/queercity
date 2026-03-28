@@ -6,6 +6,16 @@
   font-display: swap;
 }
 
+:root {
+  --qc-pink: #FF6CE3;
+  --qc-red: #FF1515;
+  --qc-orange: #FF7A00;
+  --qc-yellow: #FFD429;
+  --qc-green: #06C054;
+  --qc-blue: #00D6FF;
+  --qc-purple: #BC2FFF;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -44,7 +54,7 @@ h2 {
 
 button {
   border: none;
-  background-color: #BC2FFF;
+  background-color: var(--qc-purple);
   color: black;
   font-size: 1rem;
   font-variant-caps: all-small-caps;
@@ -98,7 +108,7 @@ button.active {
     height: 8rem;
     width: 8rem;
     aspect-ratio: 1 / 1;
-    background-color: #BC2FFF;
+    background-color: var(--qc-purple);
     border-radius: 50%;
     grid-column: 1 / span 2;
     grid-row: 2 / span 1;
@@ -107,7 +117,7 @@ button.active {
 }
 
 a{
-    color: #BC2FFF;
+    color: var(--qc-purple);
 }
 
 a:hover{
@@ -188,33 +198,38 @@ a:hover{
   border-radius: 2px;
 }
 
-.Club {
-  background-color: #FF80FF;
-  color: black;
-}
-
 .Celebration {
   background-color: #CCFF2E;
   color: black;
 }
 
-.Activity {
-  background-color: #FC7E32;
+.Active {
+  background-color: var(--qc-yellow);
   color: black;
 }
 
 .Arts {
-  background-color: #B6F7FF;
+  background-color: var(--qc-blue);
+  color: black;
+}
+
+.Music {
+  background-color: var(--qc-green);
   color: black;
 }
 
 .Life {
-  background-color: #FFE42E;
+  background-color: var(--qc-pink);
   color: black;
 }
 
-.Sexy {
-  background-color: #FF2929;
+.Sex {
+  background-color: var(--qc-red);
+  color: black;
+}
+
+.Social {
+  background-color: var(--qc-orange);
   color: black;
 }
 
