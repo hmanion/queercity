@@ -2,22 +2,8 @@
 // admin-options.php - returns existing entities for admin event-entry form.
 
 header('Content-Type: application/json; charset=utf-8');
-
-function table_exists(PDO $pdo, $tableName) {
-    $stmt = $pdo->prepare(
-        'SELECT 1 FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ? LIMIT 1'
-    );
-    $stmt->execute([$tableName]);
-    return (bool)$stmt->fetchColumn();
-}
-
-function column_exists(PDO $pdo, $tableName, $columnName) {
-    $stmt = $pdo->prepare(
-        'SELECT 1 FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ? LIMIT 1'
-    );
-    $stmt->execute([$tableName, $columnName]);
-    return (bool)$stmt->fetchColumn();
-}
+require_once __DIR__ . '/lib/prides_query.php';
+require_once __DIR__ . '/lib/event_domain.php';
 
 $configPath = __DIR__ . '/../config/db.php';
 if (!file_exists($configPath)) {
@@ -49,10 +35,11 @@ try {
 
     $cities = $pdo->query('SELECT id, name, region, country_code, timezone, slug FROM cities ORDER BY name ASC')->fetchAll();
     $places = $pdo->query('SELECT id, name FROM places WHERE name IS NOT NULL AND name <> "" ORDER BY name ASC')->fetchAll();
-    $hasAudienceLabelsTable = table_exists($pdo, 'audience_labels');
-    $hasOrgCategory = column_exists($pdo, 'organizations', 'category');
-    $hasOrgLogo = column_exists($pdo, 'organizations', 'logo_url');
-    $hasOrgAudience = column_exists($pdo, 'organizations', 'audience_label_id');
+    $hasAudienceLabelsTable = qc_table_exists($pdo, 'audience_labels');
+    $hasOrgCategory = qc_column_exists($pdo, 'organizations', 'category');
+    $hasOrgLogo = qc_column_exists($pdo, 'organizations', 'logo_url');
+    $hasOrgAudience = qc_column_exists($pdo, 'organizations', 'audience_label_id');
+    $prides = qc_fetch_prides($pdo, true);
 
     if ($hasAudienceLabelsTable && $hasOrgAudience) {
         $organizations = $pdo->query(
@@ -88,9 +75,18 @@ try {
         'places' => $places,
         'organizations' => $organizations,
         'audience_labels' => $audienceLabels,
-        'event_categories' => ['Life', 'Sex', 'Social', 'Active', 'Music', 'Arts', 'Celebration'],
+        'event_categories' => event_genre_allowed_labels(),
         'organization_categories' => ['Charity', 'Activity', 'Social', 'Arts', 'Club', 'Life', 'Sexy'],
         'tags' => $tags,
+        'prides' => array_map(static function (array $pride): array {
+            return [
+                'id' => $pride['id'],
+                'name' => $pride['name'],
+                'borough' => $pride['borough'],
+                'location' => $pride['location'],
+                'published' => $pride['published'],
+            ];
+        }, $prides),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     http_response_code(500);

@@ -69,3 +69,37 @@ button {
   min-height: 44px;
   white-space: pre-wrap;
 }
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-checkbox input {
+  margin: 0;
+}
+
+.admin-listing {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-listing-item {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+}
+
+.admin-listing-item span {
+  font-style: normal;
+  font-variant-caps: normal;
+  font-weight: 400;
+}

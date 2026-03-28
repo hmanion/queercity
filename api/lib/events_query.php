@@ -1,29 +1,6 @@
 <?php
 
-function normalize_event_genre_label($value): ?string
-{
-    $text = trim((string)($value ?? ''));
-    if ($text === '') return null;
-    $token = strtolower(preg_replace('/[^a-z0-9]+/i', '', $text));
-    $map = [
-        'activity' => 'Active',
-        'activities' => 'Active',
-        'active' => 'Active',
-        'arts' => 'Arts',
-        'art' => 'Arts',
-        'club' => 'Music',
-        'clubs' => 'Music',
-        'music' => 'Music',
-        'celebration' => 'Celebration',
-        'celebrations' => 'Celebration',
-        'life' => 'Life',
-        'sex' => 'Sex',
-        'sexy' => 'Sex',
-        'social' => 'Social',
-        'socials' => 'Social',
-    ];
-    return $map[$token] ?? $text;
-}
+require_once __DIR__ . '/event_domain.php';
 
 function fetch_one_off_events(PDO $pdo, ?string $fromDate, ?string $toDate, int $limit = 0): array
 {
@@ -94,42 +71,11 @@ ORDER BY e.start_datetime ASC
 
     $out = [];
     foreach ($rows as $r) {
-        $item = [
-            '@context' => 'https://schema.org',
-            '@type' => 'Event',
-            'identifier' => $r['identifier'],
-            'name' => $r['name'],
-            'eventStatus' => $r['event_status'],
-            'eventAttendanceMode' => $r['attendance_mode'],
-            'startDate' => $r['start_datetime'] ? str_replace(' ', 'T', $r['start_datetime']) : null,
-            'endDate' => $r['end_datetime'] ? str_replace(' ', 'T', $r['end_datetime']) : null,
-            'url' => $r['url'],
-            'description' => $r['description'],
-            'image' => $r['image_url'],
-            'genre' => normalize_event_genre_label($r['genre']),
-            'keywords' => $r['keywords_text'],
-            'location' => [
-                '@type' => 'Place',
-                'name' => $r['place_name'],
-                'address' => [
-                    '@type' => 'PostalAddress',
-                    'streetAddress' => $r['street_address'],
-                    'addressLocality' => $r['address_locality'],
-                    'postalCode' => $r['postal_code'],
-                    'addressCountry' => $r['address_country'],
-                ]
-            ]
-        ];
+        $item = shape_base_event($r);
 
         $eid = (int)$r['id'];
         if (isset($offers_by_event[$eid])) {
-            $offer = $offers_by_event[$eid];
-            $item['offers'] = [
-                '@type' => 'Offer',
-                'price' => $offer['price'],
-                'priceCurrency' => $offer['price_currency'],
-                'url' => $offer['url']
-            ];
+            $item['offers'] = shape_event_offers($offers_by_event[$eid]);
         }
 
         $out[] = $item;

@@ -13,6 +13,7 @@ if (!function_exists('qc_render_header')) {
             ['id' => 'music', 'href' => $basePath . 'music/', 'label' => 'MUSIC'],
             ['id' => 'arts', 'href' => $basePath . 'arts/', 'label' => 'ARTS'],
             ['id' => 'celebration', 'href' => $basePath . 'celebration/', 'label' => 'CELEBRATION'],
+            ['id' => 'prides', 'href' => $basePath . 'prides/', 'label' => 'PRIDES'],
         ];
         ?>
         <div class="header">
