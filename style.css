@@ -486,17 +486,6 @@ section{
   stroke: var(--qc-map-disabled-stroke);
 }
 
-.borough-bolton { fill: #fc7e32; }
-.borough-bury { fill: #ffe42e; }
-.borough-manchester { fill: #ff80ff; }
-.borough-oldham { fill: #ff6ce3; }
-.borough-rochdale { fill: #b6f7ff; }
-.borough-salford { fill: #f2d7ff; }
-.borough-stockport { fill: #06c054; }
-.borough-tameside { fill: #6e9dff; }
-.borough-trafford { fill: #ffd429; }
-.borough-wigan { fill: #bc2fff; }
-
 .prides-map-tooltip {
   position: absolute;
   top: 0.35rem;

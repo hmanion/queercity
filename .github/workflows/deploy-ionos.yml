@@ -109,6 +109,7 @@ jobs:
           } > "$BATCH_FILE"
 
           declare -A MADE_DIRS=()
+          declare -A BEFORE_DIR_EXISTS=()
 
           ensure_remote_dir() {
             local dir="$1"
@@ -132,6 +133,23 @@ jobs:
                 OPS_COUNT=$((OPS_COUNT + 1))
               fi
             done
+          }
+
+          dir_existed_in_before() {
+            local dir="$1"
+            [ "$dir" = "." ] && return 0
+            if [ -n "${BEFORE_DIR_EXISTS[$dir]+x}" ]; then
+              [ "${BEFORE_DIR_EXISTS[$dir]}" = "1" ]
+              return
+            fi
+
+            if git ls-tree -r --name-only "$BEFORE" -- "$dir/" | head -n 1 | grep -q .; then
+              BEFORE_DIR_EXISTS["$dir"]=1
+              return 0
+            fi
+
+            BEFORE_DIR_EXISTS["$dir"]=0
+            return 1
           }
 
           remote_output_dir() {
@@ -159,18 +177,22 @@ jobs:
                 fi
                 if ! is_excluded "$path2"; then
                   dir="$(dirname "$path2")"
-                  [ "$dir" = "." ] || ensure_remote_dir "$dir"
+                  if [ "$dir" != "." ] && ! dir_existed_in_before "$dir"; then
+                    ensure_remote_dir "$dir"
+                  fi
                   printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path2" >> "$BATCH_FILE"
                   OPS_COUNT=$((OPS_COUNT + 1))
                 fi
-                ;;
-              *)
-                if ! is_excluded "$path1"; then
-                  dir="$(dirname "$path1")"
-                  [ "$dir" = "." ] || ensure_remote_dir "$dir"
-                  printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path1" >> "$BATCH_FILE"
-                  OPS_COUNT=$((OPS_COUNT + 1))
+              ;;
+            *)
+              if ! is_excluded "$path1"; then
+                dir="$(dirname "$path1")"
+                if [ "$dir" != "." ] && ! dir_existed_in_before "$dir"; then
+                  ensure_remote_dir "$dir"
                 fi
+                printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path1" >> "$BATCH_FILE"
+                OPS_COUNT=$((OPS_COUNT + 1))
+              fi
                 ;;
             esac
           done
