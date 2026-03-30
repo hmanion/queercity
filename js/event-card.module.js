@@ -1,14 +1,45 @@
 import {
-  EN_DASH,
+  formatDate,
   getCategory,
+  getEventStartTime,
   getEventUrl,
   getLocationParts,
-  getRecurringFrequency,
-  getRecurringOccurrence,
-  formatOccurrenceDisplay,
   isMultiDayEvent,
   getAudienceLabel,
 } from './events-shared-utils.js';
+
+function getOrganizationName(event) {
+  const candidates = [
+    event?.organizationName,
+    event?.organizerName,
+    event?.organization,
+    event?.organizer,
+    event?.organizations,
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    if (typeof candidate === 'string') {
+      const text = candidate.trim();
+      if (text) return text;
+      continue;
+    }
+    if (Array.isArray(candidate)) {
+      for (const item of candidate) {
+        if (typeof item === 'string' && item.trim()) return item.trim();
+        if (item && typeof item === 'object' && typeof item.name === 'string' && item.name.trim()) {
+          return item.name.trim();
+        }
+      }
+      continue;
+    }
+    if (candidate && typeof candidate === 'object' && typeof candidate.name === 'string' && candidate.name.trim()) {
+      return candidate.name.trim();
+    }
+  }
+
+  return '';
+}
 
 export function buildEventCard(event, index, options = {}) {
   const i = index + 1;
@@ -36,8 +67,12 @@ export function buildEventCard(event, index, options = {}) {
   const bottom = document.createElement('div');
   if (bottomIdPrefix) bottom.id = `${bottomIdPrefix}${i}`;
   bottom.className = 'eventboxbottom';
-  const leftBadges = document.createElement('div');
-  leftBadges.className = 'eventbadges-left';
+  const meta = document.createElement('div');
+  meta.className = 'eventboxmeta';
+  const metaExtras = document.createElement('div');
+  metaExtras.className = 'eventboxmeta-extras';
+  const actions = document.createElement('div');
+  actions.className = 'eventboxactions';
   const rightBadges = document.createElement('div');
   rightBadges.className = 'eventbadges-right';
 
@@ -65,57 +100,70 @@ export function buildEventCard(event, index, options = {}) {
   if (locationIdPrefix) locDiv.id = `${locationIdPrefix}${i}`;
   locDiv.textContent = getLocationParts(event).join(', ');
 
-  if (dateBeforeLink) {
-    top.appendChild(dateDiv);
-    top.appendChild(link);
-  } else {
-    top.appendChild(link);
-    top.appendChild(dateDiv);
-  }
-  top.appendChild(locDiv);
-
   const category = getCategory(event);
+  const categorySlug = String(category || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  if (categorySlug) {
+    top.classList.add(`eventboxtop--${categorySlug}`);
+  }
   const catDiv = document.createElement('div');
   catDiv.className = 'category ' + category;
   if (categoryIdPrefix) catDiv.id = `${categoryIdPrefix}${i}`;
   catDiv.textContent = category;
-  rightBadges.appendChild(catDiv);
+  top.appendChild(catDiv);
+  top.appendChild(link);
+
+  const startDateLabel = formatDate(event?.startDate || '');
+  const startTimeLabel = getEventStartTime(event);
+  const mergedDateLabel = startDateLabel
+    ? (startTimeLabel ? `${startDateLabel} · ${startTimeLabel}` : startDateLabel)
+    : '';
+  dateDiv.textContent = dateBeforeLink
+    ? String(dateText(event) || mergedDateLabel)
+    : mergedDateLabel;
+  locDiv.textContent = getLocationParts(event)[0] || '';
+
+  meta.appendChild(dateDiv);
+  meta.appendChild(locDiv);
 
   const audience = getAudienceLabel(event);
   if (audience) {
     const label = document.createElement('div');
     label.className = 'category audience';
     label.textContent = audience;
-    leftBadges.appendChild(label);
+    metaExtras.appendChild(label);
   }
 
   if (isMultiDayEvent(event)) {
     const label = document.createElement('div');
     label.className = 'category multiday';
     label.textContent = 'Multi-day';
-    leftBadges.appendChild(label);
+    metaExtras.appendChild(label);
   }
 
-  if (recurringLabelMode === 'main' && event._isRecurring && event._recurrenceFrequency) {
-    const label = document.createElement('div');
-    label.className = 'category recurring';
-    label.textContent = String(event._recurrenceFrequency);
-    leftBadges.appendChild(label);
+  const organizationName = getOrganizationName(event);
+  if (organizationName) {
+    const orgLabel = document.createElement('div');
+    orgLabel.className = 'event-org';
+    orgLabel.textContent = organizationName;
+    metaExtras.appendChild(orgLabel);
   }
 
-  if (recurringLabelMode === 'weekday') {
-    const freq = getRecurringFrequency(event);
-    if (freq) {
-      const label = document.createElement('div');
-      label.className = 'category recurring';
-      const occ = formatOccurrenceDisplay(getRecurringOccurrence(event));
-      label.textContent = occ ? `${freq} ${EN_DASH} ${occ}` : String(freq);
-      leftBadges.appendChild(label);
-    }
+  const infoAction = document.createElement(url ? 'a' : 'div');
+  infoAction.className = 'eventboxcta eventboxcta-secondary';
+  if (url) {
+    infoAction.href = url;
+    infoAction.rel = 'noopener noreferrer';
+    infoAction.target = '_blank';
   }
+  infoAction.textContent = 'INFO';
+  rightBadges.appendChild(infoAction);
 
-  bottom.appendChild(leftBadges);
-  bottom.appendChild(rightBadges);
+  if (metaExtras.childElementCount > 0) {
+    meta.appendChild(metaExtras);
+  }
+  actions.appendChild(rightBadges);
+  bottom.appendChild(meta);
+  bottom.appendChild(actions);
 
   eventBox.appendChild(top);
   eventBox.appendChild(bottom);
