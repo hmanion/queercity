@@ -1,6 +1,27 @@
 import { fetchJsonWithFallback } from './fetch-json.module.js';
 
 const DISABLED_MESSAGE = 'No published pride currently listed.';
+const PASTEL_PALETTE = [
+  '#ffc7f3', // pastel pink
+  '#ffb3b3', // pastel red
+  '#ffd4ad', // pastel orange
+  '#fff0ab', // pastel yellow
+  '#b8efc9', // pastel green
+  '#bdefff', // pastel blue
+  '#dfc2ff', // pastel purple
+];
+const BOROUGH_ADJACENCY = {
+  bolton: ['bury', 'salford', 'wigan'],
+  bury: ['bolton', 'manchester', 'rochdale', 'salford'],
+  manchester: ['bury', 'oldham', 'salford', 'stockport', 'tameside', 'trafford'],
+  oldham: ['manchester', 'rochdale', 'tameside'],
+  rochdale: ['bury', 'oldham', 'tameside'],
+  salford: ['bolton', 'bury', 'manchester', 'trafford', 'wigan'],
+  stockport: ['manchester', 'tameside', 'trafford'],
+  tameside: ['manchester', 'oldham', 'rochdale', 'stockport'],
+  trafford: ['manchester', 'salford', 'stockport'],
+  wigan: ['bolton', 'salford'],
+};
 
 const BOROUGH_META = {
   bolton: { label: 'Bolton' },
@@ -25,6 +46,65 @@ function parseDate(value) {
   if (!value) return null;
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function shuffled(values) {
+  const next = values.slice();
+  for (let i = next.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [next[i], next[j]] = [next[j], next[i]];
+  }
+  return next;
+}
+
+function isColorAllowed(assignments, slug, color) {
+  const neighbors = BOROUGH_ADJACENCY[slug] || [];
+  return neighbors.every((neighborSlug) => assignments.get(neighborSlug) !== color);
+}
+
+function greedyColorBoroughs(slugs, palette) {
+  const assignments = new Map();
+  for (const slug of slugs) {
+    const color = palette.find((candidate) => isColorAllowed(assignments, slug, candidate));
+    if (!color) {
+      return null;
+    }
+    assignments.set(slug, color);
+  }
+  return assignments;
+}
+
+function assignBoroughColors(activeSlugs) {
+  if (!activeSlugs.length) {
+    return new Map();
+  }
+
+  const maxAttempts = 48;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const attemptSlugs = shuffled(activeSlugs);
+    const attemptPalette = shuffled(PASTEL_PALETTE);
+    const assignments = greedyColorBoroughs(attemptSlugs, attemptPalette);
+    if (assignments) {
+      return assignments;
+    }
+  }
+
+  const fallbackSlugs = activeSlugs
+    .slice()
+    .sort((a, b) => {
+      const degreeDiff = (BOROUGH_ADJACENCY[b]?.length || 0) - (BOROUGH_ADJACENCY[a]?.length || 0);
+      return degreeDiff !== 0 ? degreeDiff : a.localeCompare(b);
+    });
+  const fallback = greedyColorBoroughs(fallbackSlugs, PASTEL_PALETTE);
+  if (fallback) {
+    return fallback;
+  }
+
+  const emergency = new Map();
+  fallbackSlugs.forEach((slug, index) => {
+    emergency.set(slug, PASTEL_PALETTE[index % PASTEL_PALETTE.length]);
+  });
+  return emergency;
 }
 
 function normalizeBorough(value) {
@@ -320,6 +400,10 @@ async function renderInteractiveMap(pridesByBorough, now) {
   mapSvg.classList.add('gm-borough-map');
 
   const boroughNodes = Array.from(mapSvg.querySelectorAll('[data-borough]'));
+  const activeBoroughSlugs = boroughNodes
+    .map((node) => String(node.dataset.borough || ''))
+    .filter((slug) => (pridesByBorough.get(slug) || []).length > 0);
+  const boroughColorMap = assignBoroughColors(activeBoroughSlugs);
   let activeNode = null;
   let panelOpen = false;
   let lastFocused = null;
@@ -410,7 +494,7 @@ async function renderInteractiveMap(pridesByBorough, now) {
     const count = (pridesByBorough.get(slug) || []).length;
     const isDisabled = count === 0;
 
-    node.classList.add('borough-shape', `borough-${slug}`);
+    node.classList.add('borough-shape');
     node.setAttribute('tabindex', '0');
     node.setAttribute('role', 'button');
     node.setAttribute('aria-controls', 'prides-borough-panel');
@@ -420,8 +504,10 @@ async function renderInteractiveMap(pridesByBorough, now) {
       node.classList.add('is-disabled');
       node.setAttribute('aria-disabled', 'true');
       node.setAttribute('aria-label', `${label}. ${DISABLED_MESSAGE}`);
+      node.style.fill = '';
     } else {
       node.setAttribute('aria-label', `${label}. ${count} pride${count === 1 ? '' : 's'}.`);
+      node.style.fill = boroughColorMap.get(slug) || PASTEL_PALETTE[0];
     }
 
     node.addEventListener('mouseenter', () => {
