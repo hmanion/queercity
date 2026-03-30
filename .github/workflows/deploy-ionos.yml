@@ -3,7 +3,13 @@ name: Deploy to Ionos (SFTP)
 on:
   push:
     branches: ["main"]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_full:
+        description: "Force a full mirror deploy (backfill/recovery)"
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: deploy-ionos
@@ -31,12 +37,26 @@ jobs:
           IONOS_SFTP_PORT: ${{ secrets.IONOS_SFTP_PORT }}
           IONOS_SFTP_USER: ${{ secrets.IONOS_SFTP_USER }}
           IONOS_SFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
+          FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.force_full || 'false' }}
         run: |
           set -euo pipefail
           test -n "$IONOS_SFTP_HOST"
           test -n "$IONOS_SFTP_USER"
           test -n "$IONOS_SFTP_PASSWORD"
           if [ -z "$IONOS_SFTP_PORT" ]; then IONOS_SFTP_PORT=22; fi
+
+          REMOTE_MANIFEST=".deploy-manifest-main.json"
+          HASH_LINES="$(mktemp)"
+          LOCAL_MANIFEST="$(mktemp)"
+          REMOTE_MANIFEST_LOCAL="$(mktemp)"
+          TO_UPLOAD_FILE="$(mktemp)"
+          TO_DELETE_FILE="$(mktemp)"
+          TO_MKDIR_FILE="$(mktemp)"
+          STATS_FILE="$(mktemp)"
+          BATCH_FILE="$(mktemp)"
+          PY_BUILD_SCRIPT="$(mktemp)"
+          PY_DIFF_SCRIPT="$(mktemp)"
+          trap 'rm -f "$HASH_LINES" "$LOCAL_MANIFEST" "$REMOTE_MANIFEST_LOCAL" "$TO_UPLOAD_FILE" "$TO_DELETE_FILE" "$TO_MKDIR_FILE" "$STATS_FILE" "$BATCH_FILE" "$PY_BUILD_SCRIPT" "$PY_DIFF_SCRIPT"' EXIT
 
           is_excluded() {
             local path="$1"
@@ -53,6 +73,7 @@ jobs:
 
           full_deploy() {
             lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" -e "\
+              set cmd:fail-exit yes; \
               set sftp:auto-confirm yes; \
               set net:max-retries 2; \
               set net:reconnect-interval-base 5; \
@@ -76,80 +97,12 @@ jobs:
               bye"
           }
 
-          BEFORE="${{ github.event.before }}"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            echo "Running full deploy."
-            full_deploy
-            exit 0
-          fi
-
-          if ! git cat-file -e "${BEFORE}^{commit}" 2>/dev/null; then
-            echo "Base commit $BEFORE is unavailable on runner; running full deploy."
-            full_deploy
-            exit 0
-          fi
-
-          mapfile -t DIFF_LINES < <(git diff --name-status --find-renames "$BEFORE" "$GITHUB_SHA")
-
-          if [ "${#DIFF_LINES[@]}" -eq 0 ]; then
-            echo "No changed files to deploy."
-            exit 0
-          fi
-
-          BATCH_FILE="$(mktemp)"
-          trap 'rm -f "$BATCH_FILE"' EXIT
-          OPS_COUNT=0
-
-          {
-            echo "set sftp:auto-confirm yes"
-            echo "set net:max-retries 2"
-            echo "set net:reconnect-interval-base 5"
-            echo "lcd $PWD"
-            echo "cd ."
-          } > "$BATCH_FILE"
-
-          declare -A MADE_DIRS=()
-          declare -A BEFORE_DIR_EXISTS=()
-
-          ensure_remote_dir() {
-            local dir="$1"
-            [ -z "$dir" ] && return 0
-            if [ -n "${MADE_DIRS[$dir]+x}" ]; then
-              return 0
-            fi
-
-            local current=""
-            IFS='/' read -r -a parts <<< "$dir"
-            for part in "${parts[@]}"; do
-              [ -z "$part" ] && continue
-              if [ -z "$current" ]; then
-                current="$part"
-              else
-                current="$current/$part"
-              fi
-              if [ -z "${MADE_DIRS[$current]+x}" ]; then
-                printf 'mkdir -p "%s"\n' "$current" >> "$BATCH_FILE"
-                MADE_DIRS["$current"]=1
-                OPS_COUNT=$((OPS_COUNT + 1))
-              fi
-            done
-          }
-
-          dir_existed_in_before() {
-            local dir="$1"
-            [ "$dir" = "." ] && return 0
-            if [ -n "${BEFORE_DIR_EXISTS[$dir]+x}" ]; then
-              [ "${BEFORE_DIR_EXISTS[$dir]}" = "1" ]
-              return
-            fi
-
-            if git ls-tree -r --name-only "$BEFORE" -- "$dir/" | head -n 1 | grep -q .; then
-              BEFORE_DIR_EXISTS["$dir"]=1
-              return 0
-            fi
-
-            BEFORE_DIR_EXISTS["$dir"]=0
-            return 1
+          upload_manifest() {
+            lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" -e "\
+              set cmd:fail-exit yes; \
+              set sftp:auto-confirm yes; \
+              put \"$LOCAL_MANIFEST\" -o \"$REMOTE_MANIFEST\"; \
+              bye"
           }
 
           remote_output_dir() {
@@ -161,51 +114,204 @@ jobs:
             fi
           }
 
-          for line in "${DIFF_LINES[@]}"; do
-            IFS=$'\t' read -r status path1 path2 <<< "$line"
-            case "$status" in
-              D*)
-                if ! is_excluded "$path1"; then
-                  printf 'rm -f "%s"\n' "$path1" >> "$BATCH_FILE"
-                  OPS_COUNT=$((OPS_COUNT + 1))
-                fi
-                ;;
-              R*|C*)
-                if ! is_excluded "$path1"; then
-                  printf 'rm -f "%s"\n' "$path1" >> "$BATCH_FILE"
-                  OPS_COUNT=$((OPS_COUNT + 1))
-                fi
-                if ! is_excluded "$path2"; then
-                  dir="$(dirname "$path2")"
-                  if [ "$dir" != "." ] && ! dir_existed_in_before "$dir"; then
-                    ensure_remote_dir "$dir"
-                  fi
-                  printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path2" >> "$BATCH_FILE"
-                  OPS_COUNT=$((OPS_COUNT + 1))
-                fi
-              ;;
-            *)
-              if ! is_excluded "$path1"; then
-                dir="$(dirname "$path1")"
-                if [ "$dir" != "." ] && ! dir_existed_in_before "$dir"; then
-                  ensure_remote_dir "$dir"
-                fi
-                printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path1" >> "$BATCH_FILE"
-                OPS_COUNT=$((OPS_COUNT + 1))
+          build_local_manifest() {
+            : > "$HASH_LINES"
+            while IFS= read -r path; do
+              [ -f "$path" ] || continue
+              if is_excluded "$path"; then
+                continue
               fi
-                ;;
-            esac
-          done
+              hash="$(sha256sum "$path" | awk '{print $1}')"
+              printf '%s\t%s\n' "$path" "$hash" >> "$HASH_LINES"
+            done < <(git ls-files)
 
-          echo "bye" >> "$BATCH_FILE"
+            printf '%s\n' \
+              'import datetime' \
+              'import json' \
+              'import sys' \
+              '' \
+              'hash_lines_path = sys.argv[1]' \
+              'manifest_path = sys.argv[2]' \
+              'entries = {}' \
+              '' \
+              'with open(hash_lines_path, "r", encoding="utf-8") as fh:' \
+              '    for raw in fh:' \
+              '        raw = raw.rstrip("\n")' \
+              '        if not raw:' \
+              '            continue' \
+              '        path, sha = raw.split("\t", 1)' \
+              '        entries[path] = {"sha256": sha}' \
+              '' \
+              'manifest = {' \
+              '    "version": 1,' \
+              '    "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),' \
+              '    "entries": entries,' \
+              '}' \
+              '' \
+              'with open(manifest_path, "w", encoding="utf-8") as out:' \
+              '    json.dump(manifest, out, sort_keys=True, indent=2)' \
+              '    out.write("\n")' \
+              > "$PY_BUILD_SCRIPT"
+            python3 "$PY_BUILD_SCRIPT" "$HASH_LINES" "$LOCAL_MANIFEST"
+          }
 
-          if [ "$OPS_COUNT" -eq 0 ]; then
-            echo "No deployable file changes after exclusions."
+          preview_paths() {
+            local label="$1"
+            local file="$2"
+            local prefix="$3"
+            local count
+            count="$(wc -l < "$file" | tr -d ' ')"
+            echo "$label: $count"
+            if [ "$count" -gt 0 ]; then
+              sed -n '1,20p' "$file" | sed "s|^|$prefix|"
+            fi
+          }
+
+          build_local_manifest
+
+          if [ "$FORCE_FULL" = "true" ]; then
+            echo "Manual full deploy requested."
+            full_deploy
+            upload_manifest
+            echo "Uploaded manifest: $REMOTE_MANIFEST"
             exit 0
           fi
 
-          echo "Queued deploy operations: $OPS_COUNT"
-          echo "Deploy operation preview:"
-          sed -n '/^\(mkdir -p\|put -O\|rm -f\) /p' "$BATCH_FILE" | sed -n '1,200p'
+          if ! lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" -e "\
+            set cmd:fail-exit yes; \
+            set sftp:auto-confirm yes; \
+            get \"$REMOTE_MANIFEST\" -o \"$REMOTE_MANIFEST_LOCAL\"; \
+            bye" >/dev/null 2>&1; then
+            echo "Remote manifest missing/unavailable. Running bootstrap full deploy."
+            full_deploy
+            upload_manifest
+            echo "Uploaded manifest: $REMOTE_MANIFEST"
+            exit 0
+          fi
 
+          printf '%s\n' \
+            'import json' \
+            'import os' \
+            'import sys' \
+            '' \
+            'local_manifest_path, remote_manifest_path, upload_path, delete_path, mkdir_path, stats_path = sys.argv[1:7]' \
+            '' \
+            'def load_manifest(path):' \
+            '    try:' \
+            '        with open(path, "r", encoding="utf-8") as fh:' \
+            '            data = json.load(fh)' \
+            '    except Exception:' \
+            '        return {}' \
+            '    entries = data.get("entries", {})' \
+            '    if not isinstance(entries, dict):' \
+            '        return {}' \
+            '    return entries' \
+            '' \
+            'def entry_hash(value):' \
+            '    if isinstance(value, dict):' \
+            '        return str(value.get("sha256") or value.get("hash") or "")' \
+            '    if isinstance(value, str):' \
+            '        return value' \
+            '    return ""' \
+            '' \
+            'def dir_chain(path):' \
+            '    out = set()' \
+            '    current = os.path.dirname(path)' \
+            '    while current and current != ".":' \
+            '        out.add(current)' \
+            '        current = os.path.dirname(current)' \
+            '    return out' \
+            '' \
+            'local_entries = load_manifest(local_manifest_path)' \
+            'remote_entries = load_manifest(remote_manifest_path)' \
+            '' \
+            'local_hashes = {k: entry_hash(v) for k, v in local_entries.items()}' \
+            'remote_hashes = {k: entry_hash(v) for k, v in remote_entries.items()}' \
+            '' \
+            'to_upload = sorted([p for p, h in local_hashes.items() if remote_hashes.get(p) != h])' \
+            'to_delete = sorted([p for p in remote_hashes.keys() if p not in local_hashes])' \
+            'unchanged = max(0, len(local_hashes) - len(to_upload))' \
+            '' \
+            'remote_dirs = set()' \
+            'for p in remote_hashes.keys():' \
+            '    remote_dirs.update(dir_chain(p))' \
+            '' \
+            'upload_dirs = set()' \
+            'for p in to_upload:' \
+            '    upload_dirs.update(dir_chain(p))' \
+            '' \
+            'to_mkdir = sorted(upload_dirs - remote_dirs)' \
+            '' \
+            'with open(upload_path, "w", encoding="utf-8") as fh:' \
+            '    for p in to_upload:' \
+            '        fh.write(f"{p}\n")' \
+            '' \
+            'with open(delete_path, "w", encoding="utf-8") as fh:' \
+            '    for p in to_delete:' \
+            '        fh.write(f"{p}\n")' \
+            '' \
+            'with open(mkdir_path, "w", encoding="utf-8") as fh:' \
+            '    for d in to_mkdir:' \
+            '        fh.write(f"{d}\n")' \
+            '' \
+            'with open(stats_path, "w", encoding="utf-8") as fh:' \
+            '    fh.write(f"local_count={len(local_hashes)}\n")' \
+            '    fh.write(f"remote_count={len(remote_hashes)}\n")' \
+            '    fh.write(f"to_upload_count={len(to_upload)}\n")' \
+            '    fh.write(f"to_delete_count={len(to_delete)}\n")' \
+            '    fh.write(f"to_mkdir_count={len(to_mkdir)}\n")' \
+            '    fh.write(f"unchanged_count={unchanged}\n")' \
+            > "$PY_DIFF_SCRIPT"
+          python3 "$PY_DIFF_SCRIPT" "$LOCAL_MANIFEST" "$REMOTE_MANIFEST_LOCAL" "$TO_UPLOAD_FILE" "$TO_DELETE_FILE" "$TO_MKDIR_FILE" "$STATS_FILE"
+
+          source "$STATS_FILE"
+
+          echo "Manifest sync summary:"
+          echo "  Local entries: $local_count"
+          echo "  Remote entries: $remote_count"
+          echo "  To upload: $to_upload_count"
+          echo "  To delete: $to_delete_count"
+          echo "  Unchanged: $unchanged_count"
+          echo "  New directories: $to_mkdir_count"
+
+          preview_paths "Upload preview" "$TO_UPLOAD_FILE" "  + "
+          preview_paths "Delete preview" "$TO_DELETE_FILE" "  - "
+          preview_paths "Mkdir preview" "$TO_MKDIR_FILE" "  d "
+
+          if [ "$to_upload_count" -eq 0 ] && [ "$to_delete_count" -eq 0 ]; then
+            echo "No deployable file changes after hash comparison."
+            exit 0
+          fi
+
+          {
+            echo "set cmd:fail-exit yes"
+            echo "set sftp:auto-confirm yes"
+            echo "set net:max-retries 2"
+            echo "set net:reconnect-interval-base 5"
+            echo "lcd $PWD"
+            echo "cd ."
+          } > "$BATCH_FILE"
+
+          while IFS= read -r dir; do
+            [ -n "$dir" ] || continue
+            printf 'mkdir -p "%s"\n' "$dir" >> "$BATCH_FILE"
+          done < "$TO_MKDIR_FILE"
+
+          while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            printf 'rm -f "%s"\n' "$path" >> "$BATCH_FILE"
+          done < "$TO_DELETE_FILE"
+
+          while IFS= read -r path; do
+            [ -n "$path" ] || continue
+            dir="$(dirname "$path")"
+            printf 'put -O "%s" "%s"\n' "$(remote_output_dir "$dir")" "$path" >> "$BATCH_FILE"
+          done < "$TO_UPLOAD_FILE"
+
+          echo "bye" >> "$BATCH_FILE"
+
+          echo "Executing incremental deploy batch..."
           lftp -u "$IONOS_SFTP_USER","$IONOS_SFTP_PASSWORD" "sftp://$IONOS_SFTP_HOST:$IONOS_SFTP_PORT" -e "source $BATCH_FILE; bye"
+
+          upload_manifest
+          echo "Uploaded manifest: $REMOTE_MANIFEST"

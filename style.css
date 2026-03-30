@@ -53,12 +53,8 @@ h1 {
 }
 
 h2 {
-    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--qc-ink);
+    font-family: Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 1rem;
   margin: 0;
   padding: 0.9rem 0 0.5rem;
 }
