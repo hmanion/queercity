@@ -6,13 +6,6 @@ if (!function_exists('qc_render_header')) {
         $links = [
             ['id' => 'events', 'href' => $basePath . './', 'label' => 'EVENTS'],
             ['id' => 'weekdays', 'href' => $basePath . 'weekdays/', 'label' => 'WEEKDAYS'],
-            ['id' => 'life', 'href' => $basePath . 'life/', 'label' => 'LIFE'],
-            ['id' => 'sex', 'href' => $basePath . 'sex/', 'label' => 'SEX'],
-            ['id' => 'social', 'href' => $basePath . 'social/', 'label' => 'SOCIAL'],
-            ['id' => 'active', 'href' => $basePath . 'active/', 'label' => 'ACTIVE'],
-            ['id' => 'music', 'href' => $basePath . 'music/', 'label' => 'MUSIC'],
-            ['id' => 'arts', 'href' => $basePath . 'arts/', 'label' => 'ARTS'],
-            ['id' => 'celebration', 'href' => $basePath . 'celebration/', 'label' => 'CELEBRATION'],
             ['id' => 'prides', 'href' => $basePath . 'prides/', 'label' => 'PRIDES'],
         ];
         ?>
