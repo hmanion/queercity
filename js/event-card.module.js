@@ -69,10 +69,10 @@ export function buildEventCard(event, index, options = {}) {
   bottom.className = 'eventboxbottom';
   const meta = document.createElement('div');
   meta.className = 'eventboxmeta';
+  const metaExtras = document.createElement('div');
+  metaExtras.className = 'eventboxmeta-extras';
   const actions = document.createElement('div');
   actions.className = 'eventboxactions';
-  const leftBadges = document.createElement('div');
-  leftBadges.className = 'eventbadges-left';
   const rightBadges = document.createElement('div');
   rightBadges.className = 'eventbadges-right';
 
@@ -130,14 +130,14 @@ export function buildEventCard(event, index, options = {}) {
     const label = document.createElement('div');
     label.className = 'category audience';
     label.textContent = audience;
-    leftBadges.appendChild(label);
+    metaExtras.appendChild(label);
   }
 
   if (isMultiDayEvent(event)) {
     const label = document.createElement('div');
     label.className = 'category multiday';
     label.textContent = 'Multi-day';
-    leftBadges.appendChild(label);
+    metaExtras.appendChild(label);
   }
 
   const organizationName = getOrganizationName(event);
@@ -145,7 +145,7 @@ export function buildEventCard(event, index, options = {}) {
     const orgLabel = document.createElement('div');
     orgLabel.className = 'event-org';
     orgLabel.textContent = organizationName;
-    leftBadges.appendChild(orgLabel);
+    metaExtras.appendChild(orgLabel);
   }
 
   const infoAction = document.createElement(url ? 'a' : 'div');
@@ -158,7 +158,9 @@ export function buildEventCard(event, index, options = {}) {
   infoAction.textContent = 'INFO';
   rightBadges.appendChild(infoAction);
 
-  actions.appendChild(leftBadges);
+  if (metaExtras.childElementCount > 0) {
+    meta.appendChild(metaExtras);
+  }
   actions.appendChild(rightBadges);
   bottom.appendChild(meta);
   bottom.appendChild(actions);
