@@ -168,11 +168,19 @@ a:hover{
   flex-direction: column;
   gap: 0.4rem;
   position: relative;
-  min-height: 8.8rem;
+  min-height: 6.9rem;
   padding: 16px 16px 12px;
   border-bottom: 2px solid var(--qc-ink);
   background: var(--qc-blue);
 }
+
+.eventboxtop--life { background: var(--qc-pink); }
+.eventboxtop--sex { background: var(--qc-red); }
+.eventboxtop--social { background: var(--qc-orange); }
+.eventboxtop--active { background: var(--qc-yellow); }
+.eventboxtop--music { background: var(--qc-green); }
+.eventboxtop--arts { background: var(--qc-blue); }
+.eventboxtop--celebration { background: var(--qc-purple); }
 
 .eventboxtop::after {
   content: "";
@@ -234,15 +242,15 @@ a:hover{
     padding: 0;
     font-family: Extended, "Arial Narrow", Arial, sans-serif;
     font-weight: 900;
-    font-size: clamp(1.9rem, 4vw, 2.2rem);
-    line-height: 1.02;
+    font-size: 1.2rem;
+    line-height: 1.1;
     letter-spacing: -0.01em;
 }
 
 .date,
 .location {
     font-size: 11px;
-    color: var(--qc-muted);
+    color: var(--qc-ink);
     line-height: 1.6;
 }
 
@@ -344,8 +352,8 @@ a:hover{
 .eventboxcta-secondary {
   min-width: 88px;
   background: transparent;
-  color: var(--qc-muted);
-  border-color: var(--qc-border);
+  color: var(--qc-ink);
+  border-color: var(--qc-ink);
 }
 
 @media (max-width: 30em) {

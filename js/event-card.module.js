@@ -1,7 +1,8 @@
 import {
   EN_DASH,
+  formatDate,
   getCategory,
-  getEventPrice,
+  getEventStartTime,
   getEventUrl,
   getLocationParts,
   getRecurringFrequency,
@@ -71,6 +72,10 @@ export function buildEventCard(event, index, options = {}) {
   locDiv.textContent = getLocationParts(event).join(', ');
 
   const category = getCategory(event);
+  const categorySlug = String(category || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+  if (categorySlug) {
+    top.classList.add(`eventboxtop--${categorySlug}`);
+  }
   const catDiv = document.createElement('div');
   catDiv.className = 'category ' + category;
   if (categoryIdPrefix) catDiv.id = `${categoryIdPrefix}${i}`;
@@ -78,26 +83,18 @@ export function buildEventCard(event, index, options = {}) {
   top.appendChild(catDiv);
   top.appendChild(link);
 
-  if (dateBeforeLink) {
-    meta.appendChild(dateDiv);
-    meta.appendChild(locDiv);
-  } else {
-    meta.appendChild(dateDiv);
-    meta.appendChild(locDiv);
-  }
+  const startDateLabel = formatDate(event?.startDate || '');
+  const startTimeLabel = getEventStartTime(event);
+  const mergedDateLabel = startDateLabel
+    ? (startTimeLabel ? `${startDateLabel} · ${startTimeLabel}` : startDateLabel)
+    : '';
+  dateDiv.textContent = dateBeforeLink
+    ? String(dateText(event) || mergedDateLabel)
+    : mergedDateLabel;
+  locDiv.textContent = getLocationParts(event)[0] || '';
 
-  const priceRaw = getEventPrice(event);
-  const priceChip = document.createElement('div');
-  priceChip.className = 'eventboxcta eventboxcta-primary';
-  if (priceRaw === '' || priceRaw == null) {
-    priceChip.textContent = 'INFO';
-  } else if (Number(priceRaw) === 0) {
-    priceChip.textContent = 'FREE';
-  } else {
-    const numericPrice = Number(priceRaw);
-    priceChip.textContent = Number.isFinite(numericPrice) ? `£${numericPrice}` : String(priceRaw);
-  }
-  leftBadges.appendChild(priceChip);
+  meta.appendChild(dateDiv);
+  meta.appendChild(locDiv);
 
   const audience = getAudienceLabel(event);
   if (audience) {
@@ -132,15 +129,15 @@ export function buildEventCard(event, index, options = {}) {
     }
   }
 
+  const infoAction = document.createElement(url ? 'a' : 'div');
+  infoAction.className = 'eventboxcta eventboxcta-secondary';
   if (url) {
-    const rsvpLink = document.createElement('a');
-    rsvpLink.className = 'eventboxcta eventboxcta-secondary';
-    rsvpLink.href = url;
-    rsvpLink.rel = 'noopener noreferrer';
-    rsvpLink.target = '_blank';
-    rsvpLink.textContent = 'RSVP';
-    rightBadges.appendChild(rsvpLink);
+    infoAction.href = url;
+    infoAction.rel = 'noopener noreferrer';
+    infoAction.target = '_blank';
   }
+  infoAction.textContent = 'INFO';
+  rightBadges.appendChild(infoAction);
 
   actions.appendChild(leftBadges);
   actions.appendChild(rightBadges);
