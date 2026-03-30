@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap');
+
 @font-face {
   font-family: Extended;
   src: url(extended.woff2) format("woff2");
@@ -47,8 +49,12 @@ h1 {
 }
 
 h2 {
-    font-family: Extended, "Arial Narrow", Arial, sans-serif;
-    font-size: 1rem;
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--qc-ink);
   margin: 0;
   padding: 0.9rem 0 0.5rem;
 }
@@ -168,7 +174,7 @@ a:hover{
   flex-direction: column;
   gap: 0.4rem;
   position: relative;
-  min-height: 6.9rem;
+  min-height: 6rem;
   padding: 16px 16px 12px;
   border-bottom: 2px solid var(--qc-ink);
   background: var(--qc-blue);
@@ -181,6 +187,11 @@ a:hover{
 .eventboxtop--music { background: var(--qc-green); }
 .eventboxtop--arts { background: var(--qc-blue); }
 .eventboxtop--celebration { background: var(--qc-purple); }
+.eventboxtop--sex,
+.eventboxtop--music,
+.eventboxtop--celebration {
+  color: var(--qc-white);
+}
 
 .eventboxtop::after {
   content: "";
@@ -242,16 +253,19 @@ a:hover{
     padding: 0;
     font-family: Extended, "Arial Narrow", Arial, sans-serif;
     font-weight: 900;
-    font-size: 1.2rem;
+    font-size: 1rem;
     line-height: 1.1;
     letter-spacing: -0.01em;
 }
 
 .date,
 .location {
-    font-size: 11px;
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
     color: var(--qc-ink);
-    line-height: 1.6;
+    letter-spacing: 0.03em;
+    line-height: 1.35;
 }
 
 .date {
@@ -261,7 +275,7 @@ a:hover{
 
 .location {
     font-style: normal;
-    font-size: 11px;
+    font-size: 0.8rem;
 }
 
 .category {
@@ -280,7 +294,7 @@ a:hover{
 
 .Celebration {
   background-color: var(--qc-purple);
-  color: black;
+  color: var(--qc-white);
 }
 
 .Active {
@@ -295,7 +309,7 @@ a:hover{
 
 .Music {
   background-color: var(--qc-green);
-  color: black;
+  color: var(--qc-white);
 }
 
 .Life {
@@ -305,7 +319,7 @@ a:hover{
 
 .Sex {
   background-color: var(--qc-red);
-  color: black;
+  color: var(--qc-white);
 }
 
 .Social {
@@ -325,6 +339,19 @@ a:hover{
   background-color: #f1f1f1;
   border: 1px solid #dfdfdf;
   margin-bottom: 0;
+}
+
+.event-org {
+  font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--qc-ink);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .eventboxcta {
@@ -357,6 +384,10 @@ a:hover{
 }
 
 @media (max-width: 30em) {
+  .eventboxtop {
+    min-height: 3rem;
+  }
+
   .eventboxactions {
     flex-direction: column;
     align-items: stretch;

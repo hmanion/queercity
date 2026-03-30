@@ -1,16 +1,45 @@
 import {
-  EN_DASH,
   formatDate,
   getCategory,
   getEventStartTime,
   getEventUrl,
   getLocationParts,
-  getRecurringFrequency,
-  getRecurringOccurrence,
-  formatOccurrenceDisplay,
   isMultiDayEvent,
   getAudienceLabel,
 } from './events-shared-utils.js';
+
+function getOrganizationName(event) {
+  const candidates = [
+    event?.organizationName,
+    event?.organizerName,
+    event?.organization,
+    event?.organizer,
+    event?.organizations,
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    if (typeof candidate === 'string') {
+      const text = candidate.trim();
+      if (text) return text;
+      continue;
+    }
+    if (Array.isArray(candidate)) {
+      for (const item of candidate) {
+        if (typeof item === 'string' && item.trim()) return item.trim();
+        if (item && typeof item === 'object' && typeof item.name === 'string' && item.name.trim()) {
+          return item.name.trim();
+        }
+      }
+      continue;
+    }
+    if (candidate && typeof candidate === 'object' && typeof candidate.name === 'string' && candidate.name.trim()) {
+      return candidate.name.trim();
+    }
+  }
+
+  return '';
+}
 
 export function buildEventCard(event, index, options = {}) {
   const i = index + 1;
@@ -111,22 +140,12 @@ export function buildEventCard(event, index, options = {}) {
     leftBadges.appendChild(label);
   }
 
-  if (recurringLabelMode === 'main' && event._isRecurring && event._recurrenceFrequency) {
-    const label = document.createElement('div');
-    label.className = 'category recurring';
-    label.textContent = String(event._recurrenceFrequency);
-    leftBadges.appendChild(label);
-  }
-
-  if (recurringLabelMode === 'weekday') {
-    const freq = getRecurringFrequency(event);
-    if (freq) {
-      const label = document.createElement('div');
-      label.className = 'category recurring';
-      const occ = formatOccurrenceDisplay(getRecurringOccurrence(event));
-      label.textContent = occ ? `${freq} ${EN_DASH} ${occ}` : String(freq);
-      leftBadges.appendChild(label);
-    }
+  const organizationName = getOrganizationName(event);
+  if (organizationName) {
+    const orgLabel = document.createElement('div');
+    orgLabel.className = 'event-org';
+    orgLabel.textContent = organizationName;
+    leftBadges.appendChild(orgLabel);
   }
 
   const infoAction = document.createElement(url ? 'a' : 'div');

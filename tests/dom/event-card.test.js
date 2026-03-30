@@ -13,6 +13,7 @@ describe('buildEventCard', () => {
       endDate: '2025-09-14',
       locName: 'The Venue',
       locTown: 'Manchester',
+      organizer: { name: 'Queer Collective' },
       _isRecurring: true,
       _recurrenceFrequency: 'Weekly',
     };
@@ -27,7 +28,8 @@ describe('buildEventCard', () => {
     expect(card.querySelector('.category.Active')?.textContent).toBe('Active');
     expect(card.querySelector('.category.audience')?.textContent).toBe('FLINTA');
     expect(card.querySelector('.category.multiday')?.textContent).toBe('Multi-day');
-    expect(card.querySelector('.category.recurring')?.textContent).toBe('Weekly');
+    expect(card.querySelector('.category.recurring')).toBeNull();
+    expect(card.querySelector('.event-org')?.textContent).toBe('Queer Collective');
     expect(card.querySelector('.eventboxtop')?.classList.contains('eventboxtop--active')).toBe(true);
     expect(card.querySelector('.date')?.textContent).toBe('Wed 25 Jun · 19:00');
     expect(card.querySelector('.eventboxcta-primary')).toBeNull();
