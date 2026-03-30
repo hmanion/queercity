@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Syncopate:wght@400;700&display=swap');
 
 @font-face {
   font-family: Extended;
@@ -23,6 +23,10 @@
   --qc-r-pill: 6px;
   --qc-r-card: 12px;
   --qc-r-lg: 20px;
+  --qc-prides-bg: #fff4fb;
+  --qc-prides-border: #ffeaf6;
+  --qc-map-disabled-fill: #8d8d8d;
+  --qc-map-disabled-stroke: #b8b8b8;
 }
 
 body {
@@ -442,8 +446,8 @@ section{
 
 .prides-map-wrap {
   position: relative;
-  background: #fff4fb;
-  border: 3px solid #ffeaf6;
+  background: var(--qc-prides-bg);
+  border: 3px solid var(--qc-prides-border);
   border-radius: 5px;
   padding: 0.6rem;
 }
@@ -477,9 +481,9 @@ section{
 }
 
 .borough-shape.is-disabled {
-  fill: #8d8d8d !important;
+  fill: var(--qc-map-disabled-fill) !important;
   cursor: not-allowed;
-  stroke: #b8b8b8;
+  stroke: var(--qc-map-disabled-stroke);
 }
 
 .borough-bolton { fill: #fc7e32; }
@@ -489,6 +493,7 @@ section{
 .borough-rochdale { fill: #b6f7ff; }
 .borough-salford { fill: #f2d7ff; }
 .borough-stockport { fill: #06c054; }
+.borough-tameside { fill: #6e9dff; }
 .borough-trafford { fill: #ffd429; }
 .borough-wigan { fill: #bc2fff; }
 
@@ -512,8 +517,8 @@ section{
 }
 
 .prides-borough-panel {
-  background: #fff4fb;
-  border: 3px solid #ffeaf6;
+  background: var(--qc-prides-bg);
+  border: 3px solid var(--qc-prides-border);
   border-radius: 5px;
   padding: 0.65rem;
 }
@@ -546,9 +551,9 @@ section{
 }
 
 .prides-borough-item {
-  border: 2px solid #ffeaf6;
+  border: 2px solid var(--qc-prides-border);
   border-radius: 3px;
-  background: #fff;
+  background: var(--qc-white);
   padding: 0.45rem;
 }
 
@@ -576,7 +581,7 @@ section{
 }
 
 .prides-stat {
-  background: #ffeaf6;
+  background: var(--qc-prides-border);
   border-radius: 4px;
   padding: 0.6rem;
 }
@@ -626,8 +631,8 @@ section{
 }
 
 .pride-row {
-  border: 3px solid #ffeaf6;
-  background-color: #ffeaf6;
+  border: 3px solid var(--qc-prides-border);
+  background-color: var(--qc-prides-border);
   border-radius: 3px;
   padding: 0.6rem;
   display: grid;
@@ -672,45 +677,42 @@ section{
   border: 0;
 }
 
-.weekday {
-}
-
 #monday {
-  background-color: #FF6CE3;
+  background-color: var(--qc-pink);
 }
 
 #tuesday {
-  background-color: #FF1515;
+  background-color: var(--qc-red);
 }
 
 #wednesday {
-  background-color: #FF7A00;
+  background-color: var(--qc-orange);
 }
 
 #thursday {
-  background-color: #FFD429;
+  background-color: var(--qc-yellow);
 }
 
 #friday {
-  background-color: #06C054;
+  background-color: var(--qc-green);
 }
 
 #saturday {
-  background-color: #004CFF;
+  background-color: var(--qc-blue);
 }
 
 #sunday {
-  background-color: #BC2FFF;
+  background-color: var(--qc-purple);
 }
 
 @media (min-width: 40em) {
-	.event-section-list{
-    	display: grid;
-    	justify-content: space-between;
-    	grid-template: auto / repeat(6, 1fr);
-    	column-gap: 1rem;
-    	row-gap: 1rem;
-	}
+  .event-section-list {
+    display: grid;
+    justify-content: space-between;
+    grid-template: auto / repeat(6, 1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+  }
   
   .header {
     grid-template-columns: repeat(3, 1fr);
@@ -816,23 +818,23 @@ section{
 }
 
 @media (min-width: 55em) {
-		.event-section-list{
-    	display: grid;
-    	justify-content: space-between;
-    	grid-template: auto / repeat(9, 1fr);
-    	column-gap: 1rem;
-    	row-gap: 1rem;
-		}
+  .event-section-list {
+    display: grid;
+    justify-content: space-between;
+    grid-template: auto / repeat(9, 1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+  }
 }
 
 @media (min-width: 86em) {
-		.event-section-list{
-    	display: grid;
-    	justify-content: space-between;
-    	grid-template: auto / repeat(12, 1fr);
-    	column-gap: 1rem;
-    	row-gap: 1rem;
-	}
+  .event-section-list {
+    display: grid;
+    justify-content: space-between;
+    grid-template: auto / repeat(12, 1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+  }
   .name {
     padding: 0.2rem 0 0.2rem;
   }
