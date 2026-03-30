@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap');
+
 @font-face {
   font-family: Extended;
   src: url(extended.woff2) format("woff2");
@@ -14,6 +16,13 @@
   --qc-green: #06C054;
   --qc-blue: #00D6FF;
   --qc-purple: #BC2FFF;
+  --qc-ink: #0A0A0A;
+  --qc-white: #FFFFFF;
+  --qc-muted: #888;
+  --qc-border: rgba(0, 0, 0, 0.10);
+  --qc-r-pill: 6px;
+  --qc-r-card: 12px;
+  --qc-r-lg: 20px;
 }
 
 body {
@@ -40,8 +49,12 @@ h1 {
 }
 
 h2 {
-    font-family: Extended, "Arial Narrow", Arial, sans-serif;
-    font-size: 1rem;
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--qc-ink);
   margin: 0;
   padding: 0.9rem 0 0.5rem;
 }
@@ -137,38 +150,86 @@ a:hover{
 }
 
 .eventbox{
-    border: 3px solid #ffeaf6;
-    background-color: #ffeaf6;
-    margin: 0.5rem 0; 
-    padding: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--qc-ink);
+    background: var(--qc-white);
+    margin: 0.6rem 0;
+    padding: 0;
     grid-column: span 3;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  border-radius: 2px;
+    border-radius: var(--qc-r-lg);
+    transition: transform .12s ease, box-shadow .12s ease;
 }
 
 .eventbox:hover{
-    border: 3px solid #CCFF2E;
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 0 var(--qc-ink);
 }
 
 .eventboxtop {
   display: flex;
   flex-direction: column;
+  gap: 0.4rem;
+  position: relative;
+  min-height: 6rem;
+  padding: 16px 16px 12px;
+  border-bottom: 2px solid var(--qc-ink);
+  background: var(--qc-blue);
+}
+
+.eventboxtop--life { background: var(--qc-pink); }
+.eventboxtop--sex { background: var(--qc-red); }
+.eventboxtop--social { background: var(--qc-orange); }
+.eventboxtop--active { background: var(--qc-yellow); }
+.eventboxtop--music { background: var(--qc-green); }
+.eventboxtop--arts { background: var(--qc-blue); }
+.eventboxtop--celebration { background: var(--qc-purple); }
+.eventboxtop--sex,
+.eventboxtop--music,
+.eventboxtop--celebration {
+  color: var(--qc-white);
+}
+
+.eventboxtop::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--qc-purple);
+  opacity: 0.9;
 }
 
 .eventboxbottom {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px 14px;
+  background: var(--qc-white);
+}
+
+.eventboxmeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.eventboxactions {
+  display: flex;
   justify-content: space-between;
-  margin: 0.4rem 0 0 0;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 8px;
 }
 
 .eventbadges-left {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 6px;
   align-items: flex-start;
 }
 
@@ -176,31 +237,65 @@ a:hover{
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.3rem;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.eventboxtop a,
+.eventboxtop a:hover {
+    color: inherit;
+    text-decoration: none;
 }
 
 .name {
     text-transform: uppercase;
-    padding: 0.1rem 0 0.3rem;
-    font-weight: bold;
-    font-size: 1.1rem;
+    max-width: calc(100% - 38px);
+    padding: 0;
+    font-family: Extended, "Arial Narrow", Arial, sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+.date,
+.location {
+    font-size: 0.8rem;
+    color: var(--qc-ink);
+    line-height: 1.35;
+}
+
+.date {
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0;
 }
 
 .location {
-    font-style: italic;
+    font-family: "Barlow", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 0.8rem;
+    letter-spacing: 0;
 }
 
 .category {
-    font-variant-caps: all-small-caps;
-    font-weight: bold;
-    font-style: italic;
-    padding: 0.1rem 0.3rem;
-  border-radius: 2px;
+    width: fit-content;
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-style: normal;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    margin-bottom: 2px;
 }
 
 .Celebration {
-  background-color: #CCFF2E;
-  color: black;
+  background-color: var(--qc-purple);
+  color: var(--qc-white);
 }
 
 .Active {
@@ -215,7 +310,7 @@ a:hover{
 
 .Music {
   background-color: var(--qc-green);
-  color: black;
+  color: var(--qc-white);
 }
 
 .Life {
@@ -225,12 +320,95 @@ a:hover{
 
 .Sex {
   background-color: var(--qc-red);
-  color: black;
+  color: var(--qc-white);
 }
 
 .Social {
-  background-color: var(--qc-orange);
   color: black;
+}
+
+.eventbadges-left .category,
+.eventbadges-right .category {
+  font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-style: normal;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--qc-r-pill);
+  background-color: #f1f1f1;
+  border: 1px solid #dfdfdf;
+  margin-bottom: 0;
+  color: var(--qc-ink);
+}
+
+.event-org {
+  font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--qc-ink);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventboxcta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 3px 11px;
+  border-radius: var(--qc-r-pill);
+  font-family: Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid transparent;
+}
+
+.eventboxcta-primary {
+  background: var(--qc-purple);
+  color: var(--qc-white);
+  border-color: var(--qc-purple);
+}
+
+.eventboxcta-secondary {
+  min-width: 88px;
+  background: transparent;
+  color: var(--qc-ink);
+  border-color: var(--qc-ink);
+}
+
+@media (max-width: 30em) {
+  .eventboxtop {
+    min-height: 3rem;
+  }
+
+  .eventboxactions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .eventbadges-right {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .eventboxcta-secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 54em) {
+  .eventboxtop {
+    min-height: 3rem;
+  }
 }
 
 section{
@@ -281,12 +459,12 @@ section{
 
 .borough-shape {
   stroke: #fff;
-  stroke-width: 2.2;
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
   fill-opacity: 0.95;
   cursor: pointer;
-  transition: transform 100ms ease, fill-opacity 100ms ease;
+  transition: transform 100ms ease, fill-opacity 100ms ease, filter 100ms ease;
   transform-origin: center;
-  vector-effect: non-scaling-stroke;
 }
 
 .borough-shape.is-hover,
@@ -294,6 +472,7 @@ section{
 .borough-shape:focus-visible {
   fill-opacity: 1;
   transform: translateY(-1px);
+  filter: brightness(1.03);
   outline: none;
 }
 
@@ -310,7 +489,6 @@ section{
 .borough-rochdale { fill: #b6f7ff; }
 .borough-salford { fill: #f2d7ff; }
 .borough-stockport { fill: #06c054; }
-.borough-tameside { fill: #6e9dff; }
 .borough-trafford { fill: #ffd429; }
 .borough-wigan { fill: #bc2fff; }
 
@@ -498,31 +676,31 @@ section{
 }
 
 #monday {
-  background-color: var(--qc-pink);
+  background-color: #FF6CE3;
 }
 
 #tuesday {
-  background-color: var(--qc-red);
+  background-color: #FF1515;
 }
 
 #wednesday {
-  background-color: var(--qc-orange);
+  background-color: #FF7A00;
 }
 
 #thursday {
-  background-color: var(--qc-yellow);
+  background-color: #FFD429;
 }
 
 #friday {
-  background-color: var(--qc-green);
+  background-color: #06C054;
 }
 
 #saturday {
-  background-color: var(--qc-blue);
+  background-color: #004CFF;
 }
 
 #sunday {
-  background-color: var(--qc-purple);
+  background-color: #BC2FFF;
 }
 
 @media (min-width: 40em) {
@@ -600,7 +778,8 @@ section{
   } */
   
   .name {
-    padding: 0.1rem 0 0.25rem;
+    max-width: calc(100% - 5.2rem);
+    padding: 0;
     grid-column: 1 / span 2;
     grid-row: 1 / span 1;
   }
@@ -643,7 +822,7 @@ section{
     	grid-template: auto / repeat(9, 1fr);
     	column-gap: 1rem;
     	row-gap: 1rem;
-	}
+		}
 }
 
 @media (min-width: 86em) {
