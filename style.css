@@ -229,8 +229,10 @@ a:hover{
 
 .eventboxbottom {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
   padding: 12px 16px 14px;
   background: var(--qc-white);
 }
@@ -239,13 +241,24 @@ a:hover{
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .eventboxactions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 8px;
+  gap: 0;
+  flex: 0 0 auto;
+}
+
+.eventboxmeta-extras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
 }
 
 .eventbadges-left {
@@ -260,7 +273,7 @@ a:hover{
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 6px;
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .eventboxtop a,
@@ -322,12 +335,12 @@ a:hover{
 
 .Active {
   background-color: var(--qc-yellow);
-  color: black;
+  color: var(--qc-ink);
 }
 
 .Arts {
   background-color: var(--qc-blue);
-  color: black;
+  color: var(--qc-ink);
 }
 
 .Music {
@@ -337,7 +350,7 @@ a:hover{
 
 .Life {
   background-color: var(--qc-pink);
-  color: black;
+  color: var(--qc-ink);
 }
 
 .Sex {
@@ -346,7 +359,8 @@ a:hover{
 }
 
 .Social {
-  color: black;
+ background-color: var(--qc-orange);
+  color: var(--qc-ink);
 }
 
 .eventbadges-left .category,
@@ -427,17 +441,13 @@ a:hover{
   }
 
   .eventboxactions {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
   }
 
   .eventbadges-right {
     margin-left: 0;
-    justify-content: flex-start;
-  }
-
-  .eventboxcta-secondary {
-    width: 100%;
+    justify-content: flex-end;
   }
 }
 
