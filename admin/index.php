@@ -29,13 +29,20 @@ qc_admin_require_page_token('Admin Dashboard');
   <main class="admin-wrap">
     <section class="panel">
       <h2>Admin Actions</h2>
-      <p class="admin-intro">All admin areas below are token-gated. Use the footer links for admin actions.</p>
+      <p class="admin-intro">All admin areas below are token-gated.</p>
+      <div class="admin-actions">
+        <a class="button-link" href="./add-event.php">Add / Edit One-Off Events</a>
+        <a class="button-link" href="./recurring-events.php">Add / Edit Recurring Events</a>
+        <a class="button-link" href="./prides.php">Add / Edit Prides</a>
+        <a class="button-link" href="../newsletter/">Newsletter</a>
+      </div>
     </section>
   </main>
 
   <footer class="qc-footer">
     <a class="button-link" href="./index.php">ADMIN DASHBOARD</a>
     <a class="button-link" href="./add-event.php">ADD EVENT</a>
+    <a class="button-link" href="./recurring-events.php">RECURRING EVENTS</a>
     <a class="button-link" href="./prides.php">PRIDES ADMIN</a>
     <a class="button-link" href="../newsletter/">NEWSLETTER</a>
     <a class="button-link" href="./index.php?logout=1">LOG OUT</a>

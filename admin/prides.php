@@ -103,6 +103,7 @@ qc_admin_require_page_token('Prides Admin');
   <footer class="qc-footer">
     <a class="button-link" href="./index.php">ADMIN DASHBOARD</a>
     <a class="button-link" href="./add-event.php">ADD EVENT</a>
+    <a class="button-link" href="./recurring-events.php">RECURRING EVENTS</a>
     <a class="button-link" href="./prides.php">PRIDES ADMIN</a>
     <a class="button-link" href="../newsletter/">NEWSLETTER</a>
     <a class="button-link" href="./index.php?logout=1">LOG OUT</a>
