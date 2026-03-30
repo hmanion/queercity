@@ -260,29 +260,30 @@ a:hover{
 
 .date,
 .location {
-    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
     font-size: 0.8rem;
-    font-weight: 700;
     color: var(--qc-ink);
-    letter-spacing: 0.03em;
     line-height: 1.35;
 }
 
 .date {
-    font-weight: 600;
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-weight: 700;
     letter-spacing: 0;
 }
 
 .location {
+    font-family: "Barlow", Arial, Helvetica, sans-serif;
     font-style: normal;
+    font-weight: 400;
     font-size: 0.8rem;
+    letter-spacing: 0;
 }
 
 .category {
     width: fit-content;
-    font-family: Extended, "Arial Narrow", Arial, sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     font-weight: 700;
     font-style: normal;
@@ -328,17 +329,18 @@ a:hover{
 
 .eventbadges-left .category,
 .eventbadges-right .category {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  letter-spacing: 0;
+  font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   padding: 3px 9px;
   border-radius: var(--qc-r-pill);
   background-color: #f1f1f1;
   border: 1px solid #dfdfdf;
   margin-bottom: 0;
+  color: var(--qc-ink);
 }
 
 .event-org {
@@ -400,6 +402,12 @@ a:hover{
 
   .eventboxcta-secondary {
     width: 100%;
+  }
+}
+
+@media (max-width: 54em) {
+  .eventboxtop {
+    min-height: 3rem;
   }
 }
 
