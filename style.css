@@ -65,6 +65,24 @@ h2 {
   margin: 1rem 0 0;
 }
 
+.category-filter-bar .filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.category-filter-bar .cat-pill {
+  font-family: "Barlow Condensed", Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-style: normal;
+  font-variant-caps: normal;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--qc-r-pill);
+}
+
 button {
   border: none;
   background-color: var(--qc-purple);
@@ -205,6 +223,10 @@ a:hover{
   opacity: 0.9;
 }
 
+.eventboxtop--celebration::after {
+  background: linear-gradient(135deg, #FF6CE3, #FF1515, #FF7A00, #FFD429, #06C054, #00D6FF, #BC2FFF);
+}
+
 .eventboxbottom {
   display: flex;
   flex-direction: column;
@@ -341,6 +363,20 @@ a:hover{
   border: 1px solid #dfdfdf;
   margin-bottom: 0;
   color: var(--qc-ink);
+}
+
+.eventbadges-left .category.Social,
+.eventbadges-right .category.Social {
+  background-color: var(--qc-orange);
+  color: var(--qc-ink);
+  border-color: var(--qc-orange);
+}
+
+.eventbadges-left .category.Celebration,
+.eventbadges-right .category.Celebration {
+  background-color: var(--qc-purple);
+  color: var(--qc-white);
+  border-color: var(--qc-purple);
 }
 
 .event-org {

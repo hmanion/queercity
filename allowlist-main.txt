@@ -47,6 +47,8 @@ js/genre-page.module.js
 admin/index.php
 admin/add-event.php
 admin/add-event.js
+admin/recurring-events.php
+admin/recurring-events.js
 admin/admin.css
 admin/prides.php
 admin/prides.js
@@ -54,6 +56,7 @@ api/output.php
 api/directory.php
 api/admin-options.php
 api/admin-add-event.php
+api/admin-recurring-events.php
 api/admin-prides.php
 api/lib/admin_auth.php
 api/lib/event_domain.php
