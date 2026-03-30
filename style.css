@@ -137,38 +137,73 @@ a:hover{
 }
 
 .eventbox{
-    border: 3px solid #ffeaf6;
-    background-color: #ffeaf6;
-    margin: 0.5rem 0; 
-    padding: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid #1a1a1a;
+    background-color: #fff;
+    margin: 0.75rem 0; 
+    padding: 0;
     grid-column: span 3;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  border-radius: 2px;
+    border-radius: 2.2rem;
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.08);
+    transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
 .eventbox:hover{
-    border: 3px solid #CCFF2E;
+    transform: translateY(-2px);
+    box-shadow: 0 22px 44px rgba(0, 0, 0, 0.12);
 }
 
 .eventboxtop {
   display: flex;
   flex-direction: column;
+  gap: 0.6rem;
+  position: relative;
+  min-height: 9.25rem;
+  padding: 1.55rem 1.9rem 1.35rem;
+  border-bottom: 4px solid #1a1a1a;
+  background: var(--qc-blue);
+}
+
+.eventboxtop::after {
+  content: "";
+  position: absolute;
+  top: -0.35rem;
+  right: -0.35rem;
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #c149ff 0%, var(--qc-purple) 100%);
 }
 
 .eventboxbottom {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.55rem 1.9rem 1.8rem;
+  background: #fff;
+}
+
+.eventboxmeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.eventboxactions {
+  display: flex;
   justify-content: space-between;
-  margin: 0.4rem 0 0 0;
-  gap: 0.4rem;
+  align-items: flex-end;
+  gap: 1rem;
 }
 
 .eventbadges-left {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 0.55rem;
   align-items: flex-start;
 }
 
@@ -176,26 +211,54 @@ a:hover{
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.3rem;
+  gap: 0.55rem;
+  margin-left: auto;
+}
+
+.eventboxtop a,
+.eventboxtop a:hover {
+    color: inherit;
+    text-decoration: none;
 }
 
 .name {
     text-transform: uppercase;
-    padding: 0.1rem 0 0.3rem;
-    font-weight: bold;
-    font-size: 1.1rem;
+    max-width: calc(100% - 4.5rem);
+    padding: 0;
+    font-family: Extended, "Arial Narrow", Arial, sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.9rem, 4.6vw, 3rem);
+    line-height: 0.92;
+    letter-spacing: -0.06rem;
+}
+
+.date,
+.location {
+    font-size: 1rem;
+    color: #858585;
+}
+
+.date {
+    font-weight: 600;
+    letter-spacing: -0.01rem;
 }
 
 .location {
-    font-style: italic;
+    font-style: normal;
+    font-size: 1.1rem;
 }
 
 .category {
-    font-variant-caps: all-small-caps;
-    font-weight: bold;
-    font-style: italic;
-    padding: 0.1rem 0.3rem;
-  border-radius: 2px;
+    width: fit-content;
+    font-family: Extended, "Arial Narrow", Arial, sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-style: normal;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
 }
 
 .Celebration {
@@ -229,8 +292,63 @@ a:hover{
 }
 
 .Social {
-  background-color: var(--qc-orange);
   color: black;
+}
+
+.eventbadges-left .category,
+.eventbadges-right .category {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.84rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-style: normal;
+  padding: 0.34rem 0.68rem;
+  border-radius: 999px;
+  background-color: #f1f1f1;
+  border: 1px solid #dfdfdf;
+}
+
+.eventboxcta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.2rem 1rem;
+  border-radius: 1rem;
+  font-family: Extended, "Arial Narrow", Arial, sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.eventboxcta-primary {
+  background: var(--qc-blue);
+  color: #111;
+}
+
+.eventboxcta-secondary {
+  min-width: 8.5rem;
+  background: #fff;
+  color: #e8e3dd;
+  border-color: #ece7e1;
+}
+
+@media (max-width: 30em) {
+  .eventboxactions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .eventbadges-right {
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .eventboxcta-secondary {
+    width: 100%;
+  }
 }
 
 section{
@@ -600,7 +718,8 @@ section{
   } */
   
   .name {
-    padding: 0.1rem 0 0.25rem;
+    max-width: calc(100% - 5.2rem);
+    padding: 0;
     grid-column: 1 / span 2;
     grid-row: 1 / span 1;
   }
